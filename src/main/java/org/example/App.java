@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.Scanner;
+import org.example.Objects.SomeClass;
 /**
  * Hello world!
  *
@@ -11,6 +12,7 @@ public class App
     {
         Scanner sc = new Scanner(System.in);
         System.out.println(sc.nextInt());
-
+        SomeClass so = new SomeClass();
+        System.out.println(so.GetName());
     }
 }
