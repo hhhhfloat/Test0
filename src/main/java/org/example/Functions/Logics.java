@@ -21,6 +21,7 @@ public class Logics {
         }
         return path;
 
+
     }
     // 直线检测函数
     public ArrayDeque<int[]> StraightPathDetect(int MAPX, int MAPY, String map_, int[] p1, int[] p2)
