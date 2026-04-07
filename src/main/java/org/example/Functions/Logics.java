@@ -18,19 +18,11 @@ public class Logics {
                 // 对地图转置再传入
                 path = Tsp(RowDetect(MAPY, MAPX, Tsp(map_, MAPX, MAPY), Tsp(p1),Tsp(p2)));
             }
-            else
-            {
-                return path;
-            }
         }
-        else {
-            return path;
-        }
-
-
-
         return path;
+
     }
+    // 直线检测函数
     public ArrayDeque<int[]> StraightPathDetect(int MAPX, int MAPY, String map_, int[] p1, int[] p2)
     {
         ArrayDeque<int[]> path = null;
@@ -65,6 +57,7 @@ public class Logics {
         return path;
     }
 
+    // 横向检测函数
     public ArrayDeque<int[]> RowDetect(int MAPX, int MAPY, String map_, int[] p1, int[] p2)
     {
         ArrayDeque<int[]> path = null;
@@ -138,6 +131,7 @@ public class Logics {
         return path;
     }
 
+    // 转置地图（拷贝）
     public String Tsp(String map_, int MAPX, int MAPY)
     {
         String map_T = "";
@@ -150,11 +144,13 @@ public class Logics {
         return map_T;
     }
 
+    // 转置点坐标
     public int[] Tsp(int[] p)
     {
         return new int[]{p[1], p[0]};
     }
 
+    // 转置路径数组
     public ArrayDeque<int[]> Tsp(ArrayDeque<int[]> path)
     {
         if(path.isEmpty())return null;
