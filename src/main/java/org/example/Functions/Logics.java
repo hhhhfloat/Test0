@@ -6,9 +6,9 @@ import java.util.ArrayDeque;
 public class Logics {
     public ArrayDeque<int[]> Linky(int MAPX, int MAPY, String map_, int[] p1, int[] p2)
     {
-        ArrayDeque<int[]> path = null;
         int p1x = p1[0], p1y = p1[1], p2x = p2[0], p2y = p2[1];
-        path = StraightPathDetect(MAPX, MAPY, map_, p1, p2);
+        ArrayDeque<int[]> path = StraightPathDetect(MAPX, MAPY, map_, p1, p2);
+
         if(path.isEmpty())
         {
             // 先横向检测
@@ -26,7 +26,7 @@ public class Logics {
     // 直线检测函数
     public ArrayDeque<int[]> StraightPathDetect(int MAPX, int MAPY, String map_, int[] p1, int[] p2)
     {
-        ArrayDeque<int[]> path = null;
+        ArrayDeque<int[]> path = new ArrayDeque<>();
         int p1x = p1[0], p1y = p1[1], p2x = p2[0], p2y = p2[1];
         // 同行
         if(p1x == p2x)
@@ -61,7 +61,7 @@ public class Logics {
     // 横向检测函数
     public ArrayDeque<int[]> RowDetect(int MAPX, int MAPY, String map_, int[] p1, int[] p2)
     {
-        ArrayDeque<int[]> path = null;
+        ArrayDeque<int[]> path = new ArrayDeque<>();
         int p1x = p1[0], p1y = p1[1], p2x = p2[0], p2y = p2[1];
 
         // 对p1检测横向自由度
@@ -115,7 +115,7 @@ public class Logics {
                     one = (i - p2y > 0)? 1:-1;
                     for(int ss = i - one; s != p2y - one;s -= one){
                         int[] p = {p2x, s};
-                        path.addLast(p);
+                        path.addFirst(p);
                     }
                     // p1端横段
                     one = (i - p2y > 0)? 1:-1;
@@ -135,14 +135,14 @@ public class Logics {
     // 转置地图（拷贝）
     public String Tsp(String map_, int MAPX, int MAPY)
     {
-        String map_T = "";
+        StringBuilder map_T = new StringBuilder();
         for(int i = 0;i<MAPY;i++)
         {
             for (int j = 0; j < MAPX; j++) {
-                map_T += map_.charAt(j * MAPY + i);
+                map_T.append(map_.charAt(j * MAPY + i));
             }
         }
-        return map_T;
+        return map_T.toString();
     }
 
     // 转置点坐标
@@ -154,13 +154,12 @@ public class Logics {
     // 转置路径数组
     public ArrayDeque<int[]> Tsp(ArrayDeque<int[]> path)
     {
-        if(path.isEmpty())return null;
-        else{
+        if(!path.isEmpty()){
             for(int[] p : path)
             {
                 p = Tsp(p);
             }
-            return path;
         }
+        return path;
     }
 }
