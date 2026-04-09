@@ -97,6 +97,7 @@ public class Logics {
                     if(map_.charAt(s * MAPY + i) != ' ')
                     {
                         msg = false;
+                        break;
                     }
                     s += one;
                 }
@@ -108,22 +109,23 @@ public class Logics {
                     // 先写入中间列
                     for(int ss = p2x;ss != p1x + one;ss+=one)
                     {
-                        int[] p = {s, i};
+                        int[] p = {ss, i};
                         path.addLast(p);
                     }
                     // p2端横段
                     one = (i - p2y > 0)? 1:-1;
-                    for(int ss = i - one; s != p2y - one;s -= one){
-                        int[] p = {p2x, s};
+                    for(int ss = i - one; ss != p2y - one;ss -= one){
+                        int[] p = {p2x, ss};
                         path.addFirst(p);
                     }
                     // p1端横段
-                    one = (i - p2y > 0)? 1:-1;
-                    for(int ss = i - one; ss != p2y - one; ss -= one)
+                    one = (i - p1y > 0)? 1:-1;
+                    for(int ss = i - one; ss != p1y - one; ss -= one)
                     {
-                        int[] p = {p1x, s};
+                        int[] p = {p1x, ss};
                         path.addLast(p);
                     }
+                    return path;
                 }
             }
         }
@@ -157,7 +159,9 @@ public class Logics {
         if(!path.isEmpty()){
             for(int[] p : path)
             {
-                p = Tsp(p);
+                int temp = p[0];
+                p[0] = p[1];
+                p[1] = temp;
             }
         }
         return path;
