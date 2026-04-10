@@ -44,7 +44,7 @@ public class AppTest
 
     // Test the Logics.Linky
     // Test Functions have to be named after "test", like "testABC"
-    public void testLinkyLogic() throws InterruptedException{
+    public void testLinkyLogic() throws InterruptedException {
         int MAPX = 10, MAPY = 10;
         String map = "";
         map += " 2 642 8  ";
@@ -57,6 +57,12 @@ public class AppTest
         map += "  5       ";
         map += "   2    0 ";
         map += "        2 ";
+        char[][] Map = new char[MAPX][MAPY];
+        for (int i = 0; i < MAPX; i++){
+            for (int j = 0; j < MAPY; j++) {
+                Map[i][j] = map.charAt(i * MAPY + j);
+            }
+        }
 
         int[][][] TestInput = {
                 // Straight Test
@@ -77,15 +83,15 @@ public class AppTest
         while(count < TestNumber) // Run for TestNumber Times
         {
             Clear();
-            PrintMap(map, MAPX, MAPY);
+            PrintMap(Map, MAPX, MAPY);
             Sleep(1000);
 
             ArrayDeque<int[]> path = logics.Linky(
-                    MAPX, MAPY, map,
+                    MAPX, MAPY, Map,
                     TestInput[count][0],TestInput[count][1]
             );
 
-            String mapWithPath = ShowPath(path, map, MAPX, MAPY);
+            char[][] mapWithPath = ShowPath(path, Map, MAPX, MAPY);
             Clear();
             PrintMap(mapWithPath, MAPX, MAPY);
             PrintPath(path);
@@ -96,14 +102,19 @@ public class AppTest
     }
     // All Pass !!!
 
-    public String ShowPath(ArrayDeque<int[]> path, String map_, int MAPX, int MAPY)
+    public char[][] ShowPath(ArrayDeque<int[]> path, char[][] map_, int MAPX, int MAPY)
     {
-        StringBuilder temp = new StringBuilder(map_);
+        char[][] temp = new char[MAPX][MAPY];
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
+                temp[i][j] = map_[i][j];
+            }
+        }
         for(int[] p : path)
         {
-            temp.setCharAt(p[0] * MAPY + p[1], '#');
+            temp[p[0]][p[1]] = '#';
         }
-        return temp.toString();
+        return temp;
     }
 
     // Use this to Sleep for X miliseconds (just for simpler codes)
@@ -120,11 +131,11 @@ public class AppTest
     }
 
     // Use this to Print the rectangle map
-    public void PrintMap(String map_, int MAPX, int MAPY)
+    public void PrintMap(char[][] map_, int MAPX, int MAPY)
     {
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
-                System.out.printf(" %c ", map_.charAt(i*MAPY + j));
+                System.out.printf(" %c ", map_[i][j]);
             }
             System.out.println();
         }

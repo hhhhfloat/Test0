@@ -4,18 +4,29 @@ import java.util.ArrayDeque;
 
 
 public class Logics {
-    public ArrayDeque<int[]> Linky(int MAPX, int MAPY, String map_, int[] p1, int[] p2)
+
+    /*
+    * 一下一批是基础连连看的逻辑
+    * 适用于矩形地图
+    * 输入——地图大小，地图本身，选取的点坐标
+    * 允许不合法点，会返回不合法值
+    * Case1 -- 点不在地图上/选择同一个点/选择不同类型的点 -- 返回路径唯一点 (-1, -1)
+    * Case2 -- 不存在合法路径 -- 返回空路径（已初始化，不是null）
+    * Case3 -- 有合法路径 -- 返回完整路径的点坐标列表（顺序）
+    */
+    public ArrayDeque<int[]> Linky(int MAPX, int MAPY, char[][] map_, int[] p1, int[] p2)
     {
-        int p1x = p1[0], p1y = p1[1], p2x = p2[0], p2y = p2[1];
+        // 先检测直线
         ArrayDeque<int[]> path = StraightPathDetect(MAPX, MAPY, map_, p1, p2);
 
-        if(path.isEmpty())
+        if(path.isEmpty()) // 如果没有直路
         {
-            // 先横向检测
+            // 再横向检测
             path = RowDetect(MAPX, MAPY, map_, p1, p2);
-            if(path.isEmpty())
+
+            if(path.isEmpty()) // 如果没有横向检测得出的
             {
-                // 对地图转置再传入
+                // 对地图转置再传入，返回的路径再转置一次
                 path = Tsp(RowDetect(MAPY, MAPX, Tsp(map_, MAPX, MAPY), Tsp(p1),Tsp(p2)));
             }
         }
@@ -24,7 +35,7 @@ public class Logics {
 
     }
     // 直线检测函数
-    public ArrayDeque<int[]> StraightPathDetect(int MAPX, int MAPY, String map_, int[] p1, int[] p2)
+    public ArrayDeque<int[]> StraightPathDetect(int MAPX, int MAPY, char[][] map_, int[] p1, int[] p2)
     {
         ArrayDeque<int[]> path = new ArrayDeque<>();
         int p1x = p1[0], p1y = p1[1], p2x = p2[0], p2y = p2[1];
@@ -34,7 +45,7 @@ public class Logics {
             int one = (p1y - p2y > 0)?1:-1;
             for(int s = p2y + one; s != p1y; s += one)
             {
-                if(map_.charAt(p1x * MAPY + s) != ' ')return path;
+                if(map_[p1x][s] != ' ')return path;
             }
             for(int s = p2y; s != p1y + one; s += one)
             {
@@ -47,7 +58,7 @@ public class Logics {
             int one = (p1x - p2x > 0) ? 1:-1;
             for(int s = p2x + one; s != p1x; s += one)
             {
-                if(map_.charAt(s*MAPX + p1y) != ' ')return path;
+                if(map_[s][p1y] != ' ')return path;
             }
             for(int s = p2x; s != p1x + one; s += one)
             {
@@ -59,25 +70,25 @@ public class Logics {
     }
 
     // 横向检测函数
-    public ArrayDeque<int[]> RowDetect(int MAPX, int MAPY, String map_, int[] p1, int[] p2)
+    public ArrayDeque<int[]> RowDetect(int MAPX, int MAPY, char[][] map_, int[] p1, int[] p2)
     {
         ArrayDeque<int[]> path = new ArrayDeque<>();
         int p1x = p1[0], p1y = p1[1], p2x = p2[0], p2y = p2[1];
 
         // 对p1检测横向自由度
         int t1 = 1;
-        while(p1y-t1 >= 0 && map_.charAt(p1x * MAPY + p1y -t1) == ' '){t1++;}
+        while(p1y-t1 >= 0 && map_[p1x][p1y - t1] == ' '){t1++;}
         int Min1 = p1y - t1 + 1;
         t1 = 1;
-        while(p1y + t1 < MAPY && map_.charAt(p1x * MAPY + p1y + t1) == ' '){t1++;}
+        while(p1y + t1 < MAPY && map_[p1x][p1y + t1] == ' '){t1++;}
         int Max1 = p1y + t1 - 1;
 
         // 对p2检测横向自由度
         int t2 = 1;
-        while(p2y-t2 >= 0 && map_.charAt(p2x * MAPY + p2y -t2) == ' '){t2++;}
+        while(p2y-t2 >= 0 && map_[p2x][p2y -t2] == ' '){t2++;}
         int Min2 = p2y - t2 + 1;
         t2 = 1;
-        while(p2y + t2 < MAPY && map_.charAt(p2x * MAPY + p2y + t2) == ' '){t2++;}
+        while(p2y + t2 < MAPY && map_[p2x][p2y + t2] == ' '){t2++;}
         int Max2 = p2y + t2 - 1;
 
         // 寻找重合部分并按列检测
@@ -94,7 +105,7 @@ public class Logics {
                 msg = true;
                 while(s != p1x)
                 {
-                    if(map_.charAt(s * MAPY + i) != ' ')
+                    if(map_[s][i] != ' ')
                     {
                         msg = false;
                         break;
@@ -135,16 +146,16 @@ public class Logics {
     }
 
     // 转置地图（拷贝）
-    public String Tsp(String map_, int MAPX, int MAPY)
+    public char[][] Tsp(char[][] map_, int MAPX, int MAPY)
     {
-        StringBuilder map_T = new StringBuilder();
+        char[][] map_T = new char[MAPY][MAPX];
         for(int i = 0;i<MAPY;i++)
         {
             for (int j = 0; j < MAPX; j++) {
-                map_T.append(map_.charAt(j * MAPY + i));
+                map_T[i][j] = map_[j][i];
             }
         }
-        return map_T.toString();
+        return map_T;
     }
 
     // 转置点坐标
@@ -166,4 +177,35 @@ public class Logics {
         }
         return path;
     }
+
+
+    /*
+    * 下面是检测完成函数，纯粹是检测是否盘面为空
+    * 适用矩形地图
+    */
+    public boolean isComplete(int MAPX, int MAPY , char[][] map_)
+    {
+
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
+                if(map_[i][j] != ' ')return false;
+            }
+        }
+        return true;
+    }
+
+    /*
+    * 下面是检测是否还有可能连法并返回可能选择的函数
+    * 仅仅适用原版连连看（虽然原版不可能没有）
+    * 使用了与连连看消去路径搜索不一样的逻辑
+    * 适用矩形地图
+    * */
+    public int[][] HintSolution()
+    {
+
+
+        return null;
+    }
+
+
 }
