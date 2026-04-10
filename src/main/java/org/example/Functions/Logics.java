@@ -1,5 +1,6 @@
 package org.example.Functions;
 
+import java.text.spi.NumberFormatProvider;
 import java.util.ArrayDeque;
 
 
@@ -15,7 +16,7 @@ public class Logics
     * Case2 -- 不存在合法路径 -- 返回空路径（已初始化，不是null）
     * Case3 -- 有合法路径 -- 返回完整路径的点坐标列表（顺序）
     */
-    public ArrayDeque<int[]> Linky(int MAPX, int MAPY, char[][] map_, int[] p1, int[] p2)
+    public ArrayDeque<int[]> Linky(int MAPX, int MAPY, int[][] map_, int[] p1, int[] p2)
     {
         // 先检测直线
         ArrayDeque<int[]> path = StraightPathDetect(MAPX, MAPY, map_, p1, p2);
@@ -36,7 +37,7 @@ public class Logics
 
     }
     // 直线检测函数
-    public ArrayDeque<int[]> StraightPathDetect(int MAPX, int MAPY, char[][] map_, int[] p1, int[] p2)
+    public ArrayDeque<int[]> StraightPathDetect(int MAPX, int MAPY, int[][] map_, int[] p1, int[] p2)
     {
         ArrayDeque<int[]> path = new ArrayDeque<>();
         int p1x = p1[0], p1y = p1[1], p2x = p2[0], p2y = p2[1];
@@ -46,7 +47,7 @@ public class Logics
             int one = (p1y - p2y > 0)?1:-1;
             for(int s = p2y + one; s != p1y; s += one)
             {
-                if(map_[p1x][s] != ' ')return path;
+                if(map_[p1x][s] != -1)return path;
             }
             for(int s = p2y; s != p1y + one; s += one)
             {
@@ -59,7 +60,7 @@ public class Logics
             int one = (p1x - p2x > 0) ? 1:-1;
             for(int s = p2x + one; s != p1x; s += one)
             {
-                if(map_[s][p1y] != ' ')return path;
+                if(map_[s][p1y] != -1)return path;
             }
             for(int s = p2x; s != p1x + one; s += one)
             {
@@ -71,25 +72,25 @@ public class Logics
     }
 
     // 横向检测函数
-    public ArrayDeque<int[]> RowDetect(int MAPX, int MAPY, char[][] map_, int[] p1, int[] p2)
+    public ArrayDeque<int[]> RowDetect(int MAPX, int MAPY, int[][] map_, int[] p1, int[] p2)
     {
         ArrayDeque<int[]> path = new ArrayDeque<>();
         int p1x = p1[0], p1y = p1[1], p2x = p2[0], p2y = p2[1];
 
         // 对p1检测横向自由度
         int t1 = 1;
-        while(p1y-t1 >= 0 && map_[p1x][p1y - t1] == ' '){t1++;}
+        while(p1y-t1 >= 0 && map_[p1x][p1y - t1] == -1){t1++;}
         int Min1 = p1y - t1 + 1;
         t1 = 1;
-        while(p1y + t1 < MAPY && map_[p1x][p1y + t1] == ' '){t1++;}
+        while(p1y + t1 < MAPY && map_[p1x][p1y + t1] == -1){t1++;}
         int Max1 = p1y + t1 - 1;
 
         // 对p2检测横向自由度
         int t2 = 1;
-        while(p2y-t2 >= 0 && map_[p2x][p2y -t2] == ' '){t2++;}
+        while(p2y-t2 >= 0 && map_[p2x][p2y -t2] == -1){t2++;}
         int Min2 = p2y - t2 + 1;
         t2 = 1;
-        while(p2y + t2 < MAPY && map_[p2x][p2y + t2] == ' '){t2++;}
+        while(p2y + t2 < MAPY && map_[p2x][p2y + t2] == -1){t2++;}
         int Max2 = p2y + t2 - 1;
 
         // 寻找重合部分并按列检测
@@ -106,7 +107,7 @@ public class Logics
                 msg = true;
                 while(s != p1x)
                 {
-                    if(map_[s][i] != ' ')
+                    if(map_[s][i] != -1)
                     {
                         msg = false;
                         break;
@@ -147,9 +148,9 @@ public class Logics
     }
 
     // 转置地图（拷贝）
-    public char[][] Tsp(char[][] map_, int MAPX, int MAPY)
+    public int[][] Tsp(int[][] map_, int MAPX, int MAPY)
     {
-        char[][] map_T = new char[MAPY][MAPX];
+        int[][] map_T = new int[MAPY][MAPX];
         for(int i = 0;i<MAPY;i++)
         {
             for (int j = 0; j < MAPX; j++) {
@@ -184,12 +185,12 @@ public class Logics
     * 下面是检测完成函数，纯粹是检测是否盘面为空
     * 适用矩形地图
     */
-    public boolean isComplete(int MAPX, int MAPY , char[][] map_)
+    public boolean isComplete(int MAPX, int MAPY , int[][] map_)
     {
 
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
-                if(map_[i][j] != ' ')return false;
+                if(map_[i][j] != -1)return false;
             }
         }
         return true;
@@ -201,7 +202,7 @@ public class Logics
     * 使用了与连连看消去路径搜索不一样的逻辑
     * 适用矩形地图
     * */
-    public int[][] HintSolution(int MAPX, int MAPY, char[][] map)
+    public int[][] HintSolution(int MAPX, int MAPY, int[][] map)
     {
         // 最高效的搜索方式是什么？
         /*
@@ -225,6 +226,39 @@ public class Logics
         *
         * 你学会了吗？
         * */
+
+        int[][][][] NumMap = new int[MAPX][MAPY][4][2];
+        // 因为要储存步数，使用 ASCII码转换记录种类
+        // 四个方向 0上 1右 2下 3左
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
+                if(map[x][y] != -1)
+                {
+                    int val = map[x][y];
+                    // 向下扫
+                    int t0 = 1;
+                    while(x + t0 < MAPX) // 先增加再判断
+                    {
+                        NumMap[x + t0][y][2][0] = val;
+                        NumMap[x + t0][y][2][1] = t0;
+                        if(map[x + t0][y] != -1)break;
+                        t0++;
+                    }
+
+                    // 向上扫
+                    t0 = 1;
+                    do
+                    {
+                        NumMap[x - t0][y][0][0] = val;
+                        NumMap[x - t0][y][0][1] = t0;
+                        t0++;
+                    } while(x - t0 >= 0 && map[x - t0][y] == -1);
+
+
+                }
+            }
+        }
+
 
         return null;
     }

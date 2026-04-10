@@ -57,10 +57,11 @@ public class AppTest
         map += "  5       ";
         map += "   2    0 ";
         map += "        2 ";
-        char[][] Map = new char[MAPX][MAPY];
+        int[][] Map = new int[MAPX][MAPY];
         for (int i = 0; i < MAPX; i++){
             for (int j = 0; j < MAPY; j++) {
-                Map[i][j] = map.charAt(i * MAPY + j);
+                char c = map.charAt(i * MAPY + j);
+                Map[i][j] = (c == ' ') ? -1 : (c-'0');
             }
         }
 
@@ -91,7 +92,7 @@ public class AppTest
                     TestInput[count][0],TestInput[count][1]
             );
 
-            char[][] mapWithPath = ShowPath(path, Map, MAPX, MAPY);
+            int[][] mapWithPath = ShowPath(path, Map, MAPX, MAPY);
             Clear();
             PrintMap(mapWithPath, MAPX, MAPY);
             PrintPath(path);
@@ -102,9 +103,9 @@ public class AppTest
     }
     // All Pass !!!
 
-    public char[][] ShowPath(ArrayDeque<int[]> path, char[][] map_, int MAPX, int MAPY)
+    public int[][] ShowPath(ArrayDeque<int[]> path, int[][] map_, int MAPX, int MAPY)
     {
-        char[][] temp = new char[MAPX][MAPY];
+        int[][] temp = new int[MAPX][MAPY];
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
                 temp[i][j] = map_[i][j];
@@ -112,7 +113,7 @@ public class AppTest
         }
         for(int[] p : path)
         {
-            temp[p[0]][p[1]] = '#';
+            temp[p[0]][p[1]] = '+';
         }
         return temp;
     }
@@ -131,11 +132,14 @@ public class AppTest
     }
 
     // Use this to Print the rectangle map
-    public void PrintMap(char[][] map_, int MAPX, int MAPY)
+    public void PrintMap(int[][] map_, int MAPX, int MAPY)
     {
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
-                System.out.printf(" %c ", map_[i][j]);
+                int t = map_[i][j];
+                if(t == -1) System.out.printf("    ");
+                else if(t == '+') System.out.printf(" ## ");
+                else System.out.printf(" %-3d", t);
             }
             System.out.println();
         }
