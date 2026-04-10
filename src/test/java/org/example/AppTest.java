@@ -10,9 +10,16 @@ import java.util.ArrayDeque;
 import org.example.Functions.Logics;
 
 
+
 /**
- * Unit test for simple App.
+ * 在这个类中定义的方法命名规则
+ * 以 test 开头（全小写），会被调用并运行
+ * 为了统一，以 _test 开头标记不想被运行的测试程序
+ * 其余名称则只是普通成员方法，可以被 test 命名的方法调用
+ *
  */
+
+
 public class AppTest 
     extends TestCase
 {
@@ -37,7 +44,7 @@ public class AppTest
     /**
      * Rigourous Test :-)
      */
-    public void testApp()
+    public void _testApp()
     {
         assertTrue( true );
     }
@@ -53,7 +60,7 @@ public class AppTest
         map += "  8 7  0  ";
         map += " 5     57 ";
         map += " 20    1  ";
-        map += "0514  9   ";
+        map += "0514  91  ";
         map += "  5       ";
         map += "   2    0 ";
         map += "        2 ";
@@ -75,7 +82,8 @@ public class AppTest
                 // Column Detect Test
                 {{4, 8}, {3, 4}}, // Two twists (Only this case)
                 // Special
-                {{6, 1}, {7, 2}}
+                {{6, 1}, {7, 2}},
+                {{5, 7}, {6, 7}}
         };
         Logics logics = new Logics();
         Scanner sc = new Scanner(System.in);

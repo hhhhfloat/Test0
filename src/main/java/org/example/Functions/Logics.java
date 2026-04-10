@@ -8,6 +8,13 @@ public class Logics
 {
 
     /*
+    * 整体说明——矩形地图，MAPX-行数，MAPY-列数
+    * 方向 0上 1右 2下 3左
+    * 非负数代表不同种类块
+    * -1是空格
+    * */
+
+    /*
     * 以下一批是基础连连看的逻辑
     * 适用于矩形地图
     * 输入——地图大小，地图本身，选取的点坐标
@@ -224,37 +231,142 @@ public class Logics
         *           跑完这个双层循环，将循环记号 y 更新为 y + k（已经被枚举过了）
         *   转置，按列枚举
         *
+        * 最终为了代码简短，选择了在四元组全部记录完成后再筛选单拐点情形
+        *
         * 你学会了吗？
         * */
 
         int[][][][] NumMap = new int[MAPX][MAPY][4][2];
-        // 因为要储存步数，使用 ASCII码转换记录种类
+
         // 四个方向 0上 1右 2下 3左
-        for (int x = 0; x < MAPX; x++) {
-            for (int y = 0; y < MAPY; y++) {
-                if(map[x][y] != -1)
+        int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+
+        // 扫描四元组以及直线
+        // 按非零格枚举，直接四个方向都一起
+        for (int x = 0; x < MAPX; x++)
+        {
+            for (int y = 0; y < MAPY; y++)
+            {
+                if(map[x][y] != -1) // 仅枚举非零格
                 {
                     int val = map[x][y];
-                    // 向下扫
-                    int t0 = 1;
-                    while(x + t0 < MAPX) // 先增加再判断
+                    for(int i = 0;i<4;i++)
                     {
-                        NumMap[x + t0][y][2][0] = val;
-                        NumMap[x + t0][y][2][1] = t0;
-                        if(map[x + t0][y] != -1)break;
-                        t0++;
+                        int t0 = 1;
+                        int dx = dir[i][0], dy = dir[i][1];
+                        while ((x + t0*dx != MAPX && x + t0*dx != -1) && (y + t0*dy != MAPY && y + t0*dy != -1))
+                        {// 判断下标不在地图外
+                            NumMap[x + t0*dx][y + t0*dy][(i+2)%4][0] = val;
+                            NumMap[x + t0*dx][y + t0*dy][(i+2)%4][1] = t0;
+                            // 走到终点
+                            if(map[x + t0*dx][y + t0*dy] != -1)
+                            {
+                                // 检测直线
+                                if(map[x + t0*dx][y + t0*dy] == val)
+                                    return new int[][] {{x+t0*dx, y+t0*dy}, {x, y}};
+                                break;
+                            }
+                            t0++;
+                        }
                     }
+                }
+            }
+        }
+        // 理论上此时我们有一个完整的数据地图NumMap[][][4][2]，外周尚未给与特殊照顾
+        for (int i = 0; i < MAPY; i++) {
+            NumMap[0][i][0][0] = -1;
+            NumMap[MAPX-1][i][2][0] = -1;
+        }
+        for (int i = 0; i < MAPX; i++) {
+            NumMap[i][0][3][0] = -1;
+            NumMap[i][MAPY-1][1][0] = -1;
+        }
 
-                    // 向上扫
-                    t0 = 1;
-                    do
-                    {
-                        NumMap[x - t0][y][0][0] = val;
-                        NumMap[x - t0][y][0][1] = t0;
-                        t0++;
-                    } while(x - t0 >= 0 && map[x - t0][y] == -1);
+        // 单拐点分析
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
+                if(map[x][y] == -1) // 仅看空格
+                {
+                    for (int i = 0; i < 4; i++) {
+                        int dx = dir[i][0], dy = dir[i][1];
+                        int val = NumMap[x][y][i][0];
+                        if(val!=-1 && val == NumMap[x][y][(i+1)%4][0]) {
+                            return new int[][]
+                            {
+                                {x + dx * NumMap[x][y][i][1], y + dy * NumMap[x][y][i][1]},
+                                {x + dx * NumMap[x][y][(i + 1)%4][1], y + dy * NumMap[x][y][(i + 1)%4][1]}
+                            };
+                        }
+                    }
+                }
+            }
+        }
 
+        // 双拐点分析
 
+        int[][] ans1 = RowFindPath(MAPX,MAPY,map,NumMap);
+        int[][] ans2;
+        if(ans1 == null)
+        {
+            ans2 = Tsp(RowFindPath(MAPY,MAPX,Tsp(map,MAPX,MAPY),Tsp(MAPX,MAPY,NumMap)));
+            return ans2;
+        }
+        else return ans1;
+    }
+    // NumMap用的转置函数
+    public int[][][][] Tsp(int MAPX, int MAPY, int[][][][] NumMap)
+    {
+        int[][][][] nt = new int[MAPY][MAPX][4][2];
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
+                for (int k = 0; k < 4; k++) {
+                    nt[j][i][3-k][0] = nt[i][j][k][0];
+                    nt[j][i][3-k][1] = nt[i][j][k][1];
+                }
+            }
+        }
+        return nt;
+    }
+    // ans 用的转置函数
+    public int[][] Tsp(int[][] ans)
+    {
+        return new int[][]{{ans[0][1],ans[0][0]},{ans[1][1],ans[1][0]}};
+    }
+    // 双拐点横向检测
+    public int[][] RowFindPath(int MAPX, int MAPY, int[][]map, int[][][][] NumMap)
+    {
+        /*
+        * Part3——双拐点筛选
+         *   先按行枚举
+         *       从左到右枚举空格：
+         *           枚举到一个空格，开启一个双层循环，以右侧步数(k)为最大值，枚举 0 ≤ i<j ≤ k-1 。（k等于1直接跳过）
+         *               如果有侧边（侧边！）有相同数字的对，就说明找到了
+         *           跑完这个双层循环，将循环记号 y 更新为 y + k（已经被枚举过了）
+         *   转置，按列枚举
+        * */
+        int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+
+        for (int x = 0; x <MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
+                if(map[x][y] == -1 && NumMap[x][y][1][0] >= 2)
+                {
+                    int k = NumMap[x][y][1][0];
+                    for (int i = 0; i < k - 1; i++) {
+                        for (int j = i+1; j < k; j++) {
+                            int[] mmm = {0,2};
+                            for(int z : mmm) {
+                                for(int w:mmm) {
+                                    if(NumMap[x][y+i][z][0] == NumMap[x][y+j][w][0]){
+                                        return new int[][]
+                                        {
+                                                {x + dir[z][0]*NumMap[x][y+i][z][1], y + i},
+                                                {x + dir[w][0]*NumMap[x][y+j][w][1], y + j}
+                                        };
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -262,7 +374,4 @@ public class Logics
 
         return null;
     }
-
-
-
 }
