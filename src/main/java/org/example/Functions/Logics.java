@@ -3,7 +3,8 @@ package org.example.Functions;
 import java.util.ArrayDeque;
 
 
-public class Logics {
+public class Logics
+{
 
     /*
     * 一下一批是基础连连看的逻辑
