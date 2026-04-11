@@ -388,4 +388,13 @@ public class Logics
 
         return null;
     }
+
+    /*
+    * 自动解题
+    * */
+    public void AutoSolve(int MAPX, int MAPY, int[][] Map)
+    {
+
+    }
+
 }
