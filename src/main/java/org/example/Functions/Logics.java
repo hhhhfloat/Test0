@@ -19,12 +19,25 @@ public class Logics
     * 适用于矩形地图
     * 输入——地图大小，地图本身，选取的点坐标
     * 允许不合法点，会返回不合法值
-    * Case1 -- 点不在地图上/选择同一个点/选择不同类型的点 -- 返回路径唯一点 (-1, -1)
+    * Case1 -- 点不在地图上/选择同一个点/选择不同类型的点/选了空格 -- 返回路径唯一点 (-1, -1)
     * Case2 -- 不存在合法路径 -- 返回空路径（已初始化，不是null）
     * Case3 -- 有合法路径 -- 返回完整路径的点坐标列表（顺序）
     */
     public ArrayDeque<int[]> Linky(int MAPX, int MAPY, int[][] map_, int[] p1, int[] p2)
     {
+        // 不合法点排除
+        if(
+                (map_[p1[0]][p1[1]] != map_[p2[0]][p2[1]]) // 选了不同数字的点
+                || (map_[p1[0]][p1[1]]==-1 || map_[p2[0]][p2[1]] == -1) // 选了空格
+                || (p1[0] == p2[0] && p1[1] == p2[1]) // 选了同一个点
+                || (p1[0]<0 || p2[0]<0 || p1[0]>=MAPX || p2[0]>=MAPX || p1[1]<0 || p2[1]<0 || p1[1]>MAPY || p2[1]>MAPY) // 超出地图范围
+
+        )
+        {
+            ArrayDeque<int[]>path = new ArrayDeque<>();
+            path.addLast(new int[]{-1, -1});
+            return path;
+        }
         // 先检测直线
         ArrayDeque<int[]> path = StraightPathDetect(MAPX, MAPY, map_, p1, p2);
 
@@ -350,10 +363,11 @@ public class Logics
             for (int y = 0; y < MAPY; y++) {
                 if(map[x][y] == -1 && NumMap[x][y][1][0] >= 2)
                 {
-                    int k = NumMap[x][y][1][0];
+                    // 取右侧还有空格的空格
+                    int k = NumMap[x][y][1][0]; // 枚举步数内的所有空格对
                     for (int i = 0; i < k - 1; i++) {
                         for (int j = i+1; j < k; j++) {
-                            int[] mmm = {0,2};
+                            int[] mmm = {0,2}; // 枚举空格对中每一个的上/下数字
                             for(int z : mmm) {
                                 for(int w:mmm) {
                                     if(NumMap[x][y+i][z][0] == NumMap[x][y+j][w][0]){

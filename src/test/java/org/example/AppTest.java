@@ -51,7 +51,7 @@ public class AppTest
 
     // Test the Logics.Linky
     // Test Functions have to be named after "test", like "testABC"
-    public void testLinkyLogic() throws InterruptedException {
+    public void _testLinkyLogic() throws InterruptedException {
         int MAPX = 10, MAPY = 10;
         String map = "";
         map += " 2 642 8  ";
@@ -99,17 +99,27 @@ public class AppTest
                     MAPX, MAPY, Map,
                     TestInput[count][0],TestInput[count][1]
             );
+            if(!path.isEmpty() && path.peek()[0] == -1){
+                System.out.println("   INVALID INPUT   ");
+            }
+            else if(path.isEmpty())
+            {
+                System.out.println("   IMPOSSIBLE CONNECTION   ");
+            }
+            else {
+                int[][] mapWithPath = ShowPath(path, Map, MAPX, MAPY);
+                Clear();
+                Map[TestInput[count][0][0]][TestInput[count][0][1]] = -1;
+                Map[TestInput[count][1][0]][TestInput[count][1][1]] = -1;
+                PrintMap(mapWithPath, MAPX, MAPY);
+                PrintPath(path);
 
-            int[][] mapWithPath = ShowPath(path, Map, MAPX, MAPY);
-            Clear();
-            PrintMap(mapWithPath, MAPX, MAPY);
-            PrintPath(path);
+            }
             Sleep(3000);
-            count ++ ;
+            count++;
         }
 
     }
-    // All Pass !!!
 
     public int[][] ShowPath(ArrayDeque<int[]> path, int[][] map_, int MAPX, int MAPY)
     {
@@ -121,7 +131,7 @@ public class AppTest
         }
         for(int[] p : path)
         {
-            temp[p[0]][p[1]] = '+';
+            temp[p[0]][p[1]] = '#';
         }
         return temp;
     }
@@ -131,7 +141,7 @@ public class AppTest
         Thread.sleep(MiliS);
     }
 
-    // Use this to (pretend to) clear the output
+     // Use this to (pretend to) clear the output
     public void Clear()
     {
         for (int i = 0; i < 100; i++) {
@@ -145,8 +155,8 @@ public class AppTest
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
                 int t = map_[i][j];
-                if(t == -1) System.out.printf("    ");
-                else if(t == '+') System.out.printf(" ## ");
+                if(t == -1) System.out.print("    ");
+                else if(t == '#') System.out.print(" ## ");
                 else System.out.printf(" %-3d", t);
             }
             System.out.println();
@@ -162,4 +172,22 @@ public class AppTest
         }
         System.out.println();
     }
+
+    /*
+    * 随机生成盘面
+    * */
+    public void _testRandMap()
+    {
+
+    }
+
+    /*
+    * 自动解题
+    * */
+    public void _testAutoSolve()
+    {
+
+    }
+
+
 }
