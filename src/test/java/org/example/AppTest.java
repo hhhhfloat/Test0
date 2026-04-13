@@ -86,7 +86,6 @@ public class AppTest
                 {{5, 7}, {6, 7}}
         };
         Logics logics = new Logics();
-        Scanner sc = new Scanner(System.in);
         int count = 0;
         int TestNumber = TestInput.length;
         while(count < TestNumber) // Run for TestNumber Times
@@ -125,9 +124,7 @@ public class AppTest
     {
         int[][] temp = new int[MAPX][MAPY];
         for (int i = 0; i < MAPX; i++) {
-            for (int j = 0; j < MAPY; j++) {
-                temp[i][j] = map_[i][j];
-            }
+            System.arraycopy(map_[i], 0, temp[i], 0, MAPY);
         }
         for(int[] p : path)
         {
@@ -178,15 +175,90 @@ public class AppTest
     * */
     public void _testRandMap()
     {
-
     }
 
     /*
     * 自动解题
     * */
-    public void _testAutoSolve()
+    public void testAutoSolve() throws InterruptedException
+    {
+        int MAPX = 10, MAPY = 10;
+        String map = "";
+        map += " 2 642 8  ";
+        map += "   9   6 2";
+        map += " 2     2  ";
+        map += "  8 7  0  ";
+        map += " 5     57 ";
+        map += " 20    1  ";
+        map += "0514  91  ";
+        map += "  5       ";
+        map += "   2    0 ";
+        map += "     1  2 ";
+        int[][] Map = new int[MAPX][MAPY];
+        for (int i = 0; i < MAPX; i++){
+            for (int j = 0; j < MAPY; j++) {
+                char c = map.charAt(i * MAPY + j);
+                Map[i][j] = (c == ' ') ? -1 : (c-'0');
+            }
+        }
+
+        Logics logics = new Logics();
+
+        while(!isComplete(MAPX, MAPY, Map))
+        {
+            Clear();
+            PrintMap(Map, MAPX, MAPY);
+            Sleep(1000);
+
+            // 自动找到一个路径
+            int[][] wayPoint = logics.HintSolution(MAPX, MAPY, Map);
+            int[]p1 = wayPoint[0];
+            int[]p2 = wayPoint[1];
+            PrintANS(wayPoint);
+            Sleep(3000);
+            if(p1[0] == -1)
+            {
+                System.out.println("没有路径！");
+                break;
+            }
+            else
+            {
+
+                ArrayDeque<int[]> path = logics.Linky(MAPX, MAPY, Map, p1, p2);
+                int[][] mapWithPath = ShowPath(path, Map, MAPX, MAPY);
+                Clear();
+
+                Map[p1[0]][p1[1]] = -1;
+                Map[p2[0]][p2[1]] = -1;
+                PrintMap(mapWithPath, MAPX, MAPY);
+                PrintPath(path);
+
+            }
+
+            Sleep(3000);
+        }
+
+    }
+
+    // 检测完成的方法
+    public boolean isComplete(int MAPX, int MAPY , int[][] map_)
     {
 
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
+                if(map_[i][j] != -1)return false;
+            }
+        }
+        return true;
+    }
+
+    // 输出路径点
+    public void PrintANS(int[][] p)
+    {
+        for (int i = 0; i < 2; i++) {
+            System.out.printf("(%d, %d) ",p[i][0], p[i][1]);
+        }
+        System.out.println();
     }
 
 

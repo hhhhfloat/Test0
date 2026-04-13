@@ -27,13 +27,13 @@ public class Logics
     {
         // 不合法点排除
         if(
-                (map_[p1[0]][p1[1]] != map_[p2[0]][p2[1]]) // 选了不同数字的点
+                (p1[0]<0 || p2[0]<0 || p1[0]>=MAPX || p2[0]>=MAPX || p1[1]<0 || p2[1]<0 || p1[1]>=MAPY || p2[1]>=MAPY) // 超出地图范围
+                ||(map_[p1[0]][p1[1]] != map_[p2[0]][p2[1]]) // 选了不同数字的点
                 || (map_[p1[0]][p1[1]]==-1 || map_[p2[0]][p2[1]] == -1) // 选了空格
                 || (p1[0] == p2[0] && p1[1] == p2[1]) // 选了同一个点
-                || (p1[0]<0 || p2[0]<0 || p1[0]>=MAPX || p2[0]>=MAPX || p1[1]<0 || p2[1]<0 || p1[1]>MAPY || p2[1]>MAPY) // 超出地图范围
-
         )
         {
+            // 输入不合法，传出“不合法”消息
             ArrayDeque<int[]>path = new ArrayDeque<>();
             path.addLast(new int[]{-1, -1});
             return path;
@@ -286,14 +286,56 @@ public class Logics
             }
         }
         // 理论上此时我们有一个完整的数据地图NumMap[][][4][2]，外周尚未给与特殊照顾
+        // 需要从边缘上的空格向内扫出一些不可用的值 (用-1标记)
+
         for (int i = 0; i < MAPY; i++) {
-            NumMap[0][i][0][0] = -1;
-            NumMap[MAPX-1][i][2][0] = -1;
+            // 顶行
+            if(map[0][i] == -1)
+            {
+                int t0 = 0;
+                while (t0 != MAPX)
+                {// 判断下标不在地图外
+                    NumMap[t0][i][0][0] = -1;
+                    // 走到终点
+                    if(map[t0][i] != -1)break;
+
+                    t0++;
+                }
+            }
+            // 底行
+            if(map[MAPX-1][i] == -1)
+            {
+                int t0 = MAPX - 1;
+                while(t0 != -1) {
+                    NumMap[t0][i][2][0] = -1;
+                    if(map[t0][i] != -1)break;
+                    t0--;
+                }
+            }
+            // 左列
+            if(map[i][0] == -1)
+            {
+                int t0 = 0;
+                while (t0 != MAPX)
+                {// 判断下标不在地图外
+                    NumMap[i][t0][3][0] = -1;
+                    // 走到终点
+                    if(map[i][t0] != -1)break;
+                    t0++;
+                }
+            }
+            // 右列
+            if(map[i][MAPX-1] == -1)
+            {
+                int t0 = MAPX - 1;
+                while(t0 != -1) {
+                    NumMap[i][t0][1][0] = -1;
+                    if(map[i][t0] != -1)break;
+                    t0--;
+                }
+            }
         }
-        for (int i = 0; i < MAPX; i++) {
-            NumMap[i][0][3][0] = -1;
-            NumMap[i][MAPY-1][1][0] = -1;
-        }
+
 
         // 单拐点分析
         for (int x = 0; x < MAPX; x++) {
@@ -301,14 +343,15 @@ public class Logics
                 if(map[x][y] == -1) // 仅看空格
                 {
                     for (int i = 0; i < 4; i++) {
-                        int dx = dir[i][0], dy = dir[i][1];
                         int val = NumMap[x][y][i][0];
                         if(val!=-1 && val == NumMap[x][y][(i+1)%4][0]) {
-                            return new int[][]
-                            {
-                                {x + dx * NumMap[x][y][i][1], y + dy * NumMap[x][y][i][1]},
-                                {x + dx * NumMap[x][y][(i + 1)%4][1], y + dy * NumMap[x][y][(i + 1)%4][1]}
+                            System.out.printf("(%d, %d) ",x, y);
+                            int[][] wayP = {
+                                    {x + dir[i][0] * NumMap[x][y][i][1], y + dir[i][1] * NumMap[x][y][i][1]},
+                                    {x + dir[(i + 1)%4][0] * NumMap[x][y][(i + 1)%4][1], y + dir[(i + 1)%4][1] * NumMap[x][y][(i + 1)%4][1]}
                             };
+                            return wayP;
+
                         }
                     }
                 }
@@ -319,13 +362,14 @@ public class Logics
 
         int[][] ans1 = RowFindPath(MAPX,MAPY,map,NumMap);
         int[][] ans2;
-        if(ans1 == null)
+        if(ans1[0][0] == -1)
         {
             ans2 = Tsp(RowFindPath(MAPY,MAPX,Tsp(map,MAPX,MAPY),Tsp(MAPX,MAPY,NumMap)));
             return ans2;
         }
         else return ans1;
     }
+
     // NumMap用的转置函数
     public int[][][][] Tsp(int MAPX, int MAPY, int[][][][] NumMap)
     {
@@ -364,13 +408,13 @@ public class Logics
                 if(map[x][y] == -1 && NumMap[x][y][1][0] >= 2)
                 {
                     // 取右侧还有空格的空格
-                    int k = NumMap[x][y][1][0]; // 枚举步数内的所有空格对
+                    int k = NumMap[x][y][1][1]; // 枚举步数内的所有空格对
                     for (int i = 0; i < k - 1; i++) {
                         for (int j = i+1; j < k; j++) {
                             int[] mmm = {0,2}; // 枚举空格对中每一个的上/下数字
                             for(int z : mmm) {
                                 for(int w:mmm) {
-                                    if(NumMap[x][y+i][z][0] == NumMap[x][y+j][w][0]){
+                                    if(NumMap[x][y+i][z][0] != -1 && NumMap[x][y+i][z][0] == NumMap[x][y+j][w][0]){
                                         return new int[][]
                                         {
                                                 {x + dir[z][0]*NumMap[x][y+i][z][1], y + i},
@@ -386,7 +430,7 @@ public class Logics
         }
 
 
-        return null;
+        return new int[][]{{-1,0},{0,0}};
     }
 
     /*
