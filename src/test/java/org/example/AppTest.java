@@ -184,16 +184,16 @@ public class AppTest
     {
         int MAPX = 10, MAPY = 10;
         String map = "";
-        map += " 2 642 8  ";
-        map += "   9   6 2";
-        map += " 2     2  ";
-        map += "  8 7  0  ";
-        map += " 5     57 ";
-        map += " 20    1  ";
-        map += "0514  91  ";
-        map += "  5       ";
-        map += "   2    0 ";
-        map += "     1  2 ";
+        map += "54321     ";
+        map += "98765     ";
+        map += "54321     ";
+        map += "05678     ";
+        map += "12987     ";
+        map += "          ";
+        map += "          ";
+        map += "          ";
+        map += "          ";
+        map += "          ";
         int[][] Map = new int[MAPX][MAPY];
         for (int i = 0; i < MAPX; i++){
             for (int j = 0; j < MAPY; j++) {

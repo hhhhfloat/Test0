@@ -1,8 +1,9 @@
 package org.example.Functions;
 
-import java.text.spi.NumberFormatProvider;
+import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 
+// 改进后可以部分代替原来路径搜索函数
 
 public class Logics
 {
@@ -222,7 +223,7 @@ public class Logics
     * 使用了与连连看消去路径搜索不一样的逻辑
     * 适用矩形地图
     * */
-    public int[][] HintSolution(int MAPX, int MAPY, int[][] map)
+    public ArrayDeque<int[]> HintSolution(int MAPX, int MAPY, int[][] map)
     {
         // 最高效的搜索方式是什么？
         /*
@@ -276,7 +277,14 @@ public class Logics
                             {
                                 // 检测直线
                                 if(map[x + t0*dx][y + t0*dy] == val)
-                                    return new int[][] {{x+t0*dx, y+t0*dy}, {x, y}};
+                                {
+                                    ArrayDeque<int[]> path = new ArrayDeque<>();
+                                    for(int z = 0; z <= t0; z++)
+                                    {
+                                        path.addLast(new int[]{x + z*dx, y+z*dy});
+                                    }
+                                    return path;
+                                }
                                 break;
                             }
                             t0++;
@@ -345,12 +353,21 @@ public class Logics
                     for (int i = 0; i < 4; i++) {
                         int val = NumMap[x][y][i][0];
                         if(val!=-1 && val == NumMap[x][y][(i+1)%4][0]) {
-                            System.out.printf("(%d, %d) ",x, y);
-                            int[][] wayP = {
-                                    {x + dir[i][0] * NumMap[x][y][i][1], y + dir[i][1] * NumMap[x][y][i][1]},
-                                    {x + dir[(i + 1)%4][0] * NumMap[x][y][(i + 1)%4][1], y + dir[(i + 1)%4][1] * NumMap[x][y][(i + 1)%4][1]}
-                            };
-                            return wayP;
+                            ArrayDeque<int[]> path = new ArrayDeque<>();
+
+                            int k1 = NumMap[x][y][i][1], k2 = NumMap[x][y][(i+1)%4][1]; // 记录两个方向的步数
+                            for(int z = 0; z <= k1; z++)
+                            {
+                                path.addFirst(new int[]{x + dir[i][0] * z, y + dir[i][1] * z});
+                            }
+                            // 更新方向
+                            i = (i+1)%4;
+                            for(int z = 1; z <= k2; z++)
+                            {
+                                path.addFirst(new int[]{x + dir[i][0] * z, y + dir[i][1] * z});
+                            }
+
+                            return path;
 
                         }
                     }
@@ -360,11 +377,10 @@ public class Logics
 
         // 双拐点分析
 
-        int[][] ans1 = RowFindPath(MAPX,MAPY,map,NumMap);
-        int[][] ans2;
-        if(ans1[0][0] == -1)
+        ArrayDeque<int[]> ans1 = RowFindPath(MAPX,MAPY,map,NumMap);
+        if(ans1.isEmpty())
         {
-            ans2 = Tsp(RowFindPath(MAPY,MAPX,Tsp(map,MAPX,MAPY),Tsp(MAPX,MAPY,NumMap)));
+            ArrayDeque<int[]> ans2 = Tsp(RowFindPath(MAPY,MAPX,Tsp(map,MAPX,MAPY),Tsp(MAPX,MAPY,NumMap)));
             return ans2;
         }
         else return ans1;
@@ -390,7 +406,7 @@ public class Logics
         return new int[][]{{ans[0][1],ans[0][0]},{ans[1][1],ans[1][0]}};
     }
     // 双拐点横向检测
-    public int[][] RowFindPath(int MAPX, int MAPY, int[][]map, int[][][][] NumMap)
+    public ArrayDeque<int[]> RowFindPath(int MAPX, int MAPY, int[][]map, int[][][][] NumMap)
     {
         /*
         * Part3——双拐点筛选
@@ -403,9 +419,10 @@ public class Logics
         * */
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
+        ArrayDeque<int[]> path = new ArrayDeque<>();
         for (int x = 0; x <MAPX; x++) {
             for (int y = 0; y < MAPY; y++) {
-                if(map[x][y] == -1 && NumMap[x][y][1][0] >= 2)
+                if(map[x][y] == -1 && NumMap[x][y][1][1] >= 2)
                 {
                     // 取右侧还有空格的空格
                     int k = NumMap[x][y][1][1]; // 枚举步数内的所有空格对
@@ -415,30 +432,40 @@ public class Logics
                             for(int z : mmm) {
                                 for(int w:mmm) {
                                     if(NumMap[x][y+i][z][0] != -1 && NumMap[x][y+i][z][0] == NumMap[x][y+j][w][0]){
-                                        return new int[][]
+                                        // 先加中间
+                                        for(int poi = i; poi <= j; poi++){
+                                            path.addLast(new int[]{x,y+poi});
+                                        }
+                                        // i一侧
+                                        for(int poi = x; poi <= NumMap[x][y+i][z][1]; poi += dir[z][0])
                                         {
-                                                {x + dir[z][0]*NumMap[x][y+i][z][1], y + i},
-                                                {x + dir[w][0]*NumMap[x][y+j][w][1], y + j}
-                                        };
+                                            path.addFirst(new int[]{poi, y+i});
+                                        }
+                                        // j一侧
+                                        for(int poi = x; poi <= NumMap[x][y+j][w][1]; poi += dir[w][0])
+                                        {
+                                            path.addLast(new int[]{poi, y+j});
+                                        }
+                                        return path;
+//                                        return new int[][]
+//                                        {
+//                                                {x + dir[z][0]*NumMap[x][y+i][z][1], y + i},
+//                                                {x + dir[w][0]*NumMap[x][y+j][w][1], y + j}
+//                                        };
                                     }
                                 }
                             }
                         }
                     }
+                    y+=k;
                 }
             }
         }
 
 
-        return new int[][]{{-1,0},{0,0}};
+        return path;
     }
 
-    /*
-    * 自动解题
-    * */
-    public void AutoSolve(int MAPX, int MAPY, int[][] Map)
-    {
 
-    }
 
 }
