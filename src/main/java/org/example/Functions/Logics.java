@@ -14,7 +14,7 @@ public class Logics
     * -1是空格
     * */
 
-    /*ffff
+    /*这里aaaaaaaaaaaaaaaaa
     * 以下一批是基础连连看的逻辑
     * 适用于矩形地图
     * 输入——地图大小，地图本身，选取的点坐标
