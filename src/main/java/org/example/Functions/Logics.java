@@ -2,6 +2,7 @@ package org.example.Functions;
 
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 
 // 改进后可以部分代替原来路径搜索函数
 
@@ -222,6 +223,7 @@ public class Logics
     * 仅仅适用原版连连看（虽然原版不可能没有）
     * 使用了与连连看消去路径搜索不一样的逻辑
     * 适用矩形地图
+    * 并未进行程序整体构造的优化
     * */
     public ArrayDeque<int[]> HintSolution(int MAPX, int MAPY, int[][] map)
     {
@@ -265,7 +267,7 @@ public class Logics
                 {
                     int val = map[x][y];
                     for(int i = 0;i<4;i++)
-                    {
+                    {// 枚举四个方向
                         int t0 = 1;
                         int dx = dir[i][0], dy = dir[i][1];
                         while ((x + t0*dx != MAPX && x + t0*dx != -1) && (y + t0*dy != MAPY && y + t0*dy != -1))
@@ -279,6 +281,7 @@ public class Logics
                                 if(map[x + t0*dx][y + t0*dy] == val)
                                 {
                                     ArrayDeque<int[]> path = new ArrayDeque<>();
+                                    System.out.println("发现直线");
                                     for(int z = 0; z <= t0; z++)
                                     {
                                         path.addLast(new int[]{x + z*dx, y+z*dy});
@@ -294,7 +297,7 @@ public class Logics
             }
         }
         // 理论上此时我们有一个完整的数据地图NumMap[][][4][2]，外周尚未给与特殊照顾
-        // 需要从边缘上的空格向内扫出一些不可用的值 (用-1标记)
+        // 需要从边缘上的空格向内扫出一些不可用的值 (用-1标记，但长度仍要记！！！)
 
         for (int i = 0; i < MAPY; i++) {
             // 顶行
@@ -304,6 +307,7 @@ public class Logics
                 while (t0 != MAPX)
                 {// 判断下标不在地图外
                     NumMap[t0][i][0][0] = -1;
+                    NumMap[t0][i][0][1] = t0 + 1;
                     // 走到终点
                     if(map[t0][i] != -1)break;
 
@@ -316,6 +320,7 @@ public class Logics
                 int t0 = MAPX - 1;
                 while(t0 != -1) {
                     NumMap[t0][i][2][0] = -1;
+                    NumMap[t0][i][2][1] = MAPX - t0;
                     if(map[t0][i] != -1)break;
                     t0--;
                 }
@@ -327,6 +332,7 @@ public class Logics
                 while (t0 != MAPX)
                 {// 判断下标不在地图外
                     NumMap[i][t0][3][0] = -1;
+                    NumMap[i][t0][3][1] = t0 + 1;
                     // 走到终点
                     if(map[i][t0] != -1)break;
                     t0++;
@@ -335,14 +341,18 @@ public class Logics
             // 右列
             if(map[i][MAPX-1] == -1)
             {
-                int t0 = MAPX - 1;
+                int t0 = MAPY - 1;
                 while(t0 != -1) {
                     NumMap[i][t0][1][0] = -1;
+                    NumMap[i][t0][1][1] = MAPY - t0;
                     if(map[i][t0] != -1)break;
                     t0--;
                 }
             }
         }
+
+
+
 
 
         // 单拐点分析
@@ -354,7 +364,7 @@ public class Logics
                         int val = NumMap[x][y][i][0];
                         if(val!=-1 && val == NumMap[x][y][(i+1)%4][0]) {
                             ArrayDeque<int[]> path = new ArrayDeque<>();
-
+                            System.out.println("发现单拐点");
                             int k1 = NumMap[x][y][i][1], k2 = NumMap[x][y][(i+1)%4][1]; // 记录两个方向的步数
                             for(int z = 0; z <= k1; z++)
                             {
@@ -364,7 +374,7 @@ public class Logics
                             i = (i+1)%4;
                             for(int z = 1; z <= k2; z++)
                             {
-                                path.addFirst(new int[]{x + dir[i][0] * z, y + dir[i][1] * z});
+                                path.addLast(new int[]{x + dir[i][0] * z, y + dir[i][1] * z});
                             }
 
                             return path;
@@ -380,8 +390,7 @@ public class Logics
         ArrayDeque<int[]> ans1 = RowFindPath(MAPX,MAPY,map,NumMap);
         if(ans1.isEmpty())
         {
-            ArrayDeque<int[]> ans2 = Tsp(RowFindPath(MAPY,MAPX,Tsp(map,MAPX,MAPY),Tsp(MAPX,MAPY,NumMap)));
-            return ans2;
+            return Tsp(RowFindPath(MAPY,MAPX,Tsp(map,MAPX,MAPY),Tsp(MAPX,MAPY,NumMap)));
         }
         else return ans1;
     }
@@ -393,8 +402,8 @@ public class Logics
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
                 for (int k = 0; k < 4; k++) {
-                    nt[j][i][3-k][0] = nt[i][j][k][0];
-                    nt[j][i][3-k][1] = nt[i][j][k][1];
+                    nt[j][i][3-k][0] = NumMap[i][j][k][0];
+                    nt[j][i][3-k][1] = NumMap[i][j][k][1];
                 }
             }
         }
@@ -420,6 +429,8 @@ public class Logics
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
         ArrayDeque<int[]> path = new ArrayDeque<>();
+        System.out.println(Arrays.deepToString(NumMap[0][5]));
+        System.out.println(Arrays.deepToString(NumMap[2][5]));
         for (int x = 0; x <MAPX; x++) {
             for (int y = 0; y < MAPY; y++) {
                 if(map[x][y] == -1 && NumMap[x][y][1][1] >= 2)
@@ -437,14 +448,14 @@ public class Logics
                                             path.addLast(new int[]{x,y+poi});
                                         }
                                         // i一侧
-                                        for(int poi = x; poi <= NumMap[x][y+i][z][1]; poi += dir[z][0])
+                                        for(int poi = 1; poi <= NumMap[x][y+i][z][1]; poi ++)
                                         {
-                                            path.addFirst(new int[]{poi, y+i});
+                                            path.addFirst(new int[]{x+poi*dir[z][0], y+i});
                                         }
                                         // j一侧
-                                        for(int poi = x; poi <= NumMap[x][y+j][w][1]; poi += dir[w][0])
+                                        for(int poi = 1; poi <= NumMap[x][y+j][w][1]; poi ++)
                                         {
-                                            path.addLast(new int[]{poi, y+j});
+                                            path.addLast(new int[]{x+poi*dir[w][0], y+j});
                                         }
                                         return path;
 //                                        return new int[][]
@@ -464,6 +475,15 @@ public class Logics
 
 
         return path;
+    }
+    // Use this to Print the path
+    public void PrintPath(ArrayDeque<int[]> path)
+    {
+        for(int[] p : path)
+        {
+            System.out.printf("(%d, %d) ", p[0], p[1]);
+        }
+        System.out.println();
     }
 
 

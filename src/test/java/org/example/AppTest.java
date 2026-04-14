@@ -141,7 +141,7 @@ public class AppTest
      // Use this to (pretend to) clear the output
     public void Clear()
     {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 15; i++) {
             System.out.println();
         }
     }
@@ -171,29 +171,33 @@ public class AppTest
     }
 
     /*
-    * 随机生成盘面
+    * 随机生成盘面，搭配shuffle食用
     * */
-    public void _testRandMap()
+    public int[][] RandMap(int MAPX, int MAPY)
     {
+        int[][] map = new int[MAPX][MAPY];
+        return map;
     }
+    /*
+    * shuffle 打乱函数
+    * */
+
+
 
     /*
     * 自动解题
     * */
     public void testAutoSolve() throws InterruptedException
     {
-        int MAPX = 10, MAPY = 10;
+        int MAPX = 6, MAPY = 6;
         String map = "";
-        map += "54321     ";
-        map += "98765     ";
-        map += "54321     ";
-        map += "05678     ";
-        map += "12987     ";
-        map += "          ";
-        map += "          ";
-        map += "          ";
-        map += "          ";
-        map += "          ";
+        map += "54321 ";
+        map += "98765 ";
+        map += "54321 ";
+        map += "056787";
+        map += "129270";
+        map += "5   51";
+//
         int[][] Map = new int[MAPX][MAPY];
         for (int i = 0; i < MAPX; i++){
             for (int j = 0; j < MAPY; j++) {
@@ -211,20 +215,18 @@ public class AppTest
             Sleep(1000);
 
             // 自动找到一个路径
-            int[][] wayPoint = logics.HintSolution(MAPX, MAPY, Map);
-            int[]p1 = wayPoint[0];
-            int[]p2 = wayPoint[1];
-            PrintANS(wayPoint);
-            Sleep(3000);
-            if(p1[0] == -1)
+            ArrayDeque<int[]> path = logics.HintSolution(MAPX, MAPY, Map);
+
+            Sleep(2000);
+            if(path.isEmpty())
             {
                 System.out.println("没有路径！");
                 break;
             }
             else
             {
-
-                ArrayDeque<int[]> path = logics.Linky(MAPX, MAPY, Map, p1, p2);
+                int[]p1 = path.peek();
+                int[]p2 = path.getLast();
                 int[][] mapWithPath = ShowPath(path, Map, MAPX, MAPY);
                 Clear();
 
@@ -235,7 +237,7 @@ public class AppTest
 
             }
 
-            Sleep(3000);
+            Sleep(2000);
         }
 
     }
@@ -253,12 +255,9 @@ public class AppTest
     }
 
     // 输出路径点
-    public void PrintANS(int[][] p)
+    public void PrintPOINT(int[] p)
     {
-        for (int i = 0; i < 2; i++) {
-            System.out.printf("(%d, %d) ",p[i][0], p[i][1]);
-        }
-        System.out.println();
+        System.out.printf("(%d, %d) \n",p[0], p[1]);
     }
 
 
