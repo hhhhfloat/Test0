@@ -11,11 +11,11 @@
   <url>http://maven.apache.org</url>
 
   <properties>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.source>24</maven.compiler.source>
+    <maven.compiler.target>24</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- 指定 JavaFX 版本，建议使用与 JDK 兼容的版本，JDK 21 对应 JavaFX 21 -->
-    <javafx.version>21.0.2</javafx.version>
+    <javafx.version>26</javafx.version>
   </properties>
 
   <dependencies>
