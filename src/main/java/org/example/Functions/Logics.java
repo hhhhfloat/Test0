@@ -281,7 +281,7 @@ public class Logics
                                 if(map[x + t0*dx][y + t0*dy] == val)
                                 {
                                     ArrayDeque<int[]> path = new ArrayDeque<>();
-                                    System.out.println("发现直线");
+                                    //System.out.println("发现直线");
                                     for(int z = 0; z <= t0; z++)
                                     {
                                         path.addLast(new int[]{x + z*dx, y+z*dy});
@@ -364,7 +364,7 @@ public class Logics
                         int val = NumMap[x][y][i][0];
                         if(val!=-1 && val == NumMap[x][y][(i+1)%4][0]) {
                             ArrayDeque<int[]> path = new ArrayDeque<>();
-                            System.out.println("发现单拐点");
+                            //System.out.println("发现单拐点");
                             int k1 = NumMap[x][y][i][1], k2 = NumMap[x][y][(i+1)%4][1]; // 记录两个方向的步数
                             for(int z = 0; z <= k1; z++)
                             {
@@ -429,8 +429,8 @@ public class Logics
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
         ArrayDeque<int[]> path = new ArrayDeque<>();
-        System.out.println(Arrays.deepToString(NumMap[0][5]));
-        System.out.println(Arrays.deepToString(NumMap[2][5]));
+        //System.out.println(Arrays.deepToString(NumMap[0][5]));
+        //System.out.println(Arrays.deepToString(NumMap[2][5]));
         for (int x = 0; x <MAPX; x++) {
             for (int y = 0; y < MAPY; y++) {
                 if(map[x][y] == -1 && NumMap[x][y][1][1] >= 2)

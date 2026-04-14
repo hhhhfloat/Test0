@@ -211,13 +211,13 @@ public class AppTest
         while(!isComplete(MAPX, MAPY, Map))
         {
             Clear();
-            PrintMap(Map, MAPX, MAPY);
-            Sleep(1000);
+            //PrintMap(Map, MAPX, MAPY);
+            //Sleep(1000);
 
             // 自动找到一个路径
             ArrayDeque<int[]> path = logics.HintSolution(MAPX, MAPY, Map);
 
-            Sleep(2000);
+            //Sleep(2000);
             if(path.isEmpty())
             {
                 System.out.println("没有路径！");
@@ -228,7 +228,7 @@ public class AppTest
                 int[]p1 = path.peek();
                 int[]p2 = path.getLast();
                 int[][] mapWithPath = ShowPath(path, Map, MAPX, MAPY);
-                Clear();
+                //Clear();
 
                 Map[p1[0]][p1[1]] = -1;
                 Map[p2[0]][p2[1]] = -1;
@@ -237,7 +237,7 @@ public class AppTest
 
             }
 
-            Sleep(2000);
+            Sleep(1000);
         }
 
     }
