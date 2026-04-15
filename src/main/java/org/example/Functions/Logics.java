@@ -10,10 +10,11 @@ public class Logics
 {
 
     /*
-    * 整体说明——矩形地图，MAPX-行数，MAPY-列数
-    * 方向 0上 1右 2下 3左
-    * 非负数代表不同种类块
-    * -1是空格
+    * 整体说明——
+    * ——矩形地图，MAPX-行数，MAPY-列数
+    * ——方向 0上 1右 2下 3左
+    * ——非负数代表不同种类块
+    * —— -1是空格
     * */
 
     /*
@@ -25,6 +26,8 @@ public class Logics
     * Case2 -- 不存在合法路径 -- 返回空路径（已初始化，不是null）
     * Case3 -- 有合法路径 -- 返回完整路径的点坐标列表（顺序）
     */
+
+
     public ArrayDeque<int[]> Linky(int MAPX, int MAPY, int[][] map_, int[] p1, int[] p2)
     {
         // 不合法点排除
