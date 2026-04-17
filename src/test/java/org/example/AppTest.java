@@ -4,10 +4,12 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.ArrayDeque;
 
-import org.example.Functions.Logics;
+import org.example.Functions.*;
 
 
 
@@ -170,24 +172,12 @@ public class AppTest
         System.out.println();
     }
 
-    /*
-    * 随机生成盘面，搭配shuffle食用
-    * */
-    public int[][] RandMap(int MAPX, int MAPY)
-    {
-        int[][] map = new int[MAPX][MAPY];
-        return map;
-    }
-    /*
-    * shuffle 打乱函数
-    * */
-
 
 
     /*
     * 自动解题
     * */
-    public void testAutoSolve() throws InterruptedException
+    public void _testAutoSolve() throws InterruptedException
     {
         int MAPX = 6, MAPY = 6;
         String map = "";
@@ -208,7 +198,7 @@ public class AppTest
 
         Logics logics = new Logics();
 
-        while(!isComplete(MAPX, MAPY, Map))
+        while(!isComplete(Map))
         {
             Clear();
             //PrintMap(Map, MAPX, MAPY);
@@ -243,9 +233,10 @@ public class AppTest
     }
 
     // 检测完成的方法
-    public boolean isComplete(int MAPX, int MAPY , int[][] map_)
+    public boolean isComplete(int[][] map_)
     {
-
+        int MAPX = map_.length;
+        int MAPY = map_[0].length;
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
                 if(map_[i][j] != -1)return false;
@@ -260,5 +251,37 @@ public class AppTest
         System.out.printf("(%d, %d) \n",p[0], p[1]);
     }
 
+    // 新的地图类测试
+    public void testLinkyMap() throws InterruptedException {
+        LinkyMap level = new LinkyMap(6, 6);
+        while(!isComplete(level.getMap()))
+        {
+            ArrayDeque<int[]> path = level.autoFindPath();
+            PrintMap(level.getMap(),6,6);
+            if(path.isEmpty()) {
+                System.out.println("没有更多连线方式了");
+                return;
+            }
+            PrintPath(path);
+
+            HashSet<Point> points = new HashSet<>();
+            if (path.peek() != null) {
+                points.add(new Point(path.peek()[0], path.peek()[1]));
+            }
+            if (path.peekLast() != null) {
+                points.add(new Point(path.peekLast()[0], path.peekLast()[1]));
+            }
+            System.out.println(points);
+            level.delNumMap(points);
+            System.out.println(Arrays.deepToString(level.getNumMap()[5][1]));
+            System.out.println(Arrays.deepToString(level.getNumMap()[5][2]));
+            System.out.println(Arrays.deepToString(level.getNumMap()[5][5]));
+            int[][] maps = ShowPath(path,level.getMap(),6,6);
+            PrintMap(maps,6,6);
+
+            Sleep(2000);
+
+        }
+    }
 
 }
