@@ -12,7 +12,6 @@ import java.util.ArrayDeque;
 import org.example.Functions.*;
 
 
-
 /**
  * 在这个类中定义的方法命名规则
  * 以 test 开头（全小写），会被调用并运行
@@ -22,33 +21,29 @@ import org.example.Functions.*;
  */
 
 
-public class AppTest 
-    extends TestCase
-{
+public class AppTest
+        extends TestCase {
     /**
      * Create the test case
      *
      * @param testName name of the test case
      */
-    public AppTest( String testName )
-    {
-        super( testName );
+    public AppTest(String testName) {
+        super(testName);
     }
 
     /**
      * @return the suite of tests being tested
      */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
+    public static Test suite() {
+        return new TestSuite(AppTest.class);
     }
 
     /**
      * Rigourous Test :-)
      */
-    public void _testApp()
-    {
-        assertTrue( true );
+    public void _testApp() {
+        assertTrue(true);
     }
 
     // Test the Logics.Linky
@@ -67,10 +62,10 @@ public class AppTest
         map += "   2    0 ";
         map += "        2 ";
         int[][] Map = new int[MAPX][MAPY];
-        for (int i = 0; i < MAPX; i++){
+        for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
                 char c = map.charAt(i * MAPY + j);
-                Map[i][j] = (c == ' ') ? -1 : (c-'0');
+                Map[i][j] = (c == ' ') ? -1 : (c - '0');
             }
         }
 
@@ -90,7 +85,7 @@ public class AppTest
         Logics logics = new Logics();
         int count = 0;
         int TestNumber = TestInput.length;
-        while(count < TestNumber) // Run for TestNumber Times
+        while (count < TestNumber) // Run for TestNumber Times
         {
             Clear();
             PrintMap(Map, MAPX, MAPY);
@@ -98,16 +93,13 @@ public class AppTest
 
             ArrayDeque<int[]> path = logics.Linky(
                     MAPX, MAPY, Map,
-                    TestInput[count][0],TestInput[count][1]
+                    TestInput[count][0], TestInput[count][1]
             );
-            if(!path.isEmpty() && path.peek()[0] == -1){
+            if (!path.isEmpty() && path.peek()[0] == -1) {
                 System.out.println("   INVALID INPUT   ");
-            }
-            else if(path.isEmpty())
-            {
+            } else if (path.isEmpty()) {
                 System.out.println("   IMPOSSIBLE CONNECTION   ");
-            }
-            else {
+            } else {
                 int[][] mapWithPath = ShowPath(path, Map, MAPX, MAPY);
                 Clear();
                 Map[TestInput[count][0][0]][TestInput[count][0][1]] = -1;
@@ -122,40 +114,36 @@ public class AppTest
 
     }
 
-    public int[][] ShowPath(ArrayDeque<int[]> path, int[][] map_, int MAPX, int MAPY)
-    {
+    public int[][] ShowPath(ArrayDeque<int[]> path, int[][] map_, int MAPX, int MAPY) {
         int[][] temp = new int[MAPX][MAPY];
         for (int i = 0; i < MAPX; i++) {
             System.arraycopy(map_[i], 0, temp[i], 0, MAPY);
         }
-        for(int[] p : path)
-        {
+        for (int[] p : path) {
             temp[p[0]][p[1]] = '#';
         }
         return temp;
     }
 
     // Use this to Sleep for X miliseconds (just for simpler codes)
-    public void Sleep(int MiliS) throws InterruptedException{
+    public void Sleep(int MiliS) throws InterruptedException {
         Thread.sleep(MiliS);
     }
 
-     // Use this to (pretend to) clear the output
-    public void Clear()
-    {
+    // Use this to (pretend to) clear the output
+    public void Clear() {
         for (int i = 0; i < 15; i++) {
             System.out.println();
         }
     }
 
     // Use this to Print the rectangle map
-    public void PrintMap(int[][] map_, int MAPX, int MAPY)
-    {
+    public void PrintMap(int[][] map_, int MAPX, int MAPY) {
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
                 int t = map_[i][j];
-                if(t == -1) System.out.print("    ");
-                else if(t == '#') System.out.print(" ## ");
+                if (t == -1) System.out.print("    ");
+                else if (t == '#') System.out.print(" ## ");
                 else System.out.printf(" %-3d", t);
             }
             System.out.println();
@@ -163,22 +151,18 @@ public class AppTest
     }
 
     // Use this to Print the path
-    public void PrintPath(ArrayDeque<int[]> path)
-    {
-        for(int[] p : path)
-        {
+    public void PrintPath(ArrayDeque<int[]> path) {
+        for (int[] p : path) {
             System.out.printf("(%d, %d) ", p[0], p[1]);
         }
         System.out.println();
     }
 
 
-
     /*
-    * 自动解题
-    * */
-    public void _testAutoSolve() throws InterruptedException
-    {
+     * 自动解题
+     * */
+    public void _testAutoSolve() throws InterruptedException {
         int MAPX = 6, MAPY = 6;
         String map = "";
         map += "54321 ";
@@ -189,17 +173,16 @@ public class AppTest
         map += "5   51";
 //
         int[][] Map = new int[MAPX][MAPY];
-        for (int i = 0; i < MAPX; i++){
+        for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
                 char c = map.charAt(i * MAPY + j);
-                Map[i][j] = (c == ' ') ? -1 : (c-'0');
+                Map[i][j] = (c == ' ') ? -1 : (c - '0');
             }
         }
 
         Logics logics = new Logics();
 
-        while(!isComplete(Map))
-        {
+        while (!isComplete(Map)) {
             Clear();
             //PrintMap(Map, MAPX, MAPY);
             //Sleep(1000);
@@ -208,15 +191,12 @@ public class AppTest
             ArrayDeque<int[]> path = logics.HintSolution(MAPX, MAPY, Map);
 
             //Sleep(2000);
-            if(path.isEmpty())
-            {
+            if (path.isEmpty()) {
                 System.out.println("没有路径！");
                 break;
-            }
-            else
-            {
-                int[]p1 = path.peek();
-                int[]p2 = path.getLast();
+            } else {
+                int[] p1 = path.peek();
+                int[] p2 = path.getLast();
                 int[][] mapWithPath = ShowPath(path, Map, MAPX, MAPY);
                 //Clear();
 
@@ -233,32 +213,29 @@ public class AppTest
     }
 
     // 检测完成的方法
-    public boolean isComplete(int[][] map_)
-    {
+    public boolean isComplete(int[][] map_) {
         int MAPX = map_.length;
         int MAPY = map_[0].length;
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
-                if(map_[i][j] != -1)return false;
+                if (map_[i][j] != -1) return false;
             }
         }
         return true;
     }
 
     // 输出路径点
-    public void PrintPOINT(int[] p)
-    {
-        System.out.printf("(%d, %d) \n",p[0], p[1]);
+    public void PrintPOINT(int[] p) {
+        System.out.printf("(%d, %d) \n", p[0], p[1]);
     }
 
     // 新的地图类测试
     public void testLinkyMap() throws InterruptedException {
         LinkyMap level = new LinkyMap(6, 6);
-        while(!isComplete(level.getMap()))
-        {
+        while (!isComplete(level.getMap())) {
             ArrayDeque<int[]> path = level.autoFindPath();
-            PrintMap(level.getMap(),6,6);
-            if(path.isEmpty()) {
+            PrintMap(level.getMap(), 6, 6);
+            if (path.isEmpty()) {
                 System.out.println("没有更多连线方式了");
                 return;
             }
@@ -276,8 +253,8 @@ public class AppTest
             System.out.println(Arrays.deepToString(level.getNumMap()[5][1]));
             System.out.println(Arrays.deepToString(level.getNumMap()[5][2]));
             System.out.println(Arrays.deepToString(level.getNumMap()[5][5]));
-            int[][] maps = ShowPath(path,level.getMap(),6,6);
-            PrintMap(maps,6,6);
+            int[][] maps = ShowPath(path, level.getMap(), 6, 6);
+            PrintMap(maps, 6, 6);
 
             Sleep(2000);
 

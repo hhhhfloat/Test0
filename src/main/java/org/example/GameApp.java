@@ -7,9 +7,9 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 
-public class GameApp extends Application{
+public class GameApp extends Application {
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
         Button btn = new Button("Click on me");
         btn.setOnAction(e -> btn.setText("Literally clicked!"));
 
@@ -21,8 +21,8 @@ public class GameApp extends Application{
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    public static void main(String[] args)
-    {
+
+    public static void main(String[] args) {
         launch(args);
     }
 }
