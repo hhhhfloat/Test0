@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 public class Login extends Application {
 
     public void start(Stage stage) {
-        //BgMusic.play();
+        BgMusic.play();
         LoginButtons buttons = new LoginButtons(Accounts.read());
         VBox vBox = new VBox(), list =new VBox();
         vBox.setBackground(BgImage.bgimage());
