@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 public class LinkyMap {
-
+    /// VVVVVV 重要常数以及成员变量声明
     // 四个方向 0上 1右 2下 3左
     final int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
@@ -14,7 +14,9 @@ public class LinkyMap {
     private int[][] map;
     private int[][][][] NumMap;
 
-    // 构造函数，会生成地图以及对应数表
+    /// VVVVVV
+    /// 地图类，有成员 MAPX, MAPY, map[][]、NumMap[][][][]
+    // 构造函数，会生成地图以及对应数表（测试阶段使用MAPX = MAPY = 6）
     public LinkyMap(int MAPX, int MAPY) {
         MAPX_ = MAPX;
         MAPY_ = MAPY;
@@ -113,7 +115,9 @@ public class LinkyMap {
         // 数表生成完成
     }
 
+    /// VVVVVV
     // getters
+
     public int[][] getMap() {
         return map;
     }
@@ -122,6 +126,11 @@ public class LinkyMap {
         return NumMap;
     }
 
+    public int getMAPX_() {return MAPX_;}
+
+    public int getMAPY_() {return MAPY_;}
+
+    ///  VVVVVV
     // 消去后更新数表与地图（给定消去的非零点）
     public void delNumMap(HashSet<Point> points) {
 
@@ -169,6 +178,7 @@ public class LinkyMap {
 
     }
 
+    /// VVVVVV
     // 自动寻找路径（无路则返回空Deque）
     public ArrayDeque<int[]> autoFindPath() {
         // 全部一次性枚举！
