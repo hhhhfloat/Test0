@@ -18,8 +18,23 @@ public class LinkyMap {
     private int[][][][] NumMap_T;
 
     /// VVVVVV
-    /// 地图类，有成员 MAPX, MAPY, map[][]、NumMap[][][][]
-    // 构造函数，会生成地图以及对应数表（测试阶段使用MAPX = MAPY = 6）
+    // getters
+
+    public int[][] getMap() {
+        return map;
+    }
+
+    public int[][][][] getNumMap() {
+        return NumMap;
+    }
+
+    public int getMAPX_() {return MAPX_;}
+
+    public int getMAPY_() {return MAPY_;}
+
+    // VVVVVV
+    // 地图类，有成员 MAPX, MAPY, map[][]、NumMap[][][][]
+    /// 构造函数，会生成地图以及对应数表（测试阶段使用MAPX = MAPY = 6）
     public LinkyMap(int MAPX, int MAPY) {
         MAPX_ = MAPX;
         MAPY_ = MAPY;
@@ -44,7 +59,7 @@ public class LinkyMap {
         initNumMap();
     }
 
-    // 生成初始数表
+    /// 生成初始数表
     public void initNumMap() {
         NumMap = new int[MAPX_][MAPY_][4][2];
         // 扫描四元组
@@ -119,23 +134,16 @@ public class LinkyMap {
         // 数表生成完成
     }
 
-    /// VVVVVV
-    // getters
+    /// 自动生成地图
+    public void initMap()
+    {
 
-    public int[][] getMap() {
-        return map;
     }
 
-    public int[][][][] getNumMap() {
-        return NumMap;
-    }
 
-    public int getMAPX_() {return MAPX_;}
-
-    public int getMAPY_() {return MAPY_;}
 
     ///  VVVVVV
-    // 消去后更新数表与地图（给定消去的非零点）
+    /// 消去后更新数表与地图（给定消去的非零点）
     public void delNumMap(HashSet<Point> points) {
 
         for (Point p : points) {
@@ -186,7 +194,7 @@ public class LinkyMap {
     }
 
     /// VVVVVV
-    // 自动寻找路径（无路则返回空Deque）
+    /// 自动寻找路径（无路则返回空Deque）
     public HashSet<Point> autoFindPath() {
         // 全部一次性枚举！
 
@@ -255,7 +263,7 @@ public class LinkyMap {
         return Tsp(rowTwoTwi(Tsp(NumMap), Tsp(map)));
     }
 
-    // 自动单拐点路径返回(输入已知合法的拐点坐标)
+    /// 自动单拐点路径返回(输入已知合法的拐点坐标)
     HashSet<Point> OneTwiPath(int x, int y) {
         // 四个方向 0上 1右 2下 3左
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
@@ -277,7 +285,7 @@ public class LinkyMap {
         return path;
     }
 
-    // 横向自动寻找双拐点路径，已经发挥最大作用
+    /// 横向自动寻找双拐点路径，已经发挥最大作用
     HashSet<Point> rowTwoTwi(int[][][][] NumMap_, int[][] map_) {
         // 四个方向 0上 1右 2下 3左
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
@@ -320,7 +328,7 @@ public class LinkyMap {
         return path;
     }
 
-    // NumMap用的转置函数
+    /// NumMap用的转置函数
     public int[][][][] Tsp(int[][][][] Nm) {
         int[][][][] nt = new int[MAPY_][MAPX_][4][2];
         for (int i = 0; i < MAPX_; i++) {
@@ -334,7 +342,7 @@ public class LinkyMap {
         return nt;
     }
 
-    // map用的转置函数
+    /// map用的转置函数
     public int[][] Tsp(int[][] mp) {
         int[][] map_T = new int[MAPY_][MAPX_];
         for (int i = 0; i < MAPY_; i++) {
@@ -345,7 +353,7 @@ public class LinkyMap {
         return map_T;
     }
 
-    // path用的转置函数
+    /// path用的转置函数
     public HashSet<Point> Tsp(HashSet<Point> path) {
         HashSet<Point> pt = new HashSet<>();
         for (Point p : path) {
@@ -355,7 +363,7 @@ public class LinkyMap {
     }
 
 
-    // 给定点找连线的函数(无路径则返回空路径)
+    /// 给定点找连线的函数(无路径则返回空路径)
     public HashSet<Point> pickPath(Point p1, Point p2)
     {
         int x1 = p1.x(), x2 = p2.x();
@@ -472,7 +480,6 @@ public class LinkyMap {
         }
         return path;
     }
-
     public HashSet<Point> Rup1_Ldown2(Point p1, Point p2)
     {
         int x1 = p1.x(), x2 = p2.x();
