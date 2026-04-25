@@ -1,27 +1,35 @@
 package LoginPage;
 
-import LoginPage.Buttons.ExitButton;
-import LoginPage.Buttons.LeaderboardButton;
-import LoginPage.Buttons.LoginButton;
-import LoginPage.Buttons.SettingsButton;
+import GamePage.GameScene;
+import LoginPage.Buttons.*;
 import Page.rsc.BgImage;
 import Page.rsc.BgMusic;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class LoginScene {
+
     public static Scene getLoginScene(Stage stage) {
+        //test
+        Button admin = new Button("Admin");
+        admin.setOnAction(event -> stage.setScene(GameScene.getGameScene()));
+
         BgMusic.play();
         LoginButton buttons = new LoginButton(Accounts.read());
-        VBox vBox = new VBox(), list =new VBox();
-        vBox.setBackground(BgImage.bgimage());
-
-        list.getChildren().addAll(buttons.login(stage), LeaderboardButton.leaderboard(), SettingsButton.settings(), ExitButton.exit());
-        vBox.getChildren().addAll(list);
+        VBox list = new VBox(20);
+        list.getChildren().addAll(buttons.login(stage), TouristModeButton.touristMode(), LeaderboardButton.leaderboard(), SettingsButton.settings(), ExitButton.exit(), admin);
         list.setAlignment(Pos.CENTER);
 
-        return new Scene(vBox,1427,994);
+        StackPane pane = new StackPane();
+        pane.setBackground(BgImage.getBgImage());
+        pane.getChildren().add(list);
+        StackPane.setMargin(list, new Insets(100, 0, 0, 0));
+
+        return new Scene(pane, BgImage.getWidth(), BgImage.getHeight());
     }
 }

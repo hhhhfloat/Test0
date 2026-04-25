@@ -6,8 +6,21 @@ import javafx.scene.layout.*;
 import java.nio.file.Paths;
 
 public class BgImage {
-    public static Background bgimage(){
-        Image image = new Image(Paths.get("src/main/resources/bg.png").toUri().toString());
+    private static Image image = new Image(Paths.get("src/main/resources/bg.png").toUri().toString());
+
+    public static Image getImage() {
+        return image;
+    }
+
+    public static double getWidth() {
+        return image.getWidth();
+    }
+
+    public static double getHeight() {
+        return image.getHeight();
+    }
+
+    public static Background getBgImage() {
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
                 BackgroundRepeat.NO_REPEAT,

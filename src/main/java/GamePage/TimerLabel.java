@@ -5,10 +5,11 @@ import javafx.scene.control.Label;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
 
-public class Timer {
+public class TimerLabel {
     int counter = 0;
     Timeline timeline;
-    public Label timer (){
+
+    public Label timer() {
 
         Label timer = new Label();
         timeline = new Timeline(
