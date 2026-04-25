@@ -1,24 +1,30 @@
 package org.example.Functions;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class LinkyMap {
-
+    /// VVVVVV 重要常数以及成员变量声明
     // 四个方向 0上 1右 2下 3左
     final int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
     private int MAPX_, MAPY_;
     private int[][] map;
+    private int[][] map_T;
     private int[][][][] NumMap;
+    private int[][][][] NumMap_T;
 
-    // 构造函数，会生成地图以及对应数表
+    /// VVVVVV
+    /// 地图类，有成员 MAPX, MAPY, map[][]、NumMap[][][][]
+    // 构造函数，会生成地图以及对应数表（测试阶段使用MAPX = MAPY = 6）
     public LinkyMap(int MAPX, int MAPY) {
         MAPX_ = MAPX;
         MAPY_ = MAPY;
         map = new int[MAPX_][MAPY_];
+        map_T = new int [MAPY_][MAPX_];
         //随机生成初始地图
         String SMap = "";
         SMap += "54321 ";
@@ -31,12 +37,11 @@ public class LinkyMap {
             for (int j = 0; j < MAPY; j++) {
                 char c = SMap.charAt(i * MAPY + j);
                 map[i][j] = (c == ' ') ? -1 : (c - '0');
+                map_T[j][i] = map[i][j];
             }
         }
         // 生成数表
         initNumMap();
-
-        System.out.println(Arrays.deepToString(NumMap[5][1]));
     }
 
     // 生成初始数表
@@ -110,10 +115,13 @@ public class LinkyMap {
             }
         }
 
+        NumMap_T = Tsp(NumMap);
         // 数表生成完成
     }
 
+    /// VVVVVV
     // getters
+
     public int[][] getMap() {
         return map;
     }
@@ -122,6 +130,11 @@ public class LinkyMap {
         return NumMap;
     }
 
+    public int getMAPX_() {return MAPX_;}
+
+    public int getMAPY_() {return MAPY_;}
+
+    ///  VVVVVV
     // 消去后更新数表与地图（给定消去的非零点）
     public void delNumMap(HashSet<Point> points) {
 
@@ -151,6 +164,8 @@ public class LinkyMap {
                     // 走到这里了就先改了
                     NumMap[px][py][ii][0] = val;
                     NumMap[px][py][ii][1] = dis + t0;
+                    NumMap_T[py][px][3-ii][0] = val;
+                    NumMap_T[py][px][3-ii][1] = dis + t0;
                     boolean b = points.contains(new Point(px, py));
                     // System.out.println(b);
                     if (map[x + t0 * dx][y + t0 * dy] != -1 && !b) // 不是空格且哈希匹配不是消掉的——停步
@@ -165,20 +180,26 @@ public class LinkyMap {
         // 覆写全部完成，更新地图
         for (Point p : points) {
             map[p.x()][p.y()] = -1;
+            map_T[p.y()][p.x()]=-1;
         }
 
     }
 
+    /// VVVVVV
     // 自动寻找路径（无路则返回空Deque）
     public ArrayDeque<int[]> autoFindPath() {
         // 全部一次性枚举！
+
         for (int x = 0; x < MAPX_; x++) {
             for (int y = 0; y < MAPY_; y++) {
+                if(x==4&&y==1) System.out.println(Arrays.deepToString(NumMap[4][1]));
                 if (map[x][y] != -1)    // 非空格，找直线
                 {
+                    if(x==4&&y==1) System.out.println(Arrays.deepToString(NumMap[4][1]));
                     for (int i = 0; i < 4; i++) {
                         if (map[x][y] == NumMap[x][y][i][0]) //因为map[x][y]不是-1，不用考虑空条
                         {
+                            if(x==4&&y==1) System.out.println("FOUND");
                             ArrayDeque<int[]> path = new ArrayDeque<>();
                             int dx = dir[i][0], dy = dir[i][1];
                             for (int z = 0; z <= NumMap[x][y][i][1]; z++) {
@@ -189,28 +210,7 @@ public class LinkyMap {
                     }
                 } else // 空格，枚举同行拐点！
                 {
-                    // 不能复用双拐点检测代码了（哭）
-                    /*
-                    for (int i = 0; i < 4; i++) {
-                        if(NumMap[x][y][i][0] == NumMap[x][y][(i+1)%4][0])
-                        {
-                            ArrayDeque<int[]> path = new ArrayDeque<>();
-                            int k1 = NumMap[x][y][i][1], k2 = NumMap[x][y][(i+1)%4][1]; // 记录两个方向的步数
-                            for(int z = 0; z <= k1; z++)
-                            {
-                                path.addFirst(new int[]{x + dir[i][0] * z, y + dir[i][1] * z});
-                            }
-                            // 使用新方向
-                            int t = (i+1)%4;
-                            for(int z = 1; z <= k2; z++)
-                            {
-                                path.addLast(new int[]{x + dir[t][0] * z, y + dir[t][1] * z});
-                            }
-                            return path;
-                        }
-                    }
-
-                     */
+                    if(x==4&&y==1) System.out.println(Arrays.deepToString(NumMap[4][1]));
                     ArrayDeque<int[]> path = new ArrayDeque<>();
                     // 取右侧还有空格的空格
                     int k = NumMap[x][y][1][1];
@@ -246,8 +246,7 @@ public class LinkyMap {
                     // 别忘了最后这一个单拐点还没检测
                     path = OneTwiPath(x, y + k - 1);
                     if (!path.isEmpty()) return path;
-
-                    y += k;
+                    y += k-1;
                 }
             }
         }
@@ -256,7 +255,7 @@ public class LinkyMap {
         return Tsp(rowTwoTwi(Tsp(NumMap), Tsp(map)));
     }
 
-    // 自动单拐点路径返回（已经找到合法连法）
+    // 自动单拐点路径返回(输入已知合法的拐点坐标)
     ArrayDeque<int[]> OneTwiPath(int x, int y) {
         // 四个方向 0上 1右 2下 3左
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
@@ -350,9 +349,157 @@ public class LinkyMap {
     public ArrayDeque<int[]> Tsp(ArrayDeque<int[]> path) {
         ArrayDeque<int[]> pt = new ArrayDeque<>();
         for (int[] p : path) {
-            path.addLast(new int[]{p[1], p[0]});
+            pt.addLast(new int[]{p[1], p[0]});
+        }
+        return pt;
+    }
+
+
+    // 给定点找连线的函数(无路径则返回空路径)
+    public HashSet<Point> pickPath(Point p1, Point p2)
+    {
+        int x1 = p1.x(), x2 = p2.x();
+        int y1 = p1.y(), y2 = p2.y();
+        HashSet<Point> path = new HashSet<>();
+        int val = map[x1][y1];
+
+        for (int i = 0; i < 4; i++) {
+            if(NumMap[x1][y1][i][0] == val && x1+NumMap[x1][y1][i][1]*dir[i][0] == x2 && y1 + NumMap[x1][y1][i][1] * dir[i][1] == y2)
+            {
+                for (int j = 0; j < NumMap[x1][y1][i][1]; j++) {
+                    Point p = new Point(x1+dir[i][0]*j,y1+dir[i][1]*j);
+                    path.add(p);
+                }
+            }
+        }
+        // 剩下的情况必定不在直线上
+        // 单拐点
+        if(x1>x2 && y1>y2)
+        {
+            path = Rdown1_Lup2(p1,p2);
+            if(!path.isEmpty())return path;
+        }
+        if(x1<x2 && y1<y2)
+        {
+            path = Rdown1_Lup2(p2,p1);
+            if(!path.isEmpty())return path;
+        }
+        if(x1>x2 && y1<y2)
+        {
+            path = Rup1_Ldown2(p2,p1);
+            if(!path.isEmpty())return path;
+        }
+        if(x1<x2 && y1>y2)
+        {
+            path = Rup1_Ldown2(p1,p2);
+            if(!path.isEmpty())return path;
+        }
+
+        // 双拐点检测
+        int oney = (y1>y2)?-1:1;
+        for(int i = x1-NumMap[x1][y1][0][1]+1;i<=x1+NumMap[x1][y1][2][1]-1;i++)
+        {
+            if(map[i][y2] == -1 && NumMap[i][y1][2-oney][1] > (y2-y1)*oney)
+            {
+                for(int j = y1;j!=y2+oney;j+=oney)
+                {
+                    path.add(new Point(i,j));
+                }
+                int one1 = (i>x1)?1:-1;
+                for (int j = x1; j != i; j+=one1) {
+                    path.add(new Point(j,y1));
+                }
+                int one2 = (i>x2)?1:-1;
+                for (int j = x2; j != i; j+=one2) {
+                    path.add(new Point(j,y2));
+                }
+                return path;
+            }
+        }
+        x1 = p1.y();
+        x2 = p2.y();
+        y1 = p1.x();
+        y2 = p2.x();
+        for(int i = x1-NumMap_T[x1][y1][0][1]+1;i<=x1+NumMap_T[x1][y1][2][1]-1;i++)
+        {
+            if(map_T[i][y2] == -1 && NumMap_T[i][y1][2-oney][1] > (y2-y1)*oney)
+            {
+                for(int j = y1;j!=y2+oney;j+=oney)
+                {
+                    path.add(new Point(i,j));
+                }
+                int one1 = (i>x1)?1:-1;
+                for (int j = x1; j != i; j+=one1) {
+                    path.add(new Point(j,y1));
+                }
+                int one2 = (i>x2)?1:-1;
+                for (int j = x2; j != i; j+=one2) {
+                    path.add(new Point(j,y2));
+                }
+                return path;
+            }
+        }
+        return path;
+    }
+    public HashSet<Point> Rdown1_Lup2(Point p1, Point p2)
+    {
+        int x1 = p1.x(), x2 = p2.x();
+        int y1 = p1.y(), y2 = p2.y();
+        HashSet<Point> path = new HashSet<>();
+        if(NumMap[x1][y2][0][1] == x1-x2)
+        {
+            for (int i = 0; i < x1-x2; i++) {
+                Point p = new Point(x1 - i, y2);
+                path.add(p);
+            }
+            for (int i = 0; i <= y1-y2; i++) {
+                Point p = new Point(x1, y1-i);
+                path.add(p);
+            }
+            return path;
+        }
+        if(NumMap[x2][y1][2][1] == x1-x2) {
+            for (int i = 0; i < x1 - x2; i++) {
+                Point p = new Point(x1 - i, y1);
+                path.add(p);
+            }
+            for (int i = 0; i <= y1 - y2; i++) {
+                Point p = new Point(x2, y1 - i);
+                path.add(p);
+            }
+            return path;
         }
         return path;
     }
 
+    public HashSet<Point> Rup1_Ldown2(Point p1, Point p2)
+    {
+        int x1 = p1.x(), x2 = p2.x();
+        int y1 = p1.y(), y2 = p2.y();
+        HashSet<Point> path = new HashSet<>();
+        if(NumMap[x2][y1][0][1] == x2-x1)
+        {
+            for (int i = 0; i < x2-x1; i++) {
+                Point p = new Point(x1 + i, y1);
+                path.add(p);
+            }
+            for (int i = 0; i <= y1-y2; i++) {
+                Point p = new Point(x2, y1-i);
+                path.add(p);
+            }
+            return path;
+        }
+        if(NumMap[x1][y2][2][1] == x2-x1) {
+            for (int i = 0; i < x2 - x1; i++) {
+                Point p = new Point(x2 - i, y2);
+                path.add(p);
+            }
+            for (int i = 0; i <= y1 - y2; i++) {
+                Point p = new Point(x1, y1 - i);
+                path.add(p);
+            }
+            return path;
+        }
+        return path;
+    }
 }

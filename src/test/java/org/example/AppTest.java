@@ -229,36 +229,5 @@ public class AppTest
         System.out.printf("(%d, %d) \n", p[0], p[1]);
     }
 
-    // 新的地图类测试
-    public void testLinkyMap() throws InterruptedException {
-        LinkyMap level = new LinkyMap(6, 6);
-        while (!isComplete(level.getMap())) {
-            ArrayDeque<int[]> path = level.autoFindPath();
-            PrintMap(level.getMap(), 6, 6);
-            if (path.isEmpty()) {
-                System.out.println("没有更多连线方式了");
-                return;
-            }
-            PrintPath(path);
-
-            HashSet<Point> points = new HashSet<>();
-            if (path.peek() != null) {
-                points.add(new Point(path.peek()[0], path.peek()[1]));
-            }
-            if (path.peekLast() != null) {
-                points.add(new Point(path.peekLast()[0], path.peekLast()[1]));
-            }
-            System.out.println(points);
-            level.delNumMap(points);
-            System.out.println(Arrays.deepToString(level.getNumMap()[5][1]));
-            System.out.println(Arrays.deepToString(level.getNumMap()[5][2]));
-            System.out.println(Arrays.deepToString(level.getNumMap()[5][5]));
-            int[][] maps = ShowPath(path, level.getMap(), 6, 6);
-            PrintMap(maps, 6, 6);
-
-            Sleep(2000);
-
-        }
-    }
 
 }
