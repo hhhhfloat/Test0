@@ -2,6 +2,7 @@ package org.example.Functions;
 
 import java.util.ArrayDeque;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -188,13 +189,17 @@ public class LinkyMap {
     // 自动寻找路径（无路则返回空Deque）
     public ArrayDeque<int[]> autoFindPath() {
         // 全部一次性枚举！
+
         for (int x = 0; x < MAPX_; x++) {
             for (int y = 0; y < MAPY_; y++) {
+                if(x==4&&y==1) System.out.println(Arrays.deepToString(NumMap[4][1]));
                 if (map[x][y] != -1)    // 非空格，找直线
                 {
+                    if(x==4&&y==1) System.out.println(Arrays.deepToString(NumMap[4][1]));
                     for (int i = 0; i < 4; i++) {
                         if (map[x][y] == NumMap[x][y][i][0]) //因为map[x][y]不是-1，不用考虑空条
                         {
+                            if(x==4&&y==1) System.out.println("FOUND");
                             ArrayDeque<int[]> path = new ArrayDeque<>();
                             int dx = dir[i][0], dy = dir[i][1];
                             for (int z = 0; z <= NumMap[x][y][i][1]; z++) {
@@ -205,6 +210,7 @@ public class LinkyMap {
                     }
                 } else // 空格，枚举同行拐点！
                 {
+                    if(x==4&&y==1) System.out.println(Arrays.deepToString(NumMap[4][1]));
                     ArrayDeque<int[]> path = new ArrayDeque<>();
                     // 取右侧还有空格的空格
                     int k = NumMap[x][y][1][1];
@@ -240,8 +246,7 @@ public class LinkyMap {
                     // 别忘了最后这一个单拐点还没检测
                     path = OneTwiPath(x, y + k - 1);
                     if (!path.isEmpty()) return path;
-
-                    y += k;
+                    y += k-1;
                 }
             }
         }
@@ -250,7 +255,7 @@ public class LinkyMap {
         return Tsp(rowTwoTwi(Tsp(NumMap), Tsp(map)));
     }
 
-    // 自动单拐点路径返回（已经找到合法连法）
+    // 自动单拐点路径返回(输入已知合法的拐点坐标)
     ArrayDeque<int[]> OneTwiPath(int x, int y) {
         // 四个方向 0上 1右 2下 3左
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
@@ -344,10 +349,11 @@ public class LinkyMap {
     public ArrayDeque<int[]> Tsp(ArrayDeque<int[]> path) {
         ArrayDeque<int[]> pt = new ArrayDeque<>();
         for (int[] p : path) {
-            path.addLast(new int[]{p[1], p[0]});
+            pt.addLast(new int[]{p[1], p[0]});
         }
-        return path;
+        return pt;
     }
+
 
     // 给定点找连线的函数(无路径则返回空路径)
     public HashSet<Point> pickPath(Point p1, Point p2)
