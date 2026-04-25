@@ -187,7 +187,7 @@ public class LinkyMap {
 
     /// VVVVVV
     // 自动寻找路径（无路则返回空Deque）
-    public ArrayDeque<int[]> autoFindPath() {
+    public HashSet<Point> autoFindPath() {
         // 全部一次性枚举！
 
         for (int x = 0; x < MAPX_; x++) {
@@ -200,10 +200,10 @@ public class LinkyMap {
                         if (map[x][y] == NumMap[x][y][i][0]) //因为map[x][y]不是-1，不用考虑空条
                         {
                             if(x==4&&y==1) System.out.println("FOUND");
-                            ArrayDeque<int[]> path = new ArrayDeque<>();
+                            HashSet<Point> path = new HashSet<>();
                             int dx = dir[i][0], dy = dir[i][1];
                             for (int z = 0; z <= NumMap[x][y][i][1]; z++) {
-                                path.addLast(new int[]{x + dx * z, y + dy * z});
+                                path.add(new Point(x + dx * z, y + dy * z));
                             }
                             return path;
                         }
@@ -211,7 +211,7 @@ public class LinkyMap {
                 } else // 空格，枚举同行拐点！
                 {
                     if(x==4&&y==1) System.out.println(Arrays.deepToString(NumMap[4][1]));
-                    ArrayDeque<int[]> path = new ArrayDeque<>();
+                    HashSet<Point> path = new HashSet<>();
                     // 取右侧还有空格的空格
                     int k = NumMap[x][y][1][1];
                     // 枚举步数内的所有空格对
@@ -227,15 +227,15 @@ public class LinkyMap {
                                     if (NumMap[x][y + i][z][0] != -1 && NumMap[x][y + i][z][0] == NumMap[x][y + j][w][0]) {
                                         // 先加中间
                                         for (int poi = i; poi <= j; poi++) {
-                                            path.addLast(new int[]{x, y + poi});
+                                            path.add(new Point(x, y + poi));
                                         }
                                         // i一侧
                                         for (int poi = 1; poi <= NumMap[x][y + i][z][1]; poi++) {
-                                            path.addFirst(new int[]{x + poi * dir[z][0], y + i});
+                                            path.add(new Point(x + poi * dir[z][0], y + i));
                                         }
                                         // j一侧
                                         for (int poi = 1; poi <= NumMap[x][y + j][w][1]; poi++) {
-                                            path.addLast(new int[]{x + poi * dir[w][0], y + j});
+                                            path.add(new Point(x + poi * dir[w][0], y + j));
                                         }
                                         return path;
                                     }
@@ -256,20 +256,20 @@ public class LinkyMap {
     }
 
     // 自动单拐点路径返回(输入已知合法的拐点坐标)
-    ArrayDeque<int[]> OneTwiPath(int x, int y) {
+    HashSet<Point> OneTwiPath(int x, int y) {
         // 四个方向 0上 1右 2下 3左
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-        ArrayDeque<int[]> path = new ArrayDeque<>();
+        HashSet<Point> path = new HashSet<>();
         for (int d = 0; d < 4; d++) {
             if (NumMap[x][y][d][0] != -1 && NumMap[x][y][d][0] == NumMap[x][y][(d + 1) % 4][0]) {
                 int k1 = NumMap[x][y][d][1], k2 = NumMap[x][y][(d + 1) % 4][1]; // 记录两个方向的步数
                 for (int z = 0; z <= k1; z++) {
-                    path.addFirst(new int[]{x + dir[d][0] * z, y + dir[d][1] * z});
+                    path.add(new Point(x + dir[d][0] * z, y + dir[d][1] * z));
                 }
                 // 使用新方向
                 int t = (d + 1) % 4;
                 for (int z = 1; z <= k2; z++) {
-                    path.addLast(new int[]{x + dir[t][0] * z, y + dir[t][1] * z});
+                    path.add(new Point(x + dir[t][0] * z, y + dir[t][1] * z));
                 }
                 return path;
             }
@@ -278,12 +278,12 @@ public class LinkyMap {
     }
 
     // 横向自动寻找双拐点路径，已经发挥最大作用
-    ArrayDeque<int[]> rowTwoTwi(int[][][][] NumMap_, int[][] map_) {
+    HashSet<Point> rowTwoTwi(int[][][][] NumMap_, int[][] map_) {
         // 四个方向 0上 1右 2下 3左
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
         int MAPX = map_.length;
         int MAPY = map_[0].length;
-        ArrayDeque<int[]> path = new ArrayDeque<>();
+        HashSet<Point> path = new HashSet<>();
         for (int x = 0; x < MAPX; x++) {
             for (int y = 0; y < MAPY; y++) {
                 if (map_[x][y] == -1 && NumMap_[x][y][1][1] >= 2) {
@@ -297,15 +297,15 @@ public class LinkyMap {
                                     if (NumMap_[x][y + i][z][0] != -1 && NumMap_[x][y + i][z][0] == NumMap_[x][y + j][w][0]) {
                                         // 先加中间
                                         for (int poi = i; poi <= j; poi++) {
-                                            path.addLast(new int[]{x, y + poi});
+                                            path.add(new Point(x, y + poi));
                                         }
                                         // i一侧
                                         for (int poi = 1; poi <= NumMap_[x][y + i][z][1]; poi++) {
-                                            path.addFirst(new int[]{x + poi * dir[z][0], y + i});
+                                            path.add(new Point(x + poi * dir[z][0], y + i));
                                         }
                                         // j一侧
                                         for (int poi = 1; poi <= NumMap_[x][y + j][w][1]; poi++) {
-                                            path.addLast(new int[]{x + poi * dir[w][0], y + j});
+                                            path.add(new Point(x + poi * dir[w][0], y + j));
                                         }
                                         return path;
                                     }
@@ -346,10 +346,10 @@ public class LinkyMap {
     }
 
     // path用的转置函数
-    public ArrayDeque<int[]> Tsp(ArrayDeque<int[]> path) {
-        ArrayDeque<int[]> pt = new ArrayDeque<>();
-        for (int[] p : path) {
-            pt.addLast(new int[]{p[1], p[0]});
+    public HashSet<Point> Tsp(HashSet<Point> path) {
+        HashSet<Point> pt = new HashSet<>();
+        for (Point p : path) {
+            pt.add(new Point(p.y(), p.x()));
         }
         return pt;
     }
@@ -366,10 +366,11 @@ public class LinkyMap {
         for (int i = 0; i < 4; i++) {
             if(NumMap[x1][y1][i][0] == val && x1+NumMap[x1][y1][i][1]*dir[i][0] == x2 && y1 + NumMap[x1][y1][i][1] * dir[i][1] == y2)
             {
-                for (int j = 0; j < NumMap[x1][y1][i][1]; j++) {
+                for (int j = 0; j <= NumMap[x1][y1][i][1]; j++) {
                     Point p = new Point(x1+dir[i][0]*j,y1+dir[i][1]*j);
                     path.add(p);
                 }
+                return path;
             }
         }
         // 剩下的情况必定不在直线上
@@ -436,7 +437,7 @@ public class LinkyMap {
                 for (int j = x2; j != i; j+=one2) {
                     path.add(new Point(j,y2));
                 }
-                return path;
+                return Tsp(path);
             }
         }
         return path;
