@@ -4,15 +4,15 @@ import LoginPage.Buttons.ExitButton;
 import LoginPage.Buttons.LeaderboardButton;
 import LoginPage.Buttons.LoginButton;
 import LoginPage.Buttons.SettingsButton;
-import LoginPage.rsc.BgImage;
-import LoginPage.rsc.BgMusic;
+import Page.rsc.BgImage;
+import Page.rsc.BgMusic;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class LoginScene {
-    public static Scene loginScene(Stage stage) {
+    public static Scene getLoginScene(Stage stage) {
         BgMusic.play();
         LoginButton buttons = new LoginButton(Accounts.read());
         VBox vBox = new VBox(), list =new VBox();

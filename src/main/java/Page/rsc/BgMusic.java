@@ -1,4 +1,4 @@
-package LoginPage.rsc;
+package Page.rsc;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;

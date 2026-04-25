@@ -1,7 +1,6 @@
 package LoginPage.Buttons;
 
 import LoginPage.AccountScene;
-import LoginPage.Accounts;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -9,7 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Map;
 
 public class LoginButton {
@@ -114,7 +112,7 @@ public class LoginButton {
                         alert.setContentText("Login succeeded!");
                         alert.showAndWait();
                         loginStage.close();
-                        stage.setScene(AccountScene.accountScene(stage));
+                        stage.setScene(AccountScene.getAccountScene(stage));
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Warning");

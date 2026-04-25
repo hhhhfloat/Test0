@@ -1,4 +1,4 @@
-package LoginPage.rsc;
+package Page.rsc;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;

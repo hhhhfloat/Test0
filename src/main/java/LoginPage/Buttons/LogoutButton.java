@@ -13,7 +13,7 @@ public class LogoutButton {
             alert.setTitle("Confirm");
             alert.setHeaderText("Are you sure you want to logout?");
             alert.showAndWait();
-            stage.setScene(LoginScene.loginScene(stage));
+            stage.setScene(LoginScene.getLoginScene(stage));
         });
         return LogoutButton;
     }
