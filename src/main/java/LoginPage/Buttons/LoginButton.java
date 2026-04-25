@@ -1,24 +1,25 @@
-package LoginPage;
+package LoginPage.Buttons;
 
-import javafx.application.Platform;
+import LoginPage.AccountScene;
+import LoginPage.Accounts;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Map;
 
-public class LoginButtons {
+public class LoginButton {
     Map<String, String> users;
 
-    public LoginButtons(Map<String, String> users) {
+    public LoginButton(Map<String, String> users) {
         this.users = users;
     }
 
-    Button login() {
+    public Button login(final Stage stage) {
         class Register {
             static Button register(Map<String, String> users) {
                 TextField account = new TextField();
@@ -35,7 +36,7 @@ public class LoginButtons {
                     confirm.setOnAction(actionEvent1 -> {
                         try {
                             String s1 = account.getText(), s2 = password.getText();
-                            FileWriter fileWriter = new FileWriter("Users.txt", true);
+                            FileWriter fileWriter = new FileWriter("src/main/userdata/users.txt", true);
                             if (s1.trim().isEmpty()) {
                                 Alert alert = new Alert(Alert.AlertType.WARNING);
                                 alert.setTitle("Warning");
@@ -112,6 +113,8 @@ public class LoginButtons {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setContentText("Login succeeded!");
                         alert.showAndWait();
+                        loginStage.close();
+                        stage.setScene(AccountScene.accountScene(stage));
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Warning");
@@ -125,23 +128,5 @@ public class LoginButtons {
 
         });
         return loginButton;
-    }
-
-    Button exit() {
-        Button exitButton = new Button("Exit");
-        exitButton.setPrefSize(400, 50);
-        exitButton.setOnAction(actionEvent -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm");
-            alert.setHeaderText("Are you sure you want to exit?");
-            alert.setContentText("All the unsaved data will be lost!");
-
-            alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    Platform.exit();
-                }
-            });
-        });
-        return exitButton;
     }
 }
