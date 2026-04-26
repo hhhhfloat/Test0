@@ -1,12 +1,13 @@
 package LoginPage.Buttons;
 
+import LoginPage.Account;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class LeaderboardButton {
-    public static Button leaderboard() {
+    public static Button leaderboard(Account account) {
         Button leaderboard = new Button("Leaderboard");
         leaderboard.setPrefSize(400, 50);
         leaderboard.setOnAction(event -> {

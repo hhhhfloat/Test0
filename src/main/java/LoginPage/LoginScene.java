@@ -19,10 +19,10 @@ public class LoginScene {
         Button admin = new Button("Admin");
         admin.setOnAction(event -> stage.setScene(GameScene.getGameScene()));
 
+        Account account = new Account();
         BgMusic.play();
-        LoginButton buttons = new LoginButton(Accounts.read());
         VBox list = new VBox(20);
-        list.getChildren().addAll(buttons.login(stage), TouristModeButton.touristMode(), LeaderboardButton.leaderboard(), SettingsButton.settings(), ExitButton.exit(), admin);
+        list.getChildren().addAll(LoginButton.login(stage, account), TouristModeButton.touristMode(stage, account), LeaderboardButton.leaderboard(account), SettingsButton.settings(), ExitButton.exit(), admin);
         list.setAlignment(Pos.CENTER);
 
         StackPane pane = new StackPane();
