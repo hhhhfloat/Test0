@@ -2,8 +2,10 @@ package LoginPage.Buttons;
 
 import LoginPage.Account;
 import LoginPage.AccountScene;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -19,15 +21,14 @@ public class LoginButton {
         Stage loginStage = new Stage();
         loginStage.setTitle("Account Login");
 
-        VBox loginBox = new VBox(), registerBox = new VBox();
-        Scene loginScene = new Scene(loginBox,400,150), registerScene = new Scene(registerBox,400,150);
+        VBox loginBox = new VBox(8), registerBox = new VBox(8);
+        Scene loginScene = new Scene(loginBox,300,120), registerScene = new Scene(registerBox, 300, 90);
 
-        Button registerButton = new Button("Don't have an account yet?Click here to register");
+        Button registerButton = new Button("Don't have an account yet? Click here to register");
+
         registerButton.setStyle(
                 "-fx-background-color: transparent;" +
                         "-fx-border-color: transparent;" +
-                        "-fx-text-fill: black;" +
-                        "-fx-font-size: 12px;" +
                         "-fx-underline: true;"
         );
         registerButton.setOnMouseEntered(e ->
@@ -40,12 +41,11 @@ public class LoginButton {
             TextField accountIn = new TextField();
             TextField passwordIn = new PasswordField();
             accountIn.setPromptText("Please enter your account:");
-            accountIn.setPrefWidth(200);
             passwordIn.setPromptText("Please enter your password:");
-            passwordIn.setPrefWidth(200);
-            String s1 = accountIn.getText(), s2 = passwordIn.getText();
+
             Button confirm = new Button("Register and login");
             confirm.setOnAction(actionEvent1 -> {
+                String s1 = accountIn.getText(), s2 = passwordIn.getText();
                 try {
                     FileWriter fileWriter = new FileWriter("src/main/userdata/users.txt", true);
                     if (s1.trim().isEmpty()) {
@@ -74,11 +74,14 @@ public class LoginButton {
             Button cancel = new Button("Cancel");
             cancel.setOnAction(actionEvent1 -> loginStage.setScene(loginScene));
 
-            HBox hBox = new HBox();
-            hBox.getChildren().addAll(confirm, cancel);
+            HBox hBox = new HBox(50);
+            hBox.setAlignment(Pos.CENTER);
+            hBox.getChildren().addAll(cancel, confirm);
+
             if (registerBox.getChildren().isEmpty()) {
                 registerBox.getChildren().addAll(accountIn, passwordIn, hBox);
             }
+
             loginStage.setScene(registerScene);
         });
 
@@ -88,24 +91,17 @@ public class LoginButton {
             TextField accountIn = new TextField();
             TextField passwordIn = new PasswordField();
             accountIn.setPromptText("Please enter your account:");
-            accountIn.setPrefWidth(200);
             passwordIn.setPromptText("Please enter your password:");
-            passwordIn.setPrefWidth(200);
-            String s1 = accountIn.getText(), s2 = passwordIn.getText();
+
             Button confirm = new Button("Confirm");
             Button cancel = new Button("Cancel");
 
-            HBox hBox = new HBox();
-            hBox.getChildren().addAll(confirm, cancel);
-
-            if (loginBox.getChildren().isEmpty()) {
-                loginBox.getChildren().addAll(accountIn, passwordIn, hBox, registerButton);
-            }
-
-            loginStage.setScene(loginScene);
-            loginStage.show();
+            HBox hBox = new HBox(150);
+            hBox.setAlignment(Pos.CENTER);
+            hBox.getChildren().addAll(cancel, confirm);
 
             confirm.setOnAction(actionEvent1 -> {
+                String s1 = accountIn.getText(), s2 = passwordIn.getText();
                 if (s1.trim().isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Warning");
@@ -133,6 +129,14 @@ public class LoginButton {
                 }
             });
             cancel.setOnAction(actionEvent1 -> loginStage.close());
+
+            if (loginBox.getChildren().isEmpty()) {
+                loginBox.getChildren().addAll(accountIn, passwordIn, hBox, registerButton);
+                loginBox.setAlignment(Pos.CENTER);
+            }
+
+            loginStage.setScene(loginScene);
+            loginStage.show();
         });
         return loginButton;
     }

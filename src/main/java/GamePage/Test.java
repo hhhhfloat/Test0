@@ -3,57 +3,30 @@ package GamePage;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.scene.transform.Scale;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Test extends Application {
-
-    private double initialWidth;
-    private double initialHeight;
-    private Scale scaleTransform;
-
     @Override
-    public void start(Stage primaryStage) {
-        StackPane root = new StackPane();
-        Button button = new Button("缩放按钮");
-        root.getChildren().add(button);
+    public void start(Stage stage) {
+        // 情况1：不设置 maxWidth
+        Button button1 = new Button("按钮1 - 默认");
+        button1.setStyle("-fx-background-color: lightcoral;");
 
-        Scene scene = new Scene(root, 800, 600);
+        // 情况2：设置 maxWidth 为无限
+        Button button2 = new Button("按钮2 - maxWidth=无限");
+        button2.setPrefWidth(30);
+        button2.setMaxWidth(Double.MAX_VALUE);
 
-        // 保存初始尺寸
-        initialWidth = scene.getWidth();
-        initialHeight = scene.getHeight();
+        button2.setStyle("-fx-background-color: lightgreen;");
 
-        // 创建缩放变换
-        scaleTransform = new Scale();
-        scene.getRoot().getTransforms().add(scaleTransform);
+        VBox vbox = new VBox(10, button1, button2);
+        vbox.setPrefWidth(300);
+        vbox.setStyle("-fx-border-color: black; -fx-padding: 10;");
 
-        // 监听场景大小变化
-        scene.widthProperty().addListener((obs, oldVal, newVal) -> {
-            double scaleX = newVal.doubleValue() / initialWidth;
-            scaleTransform.setX(scaleX);
-
-            // 同步 Y 轴缩放以保持比例
-            if (primaryStage.getHeight() > 0) {
-                double scaleY = primaryStage.getHeight() / initialHeight;
-                scaleTransform.setY(scaleY);
-            }
-        });
-
-        scene.heightProperty().addListener((obs, oldVal, newVal) -> {
-            double scaleY = newVal.doubleValue() / initialHeight;
-            scaleTransform.setY(scaleY);
-
-            // 同步 X 轴缩放以保持比例
-            if (primaryStage.getWidth() > 0) {
-                double scaleX = primaryStage.getWidth() / initialWidth;
-                scaleTransform.setX(scaleX);
-            }
-        });
-
-        primaryStage.setTitle("场景缩放示例");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.setScene(new Scene(vbox));
+        stage.setTitle("maxWidth 对比");
+        stage.show();
     }
 }

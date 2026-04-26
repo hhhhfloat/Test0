@@ -9,9 +9,11 @@ import java.util.Map;
 public class Account {
     private final Map<String, String> users = new HashMap<>();
     private String accountName;
-    public Map<String, String> getMap(){
+
+    public Map<String, String> getMap() {
         return users;
     }
+
     public Account() {
         try (BufferedReader reader = new BufferedReader(new FileReader("src/main/userdata/users.txt"))) {
             String line = reader.readLine();
@@ -22,6 +24,7 @@ public class Account {
         } catch (IOException e) {
         }
     }
+
     public String getAccountName() {
         return accountName;
     }
