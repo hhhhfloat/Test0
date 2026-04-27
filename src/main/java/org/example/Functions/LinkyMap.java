@@ -1,21 +1,52 @@
 package org.example.Functions;
 
-import com.sun.webkit.dom.CSSFontFaceRuleImpl;
-
 import java.util.*;
 
 public class LinkyMap {
     /// VVVVVV 重要常数以及成员变量声明
     // 四个方向 0上 1右 2下 3左
     final int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+    static final int[][][] Pos =
+    {
+        {
+            {0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,1,1,1,1,0,0,0,0,0,0,0},
+            {0,1,1,1,1,0,0,0,0,0,0,0},
+            {0,1,1,1,1,0,0,0,0,0,0,0},
+            {0,1,1,1,1,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,1,1,1,1,0},
+            {0,0,0,0,0,0,0,1,1,1,1,0},
+            {0,0,0,0,0,0,0,1,1,1,1,0},
+            {0,0,0,0,0,0,0,1,1,1,1,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0}
+        },
+        {
+            {0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,1,1,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,1,1,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0}
+        }
+    };
+    static final int[] nType = {6,12};
+    static final int[] nToPut = {32, 100};
 
     private int MAPX_, MAPY_;
     private int[][] map;
     private int[][] map_T;
     private int[][][][] NumMap;
     private int[][][][] NumMap_T;
-    private int nType;
-
+    private int MapType = 0;
+    private int[] Count;
     private int ChangeCount = 0;
 
     /// VVVVVV
@@ -36,145 +67,85 @@ public class LinkyMap {
     public int getChangeCount() {
         return ChangeCount;
     }
-
-    // VVVVVV
-    // 地图类，有成员 MAPX, MAPY, map[][]、NumMap[][][][]
-    /// 构造函数，会生成地图以及对应数表（测试阶段使用MAPX = MAPY = 6）
-    public LinkyMap(int MAPX, int MAPY, int Types) {
+    
+    /// 构造函数，会生成地图以及对应数表
+    public LinkyMap(int MAPX, int MAPY, int mpType) throws InterruptedException {
         MAPX_ = MAPX;
         MAPY_ = MAPY;
-        nType = Types;
+        MapType = mpType;
         map = new int[MAPX_][MAPY_];
         map_T = new int [MAPY_][MAPX_];
+
         //随机生成初始地图
-
         initMap();
-
-        /*
-        String SMap = "";
-        SMap += "54321 ";
-        SMap += "98765 ";
-        SMap += "54321 ";
-        SMap += "056787";
-        SMap += "129270";
-        SMap += "5   51";
-        for (int i = 0; i < MAPX; i++) {
-            for (int j = 0; j < MAPY; j++) {
-                char c = SMap.charAt(i * MAPY + j);
-                map[i][j] = (c == ' ') ? -1 : (c - '0');
-                map_T[j][i] = map[i][j];
-            }
-        }
-        */
-
         // 生成数表
         initNumMap();
     }
 
     /// 自动生成地图
-    public int initMap()
-    {
-        int num = MAPX_*MAPY_/2 - nType; // 设置的次数
-        int Possible = 1000; // 不生成的概率
-        Random random = new Random();
-        int[] count = new int[nType];
-        // 随机设定各种图形的数量（设置一半的次数，之后再翻倍）
-        for (int i = 0; i < num; i++) {
-            int is = random.nextInt(Possible);
-            int ind = random.nextInt(nType);
-            if(is != 0)
-            {
-                if(count[ind]>=6)
-                {
-                    i--;
-                }
-                else count[ind]++;
-            }
-        }
-        int N = 0; // 总共要放进去的个数
-        for (int i = 0; i < nType; i++) {
-            count[i]++;
-            count[i]*=2;
-            N += count[i];
-        }
-        // 写入缓存地图（真的这个算法很有意思啊）
-        int[][] buf_Map = new int[MAPX_][MAPY_];
-        int Tot = MAPX_*MAPY_;
+    public void initMap() throws InterruptedException {
+        Count = new int[nType[MapType]];
+        int[][] pos = new int[MAPX_][MAPY_];
+        int[][] buf_map = new int[MAPX_][MAPY_];
         for (int x = 0; x < MAPX_; x++) {
             for (int y = 0; y < MAPY_; y++) {
-                int isPut = random.nextInt(Tot) + 1;
-                if(isPut<=N)
-                {
-                    int r = random.nextInt(nType);
-                    while(count[r]==0)r = random.nextInt(nType);
-                    map[x][y] = r;
-                    buf_Map[x][y] = r;
-                    N--;
-                    Tot--;
-                    count[r]--;
-                }
-                else{
-                    map[x][y] = -1;
-                    buf_Map[x][y] = -1;
-                    Tot--;
-                }
+                map[x][y] = -1;
+                buf_map[x][y] = -1;
             }
         }
-        HashSet<Point> path = new HashSet<>();
-        // 检查完成并修改！
-        while(true)
-        {
-            initNumMap();
-            do
-            { // 消到不能消
-                path = autoFindPath();
-                delNumMap(path);
-            }while(!path.isEmpty());
-            // 空了：胜利！
-            if(isComplete()) break;
 
-            ChangeCount++;
-            // 没空，交换（找左上角点，把与他相等的点换到能消的地方）
-            int val = -1;
-            Point aim = new Point(-1,-1);
-            Point des = new Point(-1,-1);
-            int temp = -1;
-            for (int x = 0; x < MAPX_; x++) {
-                for (int y = 0; y < MAPY_; y++) {
-                    if(map[x][y] != -1) {
-                        if(val==-1) { // 找第一个左上角的
-                            val = map[x][y];
-                            aim = new Point(x, y);
-                        }
-                        else{// 找一个能连的（不是第一个左上角的后继的第一个就是）
-                            des = new Point(x,y);
-                            temp = map[x][y];
-                            x = MAPX_;
-                            y = MAPY_;
-                        }
-                    }
-                }
-            }
-            // PrintMap(map,MAPX_,MAPY_);
-            for(int x = MAPX_-1;x>=aim.x();x--){
-                for (int y = MAPY_-1; y >=0; y--) {// 反着找，必定找到先于循环结束
-                    if(map[x][y] == val){// 找到要换的相等目标点
-                        map[x][y] = temp; // 被不等的值替换
-                        map[aim.x()][aim.y()] = -1;
-                        map[des.x()][des.y()] = -1;// 直接消掉
-                        buf_Map[x][y] = temp;
-                        buf_Map[des.x()][des.y()] = val; // 更新bufferMap的信息（交换了）
-                        x = -1;
-                        y = -1;// 跳出循环
-                    }
-                }
-            }
-        }
-        // 将bufferMap的信息转换回Map中
         for (int i = 0; i < MAPX_; i++) {
-            System.arraycopy(buf_Map[i],0,map[i],0,MAPY_);
+            System.arraycopy(Pos[MapType][i],0,pos[i],0,MAPY_);
         }
-        return ChangeCount;
+        do {
+            sRandCount();
+            sRandMap(pos, buf_map);
+            //PrintMap(map);
+            //Sleep(60000);
+            initNumMap();
+        }while(!canComplete());
+        for (int i = 0; i < MAPX_; i++) {
+            System.arraycopy(buf_map[i],0,map[i],0,MAPY_);
+        }
+    }
+    public void sRandCount()
+    {
+        Random rand = new Random();
+        int n = nType[MapType];
+        int times = nToPut[MapType];
+        for (int i = 0; i < n; i++) {
+            Count[i] = 2;
+        }
+        for (int i = 0; i < times/2 - n; i++) {
+            Count[rand.nextInt(n)]+=2;
+        }
+    }
+    public void sRandMap(int[][] pos, int[][] buf_map)
+    {
+        int n = nType[MapType];
+        Random rand = new Random();
+        for (int x = 0; x < MAPX_; x++) {
+            for (int y = 0; y < MAPY_; y++) {
+                if(pos[x][y]==1)
+                {
+                    int r = rand.nextInt(n);
+                    while(Count[r] == 0)r = rand.nextInt(n);
+                    map[x][y] = r;
+                    buf_map[x][y] = r;
+                    Count[r]--;
+                }
+            }
+        }
+    }
+    public boolean canComplete()
+    {
+        while(!isComplete())
+        {
+            HashSet<Point> path = autoFindPath();
+            delNumMap(path);
+            if(path.isEmpty() && !isComplete()) return false;
+        }
+        return true;
     }
 
     /// 生成初始数表
@@ -308,6 +279,8 @@ public class LinkyMap {
     /// VVVVVV
     /// 自动寻找路径（无路则返回空HashSet）
     public HashSet<Point> autoFindPath() {
+        if(isComplete())return new HashSet<>();
+
         // 全部一次性枚举！
 
         for (int x = 0; x < MAPX_; x++) {
@@ -637,9 +610,9 @@ public class LinkyMap {
     }
 
     // 测试用函数
-    public void PrintMap(int[][] map_, int MAPX, int MAPY) {
-        for (int i = 0; i < MAPX; i++) {
-            for (int j = 0; j < MAPY; j++) {
+    public void PrintMap(int[][] map_) {
+        for (int i = 0; i < MAPX_; i++) {
+            for (int j = 0; j < MAPY_; j++) {
                 int t = map_[i][j];
                 if (t == -1) System.out.print("    ");
                 else if (t == '#') System.out.print(" ## ");
@@ -647,5 +620,8 @@ public class LinkyMap {
             }
             System.out.println();
         }
+    }
+    public void Sleep(int MiliS) throws InterruptedException {
+        Thread.sleep(MiliS);
     }
 }

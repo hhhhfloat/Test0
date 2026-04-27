@@ -72,7 +72,9 @@ public class AppTest
     }
 
     // Use this to Print the rectangle map
-    public void PrintMap(int[][] map_, int MAPX, int MAPY) {
+    public void PrintMap(int[][] map_) {
+        int MAPX = map_.length;
+        int MAPY = map_[0].length;
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
                 int t = map_[i][j];
@@ -109,61 +111,12 @@ public class AppTest
         System.out.printf("(%d, %d) \n", p[0], p[1]);
     }
 
-    // 测试pickPath
-    public void _testpickPath() throws InterruptedException {
-        Scanner sc = new Scanner(System.in);
-        sc.useDelimiter(Pattern.compile(","));
-        int MAPX = 6, MAPY = 6;
-        LinkyMap level = new LinkyMap(MAPX, MAPY,10);
-
-        // 测试数据
-        Point[][] p = {
-                {new Point(5,0),new Point(5,4)},
-                {new Point(0,4),new Point(2,4)}
-        };
-        int l = p.length;
-        int count = 0;
-
-        while (!isComplete(level.getMap()) && count < l) {
-            PrintMap(level.getMap(),MAPX,MAPY);
-
-            System.out.println();
-            System.out.println();
-
-            Point p1 = p[count][0];
-            Point p2 = p[count][1];
-            HashSet<Point>path = level.pickPath(p1,p2);
-            int[][] Map = ShowPath(path,level.getMap(),MAPX,MAPY);
-            PrintMap(Map, MAPX,MAPY);
-            HashSet<Point> del = new HashSet<>();
-            del.add(p1);del.add(p2);
-            level.delNumMap(del);
-            count++;
-
-            Sleep(2000);
-            System.out.println();
-            System.out.println();
-            System.out.println();
-        }
-        PrintMap(level.getMap(),MAPX,MAPY);
-    }
-
     // 测试自动生成地图
-    public void testMapSummon()
-    {
+    public void testMapSummon() throws InterruptedException {
         int Count = 0;
         int MAPX = 10, MAPY = 10;
         int nType = 50;
-        /*
-        for (int i = 0; i < 1000; i++) {
-            int MAPX = 10, MAPY = 10;
-            LinkyMap level = new LinkyMap(MAPX, MAPY, 30);
-            Count += level.getChangeCount();
-            // PrintMap(level.getMap(), MAPX, MAPY);
-        }
-        */
-        LinkyMap level = new LinkyMap(MAPX,MAPY,nType);
-        System.out.println(Count);
-        PrintMap(level.getMap(),MAPX,MAPY);
+        LinkyMap level = new LinkyMap(12, 12, 0);
+        //PrintMap(level.getMap());
     }
 }
