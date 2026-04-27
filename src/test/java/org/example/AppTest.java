@@ -54,7 +54,7 @@ public class AppTest
             System.arraycopy(map_[i], 0, temp[i], 0, MAPY);
         }
         for (Point p : path) {
-            temp[p.x()][p.y()] = '#';
+            temp[p.x()][p.y()] = -2;
         }
         return temp;
     }
@@ -77,7 +77,7 @@ public class AppTest
             for (int j = 0; j < MAPY; j++) {
                 int t = map_[i][j];
                 if (t == -1) System.out.print("    ");
-                else if (t == '#') System.out.print(" ## ");
+                else if (t == -2) System.out.print(" ## ");
                 else System.out.printf(" %-3d", t);
             }
             System.out.println();
@@ -152,6 +152,8 @@ public class AppTest
     public void testMapSummon()
     {
         int Count = 0;
+        int MAPX = 10, MAPY = 10;
+        int nType = 50;
         /*
         for (int i = 0; i < 1000; i++) {
             int MAPX = 10, MAPY = 10;
@@ -160,8 +162,8 @@ public class AppTest
             // PrintMap(level.getMap(), MAPX, MAPY);
         }
         */
-        LinkyMap level = new LinkyMap(6,6,15);
+        LinkyMap level = new LinkyMap(MAPX,MAPY,nType);
         System.out.println(Count);
-        PrintMap(level.getMap(),6,6);
+        PrintMap(level.getMap(),MAPX,MAPY);
     }
 }
