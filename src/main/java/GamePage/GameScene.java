@@ -1,6 +1,6 @@
 package GamePage;
 
-import GamePage.Buttons.Pause;
+import GamePage.GameButtons.Pause;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 

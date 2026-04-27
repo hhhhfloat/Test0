@@ -1,7 +1,6 @@
-package GamePage.Buttons;
+package GamePage.GameButtons;
 
 
-import GamePage.GameScene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 

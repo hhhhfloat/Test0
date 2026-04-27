@@ -1,8 +1,8 @@
 package GamePage;
 
-import GamePage.Buttons.Difficult;
-import GamePage.Buttons.Easy;
-import GamePage.Buttons.Fun;
+import GamePage.GameButtons.Difficult;
+import GamePage.GameButtons.Easy;
+import GamePage.GameButtons.Fun;
 import Page.rsc.BgImage;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

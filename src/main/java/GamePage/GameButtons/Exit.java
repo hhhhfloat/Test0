@@ -1,4 +1,4 @@
-package GamePage.Buttons;
+package GamePage.GameButtons;
 
 
 import javafx.application.Platform;

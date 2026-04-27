@@ -1,7 +1,7 @@
 package LoginPage;
 
 import GamePage.LevelScene;
-import LoginPage.Buttons.*;
+import LoginPage.LoginButtons.*;
 import Page.rsc.BgImage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
