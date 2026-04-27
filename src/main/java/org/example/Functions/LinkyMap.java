@@ -1,10 +1,8 @@
 package org.example.Functions;
 
-import java.util.ArrayDeque;
+import com.sun.webkit.dom.CSSFontFaceRuleImpl;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class LinkyMap {
     /// VVVVVV 重要常数以及成员变量声明
@@ -41,6 +39,10 @@ public class LinkyMap {
         map = new int[MAPX_][MAPY_];
         map_T = new int [MAPY_][MAPX_];
         //随机生成初始地图
+
+        initMap(10);
+
+        /*
         String SMap = "";
         SMap += "54321 ";
         SMap += "98765 ";
@@ -55,8 +57,115 @@ public class LinkyMap {
                 map_T[j][i] = map[i][j];
             }
         }
+        */
+
         // 生成数表
         initNumMap();
+    }
+
+    /// 自动生成地图
+    public void initMap(int n)
+    {
+        int num = MAPX_*MAPY_/2; // 设置的次数
+        int Possible = 4; // 不生成的概率
+        Random random = new Random();
+        int[] count = new int[n];
+        // 随机设定各种图形的数量（设置一半的次数，之后再翻倍）
+        for (int i = 0; i < num; i++) {
+            int is = random.nextInt(Possible);
+            int ind = random.nextInt(n);
+            if(is != 0)
+            {
+                if(count[ind]>=6)
+                {
+                    i--;
+                }
+                else count[ind]++;
+            }
+        }
+        int N = 0; // 总共要放进去的个数
+        for (int i = 0; i < n; i++) {
+            count[i]*=2;
+            N += count[i];
+        }
+        /// 测试
+        System.out.println(Arrays.toString(count));
+        // 写入缓存地图（真的这个算法很有意思啊）
+        int[][] buf_Map = new int[MAPX_][MAPY_];
+        int Tot = MAPX_*MAPY_;
+        for (int x = 0; x < MAPX_; x++) {
+            for (int y = 0; y < MAPY_; y++) {
+                int isPut = random.nextInt(Tot) + 1;
+                if(isPut<=N)
+                {
+                    int r = random.nextInt(n);
+                    while(count[r]==0)r = random.nextInt(n);
+                    map[x][y] = r;
+                    buf_Map[x][y] = r;
+                    N--;
+                    Tot--;
+                    count[r]--;
+                }
+                else{
+                    map[x][y] = -1;
+                    buf_Map[x][y] = -1;
+                    Tot--;
+                }
+            }
+        }
+        HashSet<Point> path = new HashSet<>();
+        // 检查完成并修改！
+        while(true)
+        {
+            initNumMap();
+            do
+            { // 消到不能消
+                path = autoFindPath();
+                delNumMap(path);
+            }while(!path.isEmpty());
+            // 空了：胜利！
+            if(isComplete()) break;
+            // 没空，交换（找左上角点，把与他相等的点换到能消的地方）
+            int val = -1;
+            Point aim = new Point(-1,-1);
+            Point des = new Point(-1,-1);
+            int temp = -1;
+            for (int x = 0; x < MAPX_; x++) {
+                for (int y = 0; y < MAPY_; y++) {
+                    if(map[x][y] != -1) {
+                        if(val==-1) { // 找第一个左上角的
+                            val = map[x][y];
+                            aim = new Point(x, y);
+                        }
+                        else{// 找一个能连的（不是第一个左上角的后继的第一个就是）
+                            des = new Point(x,y);
+                            temp = map[x][y];
+                            x = MAPX_;
+                            y = MAPY_;
+                        }
+                    }
+                }
+            }
+            PrintMap(map,MAPX_,MAPY_);
+            System.out.println(des);
+            for(int x = MAPX_-1;x>=aim.x();x--){
+                for (int y = MAPY_-1; y >=0; y--) {// 反着找，必定找到先于循环结束
+                    if(map[x][y] == val){// 找到要换的相等目标点
+                        map[x][y] = temp; // 被不等的值替换
+                        map[aim.x()][aim.y()] = -1;
+                        map[des.x()][des.y()] = -1;// 直接消掉
+                        buf_Map[x][y] = temp;
+                        buf_Map[des.x()][des.y()] = val; // 更新bufferMap的信息（交换了）
+                        x = -1;
+                        y = -1;// 跳出循环
+                    }
+                }
+            }
+        }
+        // 将bufferMap的信息转换回Map中
+        for (int i = 0; i < MAPX_; i++) {
+            System.arraycopy(buf_Map[i],0,map[i],0,MAPY_);
+        }
     }
 
     /// 生成初始数表
@@ -134,20 +243,13 @@ public class LinkyMap {
         // 数表生成完成
     }
 
-    /// 自动生成地图
-    public void initMap()
-    {
-
-    }
-
-
-
     ///  VVVVVV
     /// 消去后更新数表与地图（给定消去的非零点）
     public void delNumMap(HashSet<Point> points) {
 
         for (Point p : points) {
             int x = p.x(), y = p.y();
+            if(map[x][y] == -1) continue;
             //延申原先方向的（不知道如何避免重复）（知道如何避免重复了但是好复杂）
             for (int i = 0; i < 4; i++) {
                 int t0 = 1;
@@ -194,7 +296,7 @@ public class LinkyMap {
     }
 
     /// VVVVVV
-    /// 自动寻找路径（无路则返回空Deque）
+    /// 自动寻找路径（无路则返回空HashSet）
     public HashSet<Point> autoFindPath() {
         // 全部一次性枚举！
 
@@ -218,7 +320,6 @@ public class LinkyMap {
                     }
                 } else // 空格，枚举同行拐点！
                 {
-                    if(x==4&&y==1) System.out.println(Arrays.deepToString(NumMap[4][1]));
                     HashSet<Point> path = new HashSet<>();
                     // 取右侧还有空格的空格
                     int k = NumMap[x][y][1][1];
@@ -362,6 +463,23 @@ public class LinkyMap {
         return pt;
     }
 
+    /// 检测map完成的函数（无参默认检查自己的地图）
+    public boolean isComplete() {
+        for (int i = 0; i < MAPX_; i++) {
+            for (int j = 0; j < MAPY_; j++) {
+                if (map[i][j] != -1) return false;
+            }
+        }
+        return true;
+    }
+    public boolean isComplete(int[][] map_) {
+        for (int i = 0; i < MAPX_; i++) {
+            for (int j = 0; j < MAPY_; j++) {
+                if (map_[i][j] != -1) return false;
+            }
+        }
+        return true;
+    }
 
     /// 给定点找连线的函数(无路径则返回空路径)
     public HashSet<Point> pickPath(Point p1, Point p2)
@@ -509,5 +627,18 @@ public class LinkyMap {
             return path;
         }
         return path;
+    }
+
+    // 测试用函数
+    public void PrintMap(int[][] map_, int MAPX, int MAPY) {
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
+                int t = map_[i][j];
+                if (t == -1) System.out.print("    ");
+                else if (t == '#') System.out.print(" ## ");
+                else System.out.printf(" %-3d", t);
+            }
+            System.out.println();
+        }
     }
 }
