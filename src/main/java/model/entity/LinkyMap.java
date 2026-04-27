@@ -100,8 +100,6 @@ public class LinkyMap {
         do {
             sRandCount();
             sRandMap(pos, buf_map);
-            //PrintMap(map);
-            //Sleep(60000);
             initNumMap();
         }while(!canComplete());
         for (int i = 0; i < MAPX_; i++) {
@@ -141,7 +139,7 @@ public class LinkyMap {
     {
         while(!isComplete())
         {
-            HashSet<Point> path = autoFindPath();
+            HashSet<Coordi> path = autoFindPath();
             delNumMap(path);
             if(path.isEmpty() && !isComplete()) return false;
         }
@@ -226,9 +224,9 @@ public class LinkyMap {
 
     ///  VVVVVV
     /// 消去后更新数表与地图（给定消去的非零点）
-    public void delNumMap(HashSet<Point> points) {
+    public void delNumMap(HashSet<Coordi> coordis) {
 
-        for (Point p : points) {
+        for (Coordi p : coordis) {
             int x = p.x(), y = p.y();
             if(map[x][y] == -1) continue;
             //延申原先方向的（不知道如何避免重复）（知道如何避免重复了但是好复杂）
@@ -257,7 +255,7 @@ public class LinkyMap {
                     NumMap[px][py][ii][1] = dis + t0;
                     NumMap_T[py][px][3-ii][0] = val;
                     NumMap_T[py][px][3-ii][1] = dis + t0;
-                    boolean b = points.contains(new Point(px, py));
+                    boolean b = coordis.contains(new Coordi(px, py));
                     // System.out.println(b);
                     if (map[x + t0 * dx][y + t0 * dy] != -1 && !b) // 不是空格且哈希匹配不是消掉的——停步
                     {
@@ -269,7 +267,7 @@ public class LinkyMap {
             // 不能在地图上抹除，因为还需要结合哈希匹配来去重
         }
         // 覆写全部完成，更新地图
-        for (Point p : points) {
+        for (Coordi p : coordis) {
             map[p.x()][p.y()] = -1;
             map_T[p.y()][p.x()]=-1;
         }
@@ -278,7 +276,7 @@ public class LinkyMap {
 
     /// VVVVVV
     /// 自动寻找路径（无路则返回空HashSet）
-    public HashSet<Point> autoFindPath() {
+    public HashSet<Coordi> autoFindPath() {
         if(isComplete())return new HashSet<>();
 
         // 全部一次性枚举！
@@ -290,17 +288,17 @@ public class LinkyMap {
                     for (int i = 0; i < 4; i++) {
                         if (map[x][y] == NumMap[x][y][i][0]) //因为map[x][y]不是-1，不用考虑空条
                         {
-                            HashSet<Point> path = new HashSet<>();
+                            HashSet<Coordi> path = new HashSet<>();
                             int dx = dir[i][0], dy = dir[i][1];
                             for (int z = 0; z <= NumMap[x][y][i][1]; z++) {
-                                path.add(new Point(x + dx * z, y + dy * z));
+                                path.add(new Coordi(x + dx * z, y + dy * z));
                             }
                             return path;
                         }
                     }
                 } else // 空格，枚举同行拐点！
                 {
-                    HashSet<Point> path = new HashSet<>();
+                    HashSet<Coordi> path = new HashSet<>();
                     // 取右侧还有空格的空格
                     int k = NumMap[x][y][1][1];
                     // 枚举步数内的所有空格对
@@ -316,15 +314,15 @@ public class LinkyMap {
                                     if (NumMap[x][y + i][z][0] != -1 && NumMap[x][y + i][z][0] == NumMap[x][y + j][w][0]) {
                                         // 先加中间
                                         for (int poi = i; poi <= j; poi++) {
-                                            path.add(new Point(x, y + poi));
+                                            path.add(new Coordi(x, y + poi));
                                         }
                                         // i一侧
                                         for (int poi = 1; poi <= NumMap[x][y + i][z][1]; poi++) {
-                                            path.add(new Point(x + poi * dir[z][0], y + i));
+                                            path.add(new Coordi(x + poi * dir[z][0], y + i));
                                         }
                                         // j一侧
                                         for (int poi = 1; poi <= NumMap[x][y + j][w][1]; poi++) {
-                                            path.add(new Point(x + poi * dir[w][0], y + j));
+                                            path.add(new Coordi(x + poi * dir[w][0], y + j));
                                         }
                                         return path;
                                     }
@@ -345,20 +343,20 @@ public class LinkyMap {
     }
 
     /// 自动单拐点路径返回(输入已知合法的拐点坐标)
-    HashSet<Point> OneTwiPath(int x, int y) {
+    HashSet<Coordi> OneTwiPath(int x, int y) {
         // 四个方向 0上 1右 2下 3左
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-        HashSet<Point> path = new HashSet<>();
+        HashSet<Coordi> path = new HashSet<>();
         for (int d = 0; d < 4; d++) {
             if (NumMap[x][y][d][0] != -1 && NumMap[x][y][d][0] == NumMap[x][y][(d + 1) % 4][0]) {
                 int k1 = NumMap[x][y][d][1], k2 = NumMap[x][y][(d + 1) % 4][1]; // 记录两个方向的步数
                 for (int z = 0; z <= k1; z++) {
-                    path.add(new Point(x + dir[d][0] * z, y + dir[d][1] * z));
+                    path.add(new Coordi(x + dir[d][0] * z, y + dir[d][1] * z));
                 }
                 // 使用新方向
                 int t = (d + 1) % 4;
                 for (int z = 1; z <= k2; z++) {
-                    path.add(new Point(x + dir[t][0] * z, y + dir[t][1] * z));
+                    path.add(new Coordi(x + dir[t][0] * z, y + dir[t][1] * z));
                 }
                 return path;
             }
@@ -367,12 +365,12 @@ public class LinkyMap {
     }
 
     /// 横向自动寻找双拐点路径，已经发挥最大作用
-    HashSet<Point> rowTwoTwi(int[][][][] NumMap_, int[][] map_) {
+    HashSet<Coordi> rowTwoTwi(int[][][][] NumMap_, int[][] map_) {
         // 四个方向 0上 1右 2下 3左
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
         int MAPX = map_.length;
         int MAPY = map_[0].length;
-        HashSet<Point> path = new HashSet<>();
+        HashSet<Coordi> path = new HashSet<>();
         for (int x = 0; x < MAPX; x++) {
             for (int y = 0; y < MAPY; y++) {
                 if (map_[x][y] == -1 && NumMap_[x][y][1][1] >= 2) {
@@ -386,15 +384,15 @@ public class LinkyMap {
                                     if (NumMap_[x][y + i][z][0] != -1 && NumMap_[x][y + i][z][0] == NumMap_[x][y + j][w][0]) {
                                         // 先加中间
                                         for (int poi = i; poi <= j; poi++) {
-                                            path.add(new Point(x, y + poi));
+                                            path.add(new Coordi(x, y + poi));
                                         }
                                         // i一侧
                                         for (int poi = 1; poi <= NumMap_[x][y + i][z][1]; poi++) {
-                                            path.add(new Point(x + poi * dir[z][0], y + i));
+                                            path.add(new Coordi(x + poi * dir[z][0], y + i));
                                         }
                                         // j一侧
                                         for (int poi = 1; poi <= NumMap_[x][y + j][w][1]; poi++) {
-                                            path.add(new Point(x + poi * dir[w][0], y + j));
+                                            path.add(new Coordi(x + poi * dir[w][0], y + j));
                                         }
                                         return path;
                                     }
@@ -435,10 +433,10 @@ public class LinkyMap {
     }
 
     /// path用的转置函数
-    public HashSet<Point> Tsp(HashSet<Point> path) {
-        HashSet<Point> pt = new HashSet<>();
-        for (Point p : path) {
-            pt.add(new Point(p.y(), p.x()));
+    public HashSet<Coordi> Tsp(HashSet<Coordi> path) {
+        HashSet<Coordi> pt = new HashSet<>();
+        for (Coordi p : path) {
+            pt.add(new Coordi(p.y(), p.x()));
         }
         return pt;
     }
@@ -462,18 +460,18 @@ public class LinkyMap {
     }
 
     /// 给定点找连线的函数(无路径则返回空路径)
-    public HashSet<Point> pickPath(Point p1, Point p2)
+    public HashSet<Coordi> pickPath(Coordi p1, Coordi p2)
     {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
-        HashSet<Point> path = new HashSet<>();
+        HashSet<Coordi> path = new HashSet<>();
         int val = map[x1][y1];
 
         for (int i = 0; i < 4; i++) {
             if(NumMap[x1][y1][i][0] == val && x1+NumMap[x1][y1][i][1]*dir[i][0] == x2 && y1 + NumMap[x1][y1][i][1] * dir[i][1] == y2)
             {
                 for (int j = 0; j <= NumMap[x1][y1][i][1]; j++) {
-                    Point p = new Point(x1+dir[i][0]*j,y1+dir[i][1]*j);
+                    Coordi p = new Coordi(x1+dir[i][0]*j,y1+dir[i][1]*j);
                     path.add(p);
                 }
                 return path;
@@ -510,15 +508,15 @@ public class LinkyMap {
             {
                 for(int j = y1;j!=y2+oney;j+=oney)
                 {
-                    path.add(new Point(i,j));
+                    path.add(new Coordi(i,j));
                 }
                 int one1 = (i>x1)?1:-1;
                 for (int j = x1; j != i; j+=one1) {
-                    path.add(new Point(j,y1));
+                    path.add(new Coordi(j,y1));
                 }
                 int one2 = (i>x2)?1:-1;
                 for (int j = x2; j != i; j+=one2) {
-                    path.add(new Point(j,y2));
+                    path.add(new Coordi(j,y2));
                 }
                 return path;
             }
@@ -533,75 +531,75 @@ public class LinkyMap {
             {
                 for(int j = y1;j!=y2+oney;j+=oney)
                 {
-                    path.add(new Point(i,j));
+                    path.add(new Coordi(i,j));
                 }
                 int one1 = (i>x1)?1:-1;
                 for (int j = x1; j != i; j+=one1) {
-                    path.add(new Point(j,y1));
+                    path.add(new Coordi(j,y1));
                 }
                 int one2 = (i>x2)?1:-1;
                 for (int j = x2; j != i; j+=one2) {
-                    path.add(new Point(j,y2));
+                    path.add(new Coordi(j,y2));
                 }
                 return Tsp(path);
             }
         }
         return path;
     }
-    public HashSet<Point> Rdown1_Lup2(Point p1, Point p2)
+    public HashSet<Coordi> Rdown1_Lup2(Coordi p1, Coordi p2)
     {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
-        HashSet<Point> path = new HashSet<>();
+        HashSet<Coordi> path = new HashSet<>();
         if(NumMap[x1][y2][0][1] == x1-x2)
         {
             for (int i = 0; i < x1-x2; i++) {
-                Point p = new Point(x1 - i, y2);
+                Coordi p = new Coordi(x1 - i, y2);
                 path.add(p);
             }
             for (int i = 0; i <= y1-y2; i++) {
-                Point p = new Point(x1, y1-i);
+                Coordi p = new Coordi(x1, y1-i);
                 path.add(p);
             }
             return path;
         }
         if(NumMap[x2][y1][2][1] == x1-x2) {
             for (int i = 0; i < x1 - x2; i++) {
-                Point p = new Point(x1 - i, y1);
+                Coordi p = new Coordi(x1 - i, y1);
                 path.add(p);
             }
             for (int i = 0; i <= y1 - y2; i++) {
-                Point p = new Point(x2, y1 - i);
+                Coordi p = new Coordi(x2, y1 - i);
                 path.add(p);
             }
             return path;
         }
         return path;
     }
-    public HashSet<Point> Rup1_Ldown2(Point p1, Point p2)
+    public HashSet<Coordi> Rup1_Ldown2(Coordi p1, Coordi p2)
     {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
-        HashSet<Point> path = new HashSet<>();
+        HashSet<Coordi> path = new HashSet<>();
         if(NumMap[x2][y1][0][1] == x2-x1)
         {
             for (int i = 0; i < x2-x1; i++) {
-                Point p = new Point(x1 + i, y1);
+                Coordi p = new Coordi(x1 + i, y1);
                 path.add(p);
             }
             for (int i = 0; i <= y1-y2; i++) {
-                Point p = new Point(x2, y1-i);
+                Coordi p = new Coordi(x2, y1-i);
                 path.add(p);
             }
             return path;
         }
         if(NumMap[x1][y2][2][1] == x2-x1) {
             for (int i = 0; i < x2 - x1; i++) {
-                Point p = new Point(x2 - i, y2);
+                Coordi p = new Coordi(x2 - i, y2);
                 path.add(p);
             }
             for (int i = 0; i <= y1 - y2; i++) {
-                Point p = new Point(x1, y1 - i);
+                Coordi p = new Coordi(x1, y1 - i);
                 path.add(p);
             }
             return path;

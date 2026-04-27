@@ -1,7 +1,7 @@
 package org.example;
 
 import model.entity.LinkyMap;
-import model.entity.Point;
+import model.entity.Coordi;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -45,12 +45,12 @@ public class AppTest
 
     // Test Functions have to be named after "test", like "testABC"
 
-    public int[][] ShowPath(HashSet<Point> path, int[][] map_, int MAPX, int MAPY) {
+    public int[][] ShowPath(HashSet<Coordi> path, int[][] map_, int MAPX, int MAPY) {
         int[][] temp = new int[MAPX][MAPY];
         for (int i = 0; i < MAPX; i++) {
             System.arraycopy(map_[i], 0, temp[i], 0, MAPY);
         }
-        for (Point p : path) {
+        for (Coordi p : path) {
             temp[p.x()][p.y()] = -2;
         }
         return temp;
@@ -84,8 +84,8 @@ public class AppTest
     }
 
     // Use this to Print the path
-    public void PrintPath(HashSet<Point> path) {
-        for (Point p : path) {
+    public void PrintPath(HashSet<Coordi> path) {
+        for (Coordi p : path) {
             System.out.printf("(%d, %d) ", p.x(), p.y());
         }
         System.out.println();
