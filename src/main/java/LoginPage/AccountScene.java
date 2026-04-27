@@ -1,6 +1,6 @@
 package LoginPage;
 
-import LoginPage.LoginButtons.*;
+import ButtonToBeChanged.LoginButtons.*;
 import Page.rsc.BgImage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

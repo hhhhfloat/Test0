@@ -1,7 +1,10 @@
 package GamePage;
 
+import ButtonToBeChanged.GameButtons.Pause;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -29,5 +32,16 @@ public class Points {
             group.getChildren().clear();
         });
         return group;
+    }
+
+    public static class GameScene {
+        public static Scene getGameScene() {
+            VBox gameboard = new VBox(Grid.grid(10, 10, 50, 50));
+            int points = 0;
+            ScoreLabel scoreLabel = new ScoreLabel(points);
+            TimerLabel timerLabel = new TimerLabel();
+            gameboard.getChildren().addAll(Pause.getButton(), scoreLabel.getPointsLabel(), timerLabel.timer());
+            return new Scene(gameboard);
+        }
     }
 }

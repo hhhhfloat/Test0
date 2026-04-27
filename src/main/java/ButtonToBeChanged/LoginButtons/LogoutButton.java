@@ -1,4 +1,4 @@
-package LoginPage.LoginButtons;
+package ButtonToBeChanged.LoginButtons;
 
 import LoginPage.LoginScene;
 import javafx.scene.control.*;

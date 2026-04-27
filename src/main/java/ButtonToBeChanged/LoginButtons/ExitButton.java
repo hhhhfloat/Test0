@@ -1,4 +1,4 @@
-package LoginPage.LoginButtons;
+package ButtonToBeChanged.LoginButtons;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;

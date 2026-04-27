@@ -1,6 +1,6 @@
-package GamePage.GameButtons;
+package ButtonToBeChanged.GameButtons;
 
-import LoginPage.LoginButtons.SettingsButton;
+import ButtonToBeChanged.LoginButtons.SettingsButton;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
