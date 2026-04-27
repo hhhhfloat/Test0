@@ -106,7 +106,7 @@ public class LinkyMap {
             System.arraycopy(buf_map[i],0,map[i],0,MAPY_);
         }
     }
-    public void sRandCount()
+    void sRandCount()
     {
         Random rand = new Random();
         int n = nType[MapType];
@@ -118,7 +118,7 @@ public class LinkyMap {
             Count[rand.nextInt(n)]+=2;
         }
     }
-    public void sRandMap(int[][] pos, int[][] buf_map)
+    void sRandMap(int[][] pos, int[][] buf_map)
     {
         int n = nType[MapType];
         Random rand = new Random();
@@ -135,7 +135,7 @@ public class LinkyMap {
             }
         }
     }
-    public boolean canComplete()
+    boolean canComplete()
     {
         while(!isComplete())
         {
@@ -147,7 +147,7 @@ public class LinkyMap {
     }
 
     /// 生成初始数表
-    public void initNumMap() {
+    void initNumMap() {
         NumMap = new int[MAPX_][MAPY_][4][2];
         // 扫描四元组
         // 按非零格枚举，直接四个方向都一起
@@ -408,7 +408,7 @@ public class LinkyMap {
     }
 
     /// NumMap用的转置函数
-    public int[][][][] Tsp(int[][][][] Nm) {
+    int[][][][] Tsp(int[][][][] Nm) {
         int[][][][] nt = new int[MAPY_][MAPX_][4][2];
         for (int i = 0; i < MAPX_; i++) {
             for (int j = 0; j < MAPY_; j++) {
@@ -422,7 +422,7 @@ public class LinkyMap {
     }
 
     /// map用的转置函数
-    public int[][] Tsp(int[][] mp) {
+    int[][] Tsp(int[][] mp) {
         int[][] map_T = new int[MAPY_][MAPX_];
         for (int i = 0; i < MAPY_; i++) {
             for (int j = 0; j < MAPX_; j++) {
@@ -433,7 +433,7 @@ public class LinkyMap {
     }
 
     /// path用的转置函数
-    public HashSet<Coordi> Tsp(HashSet<Coordi> path) {
+    HashSet<Coordi> Tsp(HashSet<Coordi> path) {
         HashSet<Coordi> pt = new HashSet<>();
         for (Coordi p : path) {
             pt.add(new Coordi(p.y(), p.x()));
@@ -442,7 +442,7 @@ public class LinkyMap {
     }
 
     /// 检测map完成的函数（无参默认检查自己的地图）
-    public boolean isComplete() {
+    boolean isComplete() {
         for (int i = 0; i < MAPX_; i++) {
             for (int j = 0; j < MAPY_; j++) {
                 if (map[i][j] != -1) return false;
@@ -450,7 +450,7 @@ public class LinkyMap {
         }
         return true;
     }
-    public boolean isComplete(int[][] map_) {
+    boolean isComplete(int[][] map_) {
         for (int i = 0; i < MAPX_; i++) {
             for (int j = 0; j < MAPY_; j++) {
                 if (map_[i][j] != -1) return false;
@@ -460,7 +460,7 @@ public class LinkyMap {
     }
 
     /// 给定点找连线的函数(无路径则返回空路径)
-    public HashSet<Coordi> pickPath(Coordi p1, Coordi p2)
+    HashSet<Coordi> pickPath(Coordi p1, Coordi p2)
     {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
@@ -546,7 +546,7 @@ public class LinkyMap {
         }
         return path;
     }
-    public HashSet<Coordi> Rdown1_Lup2(Coordi p1, Coordi p2)
+    HashSet<Coordi> Rdown1_Lup2(Coordi p1, Coordi p2)
     {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
@@ -576,7 +576,7 @@ public class LinkyMap {
         }
         return path;
     }
-    public HashSet<Coordi> Rup1_Ldown2(Coordi p1, Coordi p2)
+    HashSet<Coordi> Rup1_Ldown2(Coordi p1, Coordi p2)
     {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
@@ -608,7 +608,7 @@ public class LinkyMap {
     }
 
     // 测试用函数
-    public void PrintMap(int[][] map_) {
+    void PrintMap(int[][] map_) {
         for (int i = 0; i < MAPX_; i++) {
             for (int j = 0; j < MAPY_; j++) {
                 int t = map_[i][j];
@@ -619,7 +619,7 @@ public class LinkyMap {
             System.out.println();
         }
     }
-    public void Sleep(int MiliS) throws InterruptedException {
-        Thread.sleep(MiliS);
+    void Sleep(int MilliS) throws InterruptedException {
+        Thread.sleep(MilliS);
     }
 }
