@@ -21,8 +21,8 @@ public class Grid {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 Rectangle temp = rectangle(i, j, length, width);
-                Points point = new Points(i, j, length, width);
-                panel.getChildren().addAll(temp, point.circle());
+                Points point = new Points(i, j, length, width, 1);
+                panel.getChildren().addAll(temp, point.point());
 
             }
         }

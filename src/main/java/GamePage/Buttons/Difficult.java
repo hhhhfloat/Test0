@@ -8,7 +8,7 @@ public class Difficult {
     public static Button difficult(Stage stage) {
         Button difficultMode  = new Button("DIFFICULT");
         difficultMode.setPrefSize(600, 100);
-        difficultMode.setOnAction(event -> stage.setScene(GameScene.getGameScene(1)));
+        difficultMode.setOnAction(event -> stage.setScene(GameScene.getGameScene()));
         return difficultMode;
     }
 }

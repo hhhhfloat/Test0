@@ -1,7 +1,7 @@
 package GamePage;
 
 import GamePage.Buttons.Difficult;
-import GamePage.Buttons.Eazy;
+import GamePage.Buttons.Easy;
 import GamePage.Buttons.Fun;
 import Page.rsc.BgImage;
 import javafx.geometry.Pos;
@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 public class LevelScene {
     public static Scene getLevelScene(Stage stage) {
-        VBox list = new VBox(100, Eazy.eazy(stage), Difficult.difficult(stage), Fun.fun(stage));
+        VBox list = new VBox(100, Easy.easy(stage), Difficult.difficult(stage), Fun.fun(stage));
         StackPane stackPane = new StackPane(list);
         list.setAlignment(Pos.CENTER);
         stackPane.setBackground(BgImage.getBgImage());
