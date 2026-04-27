@@ -10,7 +10,6 @@ public class TimerLabel {
     Timeline timeline;
 
     public Label timer() {
-
         Label timer = new Label();
         timeline = new Timeline(
                 new KeyFrame(Duration.seconds(1), e -> {

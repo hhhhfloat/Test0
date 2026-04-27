@@ -6,11 +6,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Grid {
     public static Rectangle rectangle(double x, double y, double length, double width) {
-        Rectangle rectangle = new Rectangle();
-        rectangle.setX(x * length);
-        rectangle.setY(y * width);
-        rectangle.setHeight(length);
-        rectangle.setWidth(width);
+        Rectangle rectangle = new Rectangle(x * length, y * width, length, width);
         rectangle.setFill(Color.WHITE);
         rectangle.setStroke(Color.BLACK);
         return rectangle;
@@ -23,7 +19,6 @@ public class Grid {
                 Rectangle temp = rectangle(i, j, length, width);
                 Points point = new Points(i, j, length, width, 1);
                 panel.getChildren().addAll(temp, point.point());
-
             }
         }
         return panel;
