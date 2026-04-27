@@ -54,7 +54,7 @@ public class AppTest
             System.arraycopy(map_[i], 0, temp[i], 0, MAPY);
         }
         for (Point p : path) {
-            temp[p.x()][p.y()] = '#';
+            temp[p.x()][p.y()] = -2;
         }
         return temp;
     }
@@ -72,12 +72,14 @@ public class AppTest
     }
 
     // Use this to Print the rectangle map
-    public void PrintMap(int[][] map_, int MAPX, int MAPY) {
+    public void PrintMap(int[][] map_) {
+        int MAPX = map_.length;
+        int MAPY = map_[0].length;
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
                 int t = map_[i][j];
                 if (t == -1) System.out.print("    ");
-                else if (t == '#') System.out.print(" ## ");
+                else if (t == -2) System.out.print(" ## ");
                 else System.out.printf(" %-3d", t);
             }
             System.out.println();
@@ -109,50 +111,12 @@ public class AppTest
         System.out.printf("(%d, %d) \n", p[0], p[1]);
     }
 
-    // 测试pickPath
-    public void _testpickPath() throws InterruptedException {
-        Scanner sc = new Scanner(System.in);
-        sc.useDelimiter(Pattern.compile(","));
-        int MAPX = 6, MAPY = 6;
-        LinkyMap level = new LinkyMap(MAPX, MAPY);
-
-        // 测试数据
-        Point[][] p = {
-                {new Point(5,0),new Point(5,4)},
-                {new Point(0,4),new Point(2,4)}
-        };
-        int l = p.length;
-        int count = 0;
-
-        while (!isComplete(level.getMap()) && count < l) {
-            PrintMap(level.getMap(),MAPX,MAPY);
-
-            System.out.println();
-            System.out.println();
-
-            Point p1 = p[count][0];
-            Point p2 = p[count][1];
-            HashSet<Point>path = level.pickPath(p1,p2);
-            int[][] Map = ShowPath(path,level.getMap(),MAPX,MAPY);
-            PrintMap(Map, MAPX,MAPY);
-            HashSet<Point> del = new HashSet<>();
-            del.add(p1);del.add(p2);
-            level.delNumMap(del);
-            count++;
-
-            Sleep(2000);
-            System.out.println();
-            System.out.println();
-            System.out.println();
-        }
-        PrintMap(level.getMap(),MAPX,MAPY);
-    }
-
     // 测试自动生成地图
-    public void testMapSummon()
-    {
-        int MAPX = 6, MAPY = 6;
-        LinkyMap level = new LinkyMap(MAPX, MAPY);
-        PrintMap(level.getMap(),MAPX,MAPY);
+    public void testMapSummon() throws InterruptedException {
+        int Count = 0;
+        int MAPX = 10, MAPY = 10;
+        int nType = 50;
+        LinkyMap level = new LinkyMap(12, 12, 1);
+        PrintMap(level.getMap());
     }
 }
