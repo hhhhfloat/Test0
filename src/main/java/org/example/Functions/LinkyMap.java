@@ -74,7 +74,7 @@ public class LinkyMap {
     /// 自动生成地图
     public int initMap()
     {
-        int num = MAPX_*MAPY_/2; // 设置的次数
+        int num = MAPX_*MAPY_/2 - nType; // 设置的次数
         int Possible = 1000; // 不生成的概率
         Random random = new Random();
         int[] count = new int[nType];
@@ -93,6 +93,7 @@ public class LinkyMap {
         }
         int N = 0; // 总共要放进去的个数
         for (int i = 0; i < nType; i++) {
+            count[i]++;
             count[i]*=2;
             N += count[i];
         }

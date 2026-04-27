@@ -152,12 +152,16 @@ public class AppTest
     public void testMapSummon()
     {
         int Count = 0;
+        /*
         for (int i = 0; i < 1000; i++) {
-            int MAPX = 30, MAPY = 30;
+            int MAPX = 10, MAPY = 10;
             LinkyMap level = new LinkyMap(MAPX, MAPY, 30);
             Count += level.getChangeCount();
             // PrintMap(level.getMap(), MAPX, MAPY);
         }
+        */
+        LinkyMap level = new LinkyMap(6,6,15);
         System.out.println(Count);
+        PrintMap(level.getMap(),6,6);
     }
 }
