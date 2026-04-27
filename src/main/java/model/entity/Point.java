@@ -1,4 +1,4 @@
-package Model.entity;
+package model.entity;
 
 
 public record Point(int x, int y) {

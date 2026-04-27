@@ -1,6 +1,6 @@
 package GamePage;
 
-import Model.entity.LinkyMap;
+import model.entity.LinkyMap;
 
 public class Board {
     LinkyMap linkyMap = new LinkyMap(10,10,10);
