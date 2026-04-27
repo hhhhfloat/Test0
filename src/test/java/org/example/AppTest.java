@@ -93,12 +93,12 @@ public class AppTest
     }
 
     // 检测完成的方法
-    public boolean isComplete(int[][] map_) {
-        int MAPX = map_.length;
-        int MAPY = map_[0].length;
+    public boolean isComplete(int[][] map) {
+        int MAPX = map.length;
+        int MAPY = map[0].length;
         for (int i = 0; i < MAPX; i++) {
             for (int j = 0; j < MAPY; j++) {
-                if (map_[i][j] != -1) return false;
+                if (map[i][j] != -1) return false;
             }
         }
         return true;
@@ -148,4 +148,11 @@ public class AppTest
         PrintMap(level.getMap(),MAPX,MAPY);
     }
 
+    // 测试自动生成地图
+    public void testMapSummon()
+    {
+        int MAPX = 6, MAPY = 6;
+        LinkyMap level = new LinkyMap(MAPX, MAPY);
+        PrintMap(level.getMap(),MAPX,MAPY);
+    }
 }
