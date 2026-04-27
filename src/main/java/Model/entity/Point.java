@@ -1,4 +1,4 @@
-package org.example.Functions;
+package Model.entity;
 
 
 public record Point(int x, int y) {

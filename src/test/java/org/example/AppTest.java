@@ -1,15 +1,12 @@
 package org.example;
 
+import Model.entity.LinkyMap;
+import Model.entity.Point;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import java.util.HashSet;
-import java.util.Scanner;
-import java.util.ArrayDeque;
-import java.util.regex.Pattern;
-
-import org.example.Functions.*;
 
 
 /**

@@ -1,4 +1,4 @@
-package org.example.Functions;
+package Model.entity;
 
 import java.util.*;
 
