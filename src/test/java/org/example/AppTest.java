@@ -114,7 +114,7 @@ public class AppTest
         Scanner sc = new Scanner(System.in);
         sc.useDelimiter(Pattern.compile(","));
         int MAPX = 6, MAPY = 6;
-        LinkyMap level = new LinkyMap(MAPX, MAPY);
+        LinkyMap level = new LinkyMap(MAPX, MAPY,10);
 
         // 测试数据
         Point[][] p = {
@@ -151,10 +151,13 @@ public class AppTest
     // 测试自动生成地图
     public void testMapSummon()
     {
+        int Count = 0;
         for (int i = 0; i < 1000; i++) {
-            int MAPX = 15, MAPY = 20;
-            LinkyMap level = new LinkyMap(MAPX, MAPY);
+            int MAPX = 30, MAPY = 30;
+            LinkyMap level = new LinkyMap(MAPX, MAPY, 30);
+            Count += level.getChangeCount();
             // PrintMap(level.getMap(), MAPX, MAPY);
         }
+        System.out.println(Count);
     }
 }

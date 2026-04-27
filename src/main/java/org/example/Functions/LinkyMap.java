@@ -14,6 +14,9 @@ public class LinkyMap {
     private int[][] map_T;
     private int[][][][] NumMap;
     private int[][][][] NumMap_T;
+    private int nType;
+
+    private int ChangeCount = 0;
 
     /// VVVVVV
     // getters
@@ -30,17 +33,22 @@ public class LinkyMap {
 
     public int getMAPY_() {return MAPY_;}
 
+    public int getChangeCount() {
+        return ChangeCount;
+    }
+
     // VVVVVV
     // 地图类，有成员 MAPX, MAPY, map[][]、NumMap[][][][]
     /// 构造函数，会生成地图以及对应数表（测试阶段使用MAPX = MAPY = 6）
-    public LinkyMap(int MAPX, int MAPY) {
+    public LinkyMap(int MAPX, int MAPY, int Types) {
         MAPX_ = MAPX;
         MAPY_ = MAPY;
+        nType = Types;
         map = new int[MAPX_][MAPY_];
         map_T = new int [MAPY_][MAPX_];
         //随机生成初始地图
 
-        initMap(10);
+        initMap();
 
         /*
         String SMap = "";
@@ -64,16 +72,16 @@ public class LinkyMap {
     }
 
     /// 自动生成地图
-    public void initMap(int n)
+    public int initMap()
     {
         int num = MAPX_*MAPY_/2; // 设置的次数
-        int Possible = 4; // 不生成的概率
+        int Possible = 1000; // 不生成的概率
         Random random = new Random();
-        int[] count = new int[n];
+        int[] count = new int[nType];
         // 随机设定各种图形的数量（设置一半的次数，之后再翻倍）
         for (int i = 0; i < num; i++) {
             int is = random.nextInt(Possible);
-            int ind = random.nextInt(n);
+            int ind = random.nextInt(nType);
             if(is != 0)
             {
                 if(count[ind]>=6)
@@ -84,7 +92,7 @@ public class LinkyMap {
             }
         }
         int N = 0; // 总共要放进去的个数
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < nType; i++) {
             count[i]*=2;
             N += count[i];
         }
@@ -96,8 +104,8 @@ public class LinkyMap {
                 int isPut = random.nextInt(Tot) + 1;
                 if(isPut<=N)
                 {
-                    int r = random.nextInt(n);
-                    while(count[r]==0)r = random.nextInt(n);
+                    int r = random.nextInt(nType);
+                    while(count[r]==0)r = random.nextInt(nType);
                     map[x][y] = r;
                     buf_Map[x][y] = r;
                     N--;
@@ -123,6 +131,8 @@ public class LinkyMap {
             }while(!path.isEmpty());
             // 空了：胜利！
             if(isComplete()) break;
+
+            ChangeCount++;
             // 没空，交换（找左上角点，把与他相等的点换到能消的地方）
             int val = -1;
             Point aim = new Point(-1,-1);
@@ -163,6 +173,7 @@ public class LinkyMap {
         for (int i = 0; i < MAPX_; i++) {
             System.arraycopy(buf_Map[i],0,map[i],0,MAPY_);
         }
+        return ChangeCount;
     }
 
     /// 生成初始数表

@@ -23,7 +23,8 @@ import java.util.HashSet;
 public void Func()
 {
     int MAPX = 6, MAPY = 6;
-    LinkyMap level = new LinkyMap(MAPX, MAPY);
+    int nType = 10;
+    LinkyMap level = new LinkyMap(MAPX, MAPY, nType);
     
     boolean msg = true;
     while(!isComplete(level.getMap()))
