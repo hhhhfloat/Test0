@@ -12,15 +12,11 @@ public class GameContr {
     {
 
     }
-    public void handleExit()
+    public void handleExitToMenu()
     {
 
     }
     public void handleRestart()
-    {
-
-    }
-    public void handleSave()
     {
 
     }
@@ -40,6 +36,15 @@ public class GameContr {
     }
     // 供view刷新用
     public boolean isGameRunning()
+    {
+        return true;
+    }
+
+    public void handleSave()
+    {
+
+    }
+    public void handleLoad()
     {
 
     }

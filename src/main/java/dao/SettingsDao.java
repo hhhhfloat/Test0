@@ -1,4 +1,8 @@
 package dao;
 
-public class SettingsDao {
+import model.state.Settings;
+
+public interface SettingsDao {
+    void saveSettings(Settings settings);
+    Settings loadSettings();
 }
