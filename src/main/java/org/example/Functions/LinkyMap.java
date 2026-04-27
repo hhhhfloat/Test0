@@ -88,8 +88,6 @@ public class LinkyMap {
             count[i]*=2;
             N += count[i];
         }
-        /// 测试
-        System.out.println(Arrays.toString(count));
         // 写入缓存地图（真的这个算法很有意思啊）
         int[][] buf_Map = new int[MAPX_][MAPY_];
         int Tot = MAPX_*MAPY_;
@@ -146,8 +144,7 @@ public class LinkyMap {
                     }
                 }
             }
-            PrintMap(map,MAPX_,MAPY_);
-            System.out.println(des);
+            // PrintMap(map,MAPX_,MAPY_);
             for(int x = MAPX_-1;x>=aim.x();x--){
                 for (int y = MAPY_-1; y >=0; y--) {// 反着找，必定找到先于循环结束
                     if(map[x][y] == val){// 找到要换的相等目标点
@@ -218,11 +215,12 @@ public class LinkyMap {
                 if (map[t1][i] != -1) break;
                 t1--;
             }
-
+        }
+        for (int i = 0; i < MAPX_; i++) {
             // 左列
 
             int t2 = 0;
-            while (t2 != MAPX_) {// 判断下标不在地图外
+            while (t2 != MAPY_) {// 判断下标不在地图外
                 NumMap[i][t2][3][0] = -1;
                 NumMap[i][t2][3][1] = t2 + 1;
                 // 走到终点
@@ -302,14 +300,11 @@ public class LinkyMap {
 
         for (int x = 0; x < MAPX_; x++) {
             for (int y = 0; y < MAPY_; y++) {
-                if(x==4&&y==1) System.out.println(Arrays.deepToString(NumMap[4][1]));
                 if (map[x][y] != -1)    // 非空格，找直线
                 {
-                    if(x==4&&y==1) System.out.println(Arrays.deepToString(NumMap[4][1]));
                     for (int i = 0; i < 4; i++) {
                         if (map[x][y] == NumMap[x][y][i][0]) //因为map[x][y]不是-1，不用考虑空条
                         {
-                            if(x==4&&y==1) System.out.println("FOUND");
                             HashSet<Point> path = new HashSet<>();
                             int dx = dir[i][0], dy = dir[i][1];
                             for (int z = 0; z <= NumMap[x][y][i][1]; z++) {

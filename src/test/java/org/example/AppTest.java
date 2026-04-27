@@ -151,8 +151,10 @@ public class AppTest
     // 测试自动生成地图
     public void testMapSummon()
     {
-        int MAPX = 6, MAPY = 6;
-        LinkyMap level = new LinkyMap(MAPX, MAPY);
-        PrintMap(level.getMap(),MAPX,MAPY);
+        for (int i = 0; i < 1000; i++) {
+            int MAPX = 15, MAPY = 20;
+            LinkyMap level = new LinkyMap(MAPX, MAPY);
+            // PrintMap(level.getMap(), MAPX, MAPY);
+        }
     }
 }
