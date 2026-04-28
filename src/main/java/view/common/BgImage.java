@@ -1,4 +1,4 @@
-package view.scene.rsc;
+package view.common;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;

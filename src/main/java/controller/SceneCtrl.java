@@ -1,38 +1,17 @@
 package controller;
 
-import LoginPage.LoginScene;
 import javafx.scene.Scene;
-import view.scene.*;
+import javafx.stage.Stage;
+import view.scenes.*;
 
 public class SceneCtrl {
-    static Scene primaryScene;
-
-    public static Scene getPrimaryScene() {
-        return primaryScene;
+    private final Stage primaryStage;
+    public SceneCtrl(Stage stage) {
+        primaryStage = stage;
     }
 
-    public static void switchToInitial() {
-        primaryScene = InitialScene.initialScene();
+    public void setScene(Scene scene) {
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
-
-    public static void switchToLogin() {
-        primaryScene = LoginScene.loginScene();
-    }
-
-    public static void switchToRegister() {
-        primaryScene = InitialScene.initialScene();
-    }
-
-    public static void switchToAccount() {
-        primaryScene = AccountScene.accountScene();
-    }
-
-    public static void switchToGame() {
-        primaryScene = GameScene.gameScene();
-    }
-
-    public static void switchToLevelSelect() {
-        primaryScene = LevelScene.levelScene();
-    }
-
 }

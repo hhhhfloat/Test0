@@ -1,30 +1,46 @@
 package controller;
 
+import dao.UserDao;
+import dao.impl.FileUserDao;
 import model.entity.Crd;
 
 public class GameCtrl {
+    private UserDao userDao = new FileUserDao();
+    private SceneCtrl sceneCtrl;
 
+    public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl) {
+        this.userDao = userDao;
+        this.sceneCtrl = sceneCtrl;
+    }
     public void handleCellClick(Crd p) {
 
     }
 
-    public static void handlePause() {
+    public void handlePause() {
 
     }
 
-    public static void handleExitToMenu() {
+    public void handleSave() {
 
     }
 
-    public static void handleRestart() {
+    public void handleExitToMenu() {
 
     }
 
-    public static void handleEasy() {
+    public void handleExit() {
 
     }
 
-    public static void handleDifficult() {
+    public void handleRestart() {
+
+    }
+
+    public void handleEasy() {
+
+    }
+
+    public void handleDifficult() {
 
     }
 
@@ -38,18 +54,16 @@ public class GameCtrl {
         return time;
     }
 
+
+
     // 供view刷新用
     public boolean isGameRunning() {
         return true;
     }
 
-    public void handleSave() {
-
-    }
 
     public void handleLoad() {
 
     }
-
 
 }

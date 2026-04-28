@@ -1,6 +1,5 @@
 package GamePage;
 
-import ButtonToBeChanged.GameButtons.Pause;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -40,7 +39,7 @@ public class Points {
             int points = 0;
             ScoreLabel scoreLabel = new ScoreLabel(points);
             TimerLabel timerLabel = new TimerLabel();
-            gameboard.getChildren().addAll(Pause.getButton(), scoreLabel.getPointsLabel(), timerLabel.timer());
+            gameboard.getChildren().addAll( scoreLabel.getPointsLabel(), timerLabel.timer());
             return new Scene(gameboard);
         }
     }

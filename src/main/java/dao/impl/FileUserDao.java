@@ -2,80 +2,128 @@ package dao.impl;
 
 import dao.UserDao;
 import model.entity.Account;
+import model.state.ScoreEntry;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
 public class FileUserDao implements UserDao {
-    private final Path userDataPath;
+    private final Path userFile;
+    public FileUserDao() {
+        Path dataDir = Paths.get("./data");
+        try {
+            Files.createDirectories(dataDir);
+        } catch (IOException e) {
+            System.err.println("无法创建数据目录: " + e.getMessage());
+        }
+        this.userFile = dataDir.resolve("users.properties");
+        createFileIfNotExists();
+    }
 
-    @Override
-    public List<Account> getAllUsers() {
-        List<Account> users = new ArrayList<>();
-        Properties props = loadProperties();
-        // 假设 properties 中的 key 格式为 "username.pwd"，提取所有 username
-        Set<String> keys = props.stringPropertyNames();
-        Set<String> processed = new HashSet<>();
-        for (String key : keys) {
-            if (key.endsWith(".pwd")) {
-                String username = key.substring(0, key.length() - 4);
-                if (!processed.contains(username)) {
-                    //Account acc = new Account(username);
-                    //acc.setPassword(props.getProperty(key));
-                    //users.add(acc);
-                    processed.add(username);
-                }
+    private void createFileIfNotExists() {
+        if (!Files.exists(userFile)) {
+            try {
+                Files.createFile(userFile);
+            } catch (IOException e) {
+                System.err.println("无法创建用户文件: " + e.getMessage());//err流？
             }
         }
-        return users;
-    }
-
-    // 构造函数中确定文件位置
-    public FileUserDao() {
-        // 存在用户主目录下的 .game/data/users.prop
-        String home = System.getProperty("user.home");
-        this.userDataPath = Paths.get(home, ".game", "data", "users.prop");
-    }
-
-    @Override
-    public Account findByName(String username) {
-        Properties props = loadProperties();
-        String password = props.getProperty(username + ".pwd");
-        if (password == null) return null;
-        Account acc = new Account(username);
-        acc.setPassword(password);
-         //可能还读取其他属性
-        return acc;
-    }
-
-    @Override
-    public void save(Account account) {
-        Properties props = loadProperties();
-        props.setProperty(account.getAccountName() + ".pwd", account.getPassword());
-        saveProperties(props);
-    }
-
-    @Override
-    public boolean validate(String username, String password) {
-        Account acc = findByName(username);
-        return acc != null && acc.getPassword().equals(password);
     }
 
     private Properties loadProperties() {
         Properties props = new Properties();
-        try (InputStream in = Files.newInputStream(userDataPath)) {
-            props.load(in);
-        } catch (IOException e) {
-            // 文件不存在就返回空 Properties
+        if (Files.exists(userFile)) {
+            try (InputStream in = Files.newInputStream(userFile)) {
+                props.load(in);
+            } catch (IOException e) {
+                System.err.println("读取用户文件失败: " + e.getMessage());
+            }
         }
         return props;
     }
 
     private void saveProperties(Properties props) {
-        try (OutputStream out = Files.newOutputStream(userDataPath)) {
+        try (OutputStream out = Files.newOutputStream(userFile)) {
             props.store(out, "User Accounts");
         } catch (IOException e) {
-            throw new RuntimeException("保存用户数据失败", e);
+            System.err.println("保存用户文件失败: " + e.getMessage());
         }
+    }
+
+    @Override
+    public boolean validate(String username, String password) {
+        Properties props = loadProperties();
+        String storedPwd = props.getProperty(username + ".pwd");
+        return storedPwd != null && storedPwd.equals(password);
+    }
+
+    @Override
+    public boolean createUser(String username, String password) {
+        Properties props = loadProperties();
+        if (props.containsKey(username + ".pwd")) {
+            return false;
+        }
+        props.setProperty(username + ".pwd", password);
+        props.setProperty(username + ".highscore", "0");
+        saveProperties(props);
+        return true;
+    }
+
+    @Override
+    public int getHighScore(String username) {
+        Properties props = loadProperties();
+        String scoreStr = props.getProperty(username + ".highscore");
+        if (scoreStr == null) return -1;
+        try {
+            return Integer.parseInt(scoreStr);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    @Override
+    public void updateHighScore(String username, int score) {
+        int currentHigh = getHighScore(username);
+        if (score > currentHigh) {
+            Properties props = loadProperties();
+            props.setProperty(username + ".highscore", String.valueOf(score));
+            saveProperties(props);
+        }
+    }
+
+    @Override
+    public List<ScoreEntry> getLeaderboard(int limit) {
+        Properties props = loadProperties();
+        Set<String> usernames = new HashSet<>();
+        for (String key : props.stringPropertyNames()) {
+            if (key.endsWith(".pwd")) {
+                String username = key.substring(0, key.length() - 4);
+                usernames.add(username);
+            }
+        }
+
+        List<ScoreEntry> entries = new ArrayList<>();
+        for (String username : usernames) {
+            int score = getHighScore(username);
+            entries.add(new ScoreEntry(username, score));
+        }
+
+        entries.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
+        if (entries.size() > limit) {
+            entries = entries.subList(0, limit);
+        }
+        return entries;
+    }
+
+    @Override
+    public Account findByUsername(String username) {
+        Properties props = loadProperties();
+        String pwd = props.getProperty(username + ".pwd");
+        if (pwd == null) return null;
+
+        Account account = new Account(username);
+        account.setPassword(pwd);
+        return account;
     }
 }
