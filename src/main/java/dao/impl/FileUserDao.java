@@ -9,7 +9,7 @@ import java.util.*;
 // 样例
 // 从AI贴的代码，看看咋适配
 // 在这里
-public class FileUserDao implements UserDao {
+/*public class FileUserDao implements UserDao {
     private final Path userDataPath;
 
     @Override
@@ -23,9 +23,9 @@ public class FileUserDao implements UserDao {
             if (key.endsWith(".pwd")) {
                 String username = key.substring(0, key.length() - 4);
                 if (!processed.contains(username)) {
-                    Account acc = new Account(username);
-                    acc.setPassword(props.getProperty(key));
-                    users.add(acc);
+                    //Account acc = new Account(username);
+                    //acc.setPassword(props.getProperty(key));
+                    //users.add(acc);
                     processed.add(username);
                 }
             }
@@ -59,7 +59,7 @@ public class FileUserDao implements UserDao {
         if (password == null) return null;
         Account acc = new Account(username);
         acc.setPassword(password);
-        // 可能还读取其他属性
+         //可能还读取其他属性
         return acc;
     }
 
@@ -93,4 +93,4 @@ public class FileUserDao implements UserDao {
             throw new RuntimeException("保存用户数据失败", e);
         }
     }
-}
+}*/

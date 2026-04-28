@@ -2,7 +2,7 @@ package controller;
 
 import LoginPage.Account;
 
-public class LoginContr {
+public class LoginCtrl {
     public void handleLogin(String usename, String password)
     {
 

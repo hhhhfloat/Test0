@@ -1,9 +1,15 @@
 package controller;
 
 import LoginPage.Account;
+import javafx.scene.Scene;
 import model.state.GameSnapshot;
 
-public class SceneContr {
+public class SceneCtrl {
+    Scene primaryScene;
+    public Scene getPrimaryScene() {
+
+    }
+
     public void switchToLogin()
     {
 

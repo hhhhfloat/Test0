@@ -12,7 +12,7 @@ public class ButtonUtils {
     // 样式均在css文件中更改
 
     // 创建文字按钮
-    public static Button createTextButton(String text)
+    public static Button createButton(String text)
     {
         Button btn = new Button(text);
         btn.getStyleClass().add("menu-btn");

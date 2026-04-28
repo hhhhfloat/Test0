@@ -1,6 +1,6 @@
 package controller;
 
-public class AudioContr {
+public class AudioCtrl {
     public void playBgMusic()
     {
 

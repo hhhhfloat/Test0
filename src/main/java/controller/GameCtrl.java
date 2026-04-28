@@ -2,7 +2,7 @@ package controller;
 
 import model.entity.Coordi;
 
-public class GameContr {
+public class GameCtrl {
 
     public void handleCellClick(Coordi p)
     {

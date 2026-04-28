@@ -1,6 +1,6 @@
 package ButtonToBeChanged.LoginButtons;
 
-import LoginPage.LoginScene;
+import LoginPage.LoginScene_;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -13,7 +13,7 @@ public class LogoutButton {
             alert.setTitle("Confirm");
             alert.setHeaderText("Are you sure you want to logout?");
             alert.showAndWait();
-            stage.setScene(LoginScene.getLoginScene(stage));
+            stage.setScene(LoginScene_.getLoginScene(stage));
         });
         return LogoutButton;
     }

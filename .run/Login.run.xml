@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Login" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="Page.Page" />
+    <option name="MAIN_CLASS_NAME" value="controller.page.Page" />
     <module name="Test0" />
     <option name="VM_PARAMETERS" value="--module-path C:\javafx-sdk-26\lib --add-modules javafx.controls,javafx.fxml,javafx.web,javafx.swing --enable-native-access=javafx.graphics,javafx.media,javafx.web" />
     <extension name="coverage">
