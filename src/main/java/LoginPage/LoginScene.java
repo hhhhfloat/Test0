@@ -11,7 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class LoginScene_ {
+public class LoginScene {
 
     public static Scene getLoginScene(Stage stage) {
         //test

@@ -1,7 +1,6 @@
 package controller;
 
-import LoginPage.Account;
-import LoginPage.LoginScene_;
+import LoginPage.LoginScene;
 import javafx.scene.Scene;
 import view.scene.*;
 
@@ -12,6 +11,10 @@ public class SceneCtrl {
         return primaryScene;
     }
 
+    public static void switchToInitial() {
+        primaryScene = InitialScene.initialScene();
+    }
+
     public static void switchToLogin() {
         primaryScene = LoginScene.loginScene();
     }
@@ -20,7 +23,7 @@ public class SceneCtrl {
         primaryScene = InitialScene.initialScene();
     }
 
-    public static void switchToAccount(Account acc, boolean tourist) {
+    public static void switchToAccount() {
         primaryScene = AccountScene.accountScene();
     }
 

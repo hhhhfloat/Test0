@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import view.common.ButtonUtils;
 
-public class LevelBtnBox {
+public class LevelBox {
     public static VBox levelBtnBox(){
         Button easyBtn = ButtonUtils.createButton("Easy");
         easyBtn.setOnAction(event -> GameCtrl.handleEasy());

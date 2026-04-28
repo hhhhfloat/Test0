@@ -1,4 +1,4 @@
-package ButtonToBeChanged;
+package app;
 
 class Processor {
     public void processData(ParameterModifier modifier) {

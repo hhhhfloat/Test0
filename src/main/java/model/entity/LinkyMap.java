@@ -143,7 +143,7 @@ public class LinkyMap {
 
     public boolean canComplete() {
         while (!isComplete()) {
-            ArrayList<Coordi> path = autoFindPath();
+            ArrayList<Crd> path = autoFindPath();
             delNumMap(HashPath(path));
             if (path.isEmpty() && !isComplete()) return false;
         }
@@ -228,8 +228,8 @@ public class LinkyMap {
 
     ///  VVVVVV
     /// 消去后更新数表与地图（给定消去的非零点）
-    public void delNumMap(HashSet<Coordi> coordis) {
-        for (Coordi p : coordis) {
+    public void delNumMap(HashSet<Crd> crds) {
+        for (Crd p : crds) {
             int x = p.x(), y = p.y();
             if (map[x][y] == -1) continue;
             //延申原先方向的（不知道如何避免重复）（知道如何避免重复了但是好复杂）
@@ -258,7 +258,7 @@ public class LinkyMap {
                     NumMap[px][py][ii][1] = dis + t0;
                     NumMap_T[py][px][3 - ii][0] = val;
                     NumMap_T[py][px][3 - ii][1] = dis + t0;
-                    boolean b = coordis.contains(new Coordi(px, py));
+                    boolean b = crds.contains(new Crd(px, py));
                     // System.out.println(b);
                     if (map[x + t0 * dx][y + t0 * dy] != -1 && !b) // 不是空格且哈希匹配不是消掉的——停步
                     {
@@ -270,7 +270,7 @@ public class LinkyMap {
             // 不能在地图上抹除，因为还需要结合哈希匹配来去重
         }
         // 覆写全部完成，更新地图
-        for (Coordi p : coordis) {
+        for (Crd p : crds) {
             map[p.x()][p.y()] = -1;
             map_T[p.y()][p.x()] = -1;
         }
@@ -279,7 +279,7 @@ public class LinkyMap {
 
     /// VVVVVV
     /// 自动寻找路径（无路则返回空ArrayList）返回起点-(拐点-拐点-)终点
-    public ArrayList<Coordi> autoFindPath() {
+    public ArrayList<Crd> autoFindPath() {
         if (isComplete()) return new ArrayList<>();
         // 全部一次性枚举！
         for (int x = 0; x < MAPX_; x++) {
@@ -289,18 +289,18 @@ public class LinkyMap {
                     for (int i = 0; i < 4; i++) {
                         if (map[x][y] == NumMap[x][y][i][0]) //因为map[x][y]不是-1，不用考虑空条
                         {
-                            ArrayList<Coordi> path = new ArrayList<>();
+                            ArrayList<Crd> path = new ArrayList<>();
                             int dx = dir[i][0], dy = dir[i][1];
-                            path.add(new Coordi(x,y));
+                            path.add(new Crd(x,y));
                             int z = NumMap[x][y][i][1];
-                            path.add(new Coordi(x+dx*z,y+dy*z));
+                            path.add(new Crd(x+dx*z,y+dy*z));
                             return path;
                         }
                     }
                 }
                 else // 空格，枚举同行拐点！
                 {
-                    ArrayList<Coordi> path = new ArrayList<>();
+                    ArrayList<Crd> path = new ArrayList<>();
                     // 取右侧还有空格的空格
                     int k = NumMap[x][y][1][1];
                     // 枚举步数内的所有空格对
@@ -315,13 +315,13 @@ public class LinkyMap {
                                 for (int w : mmm) {
                                     if (NumMap[x][y + i][z][0] != -1 && NumMap[x][y + i][z][0] == NumMap[x][y + j][w][0]) {
                                         // 起点
-                                        path.add(new Coordi(x+NumMap[x][y+i][z][1]*dir[z][0],y+i));
+                                        path.add(new Crd(x+NumMap[x][y+i][z][1]*dir[z][0],y+i));
                                         // 拐点一
-                                        path.add(new Coordi(x, y+i));
+                                        path.add(new Crd(x, y+i));
                                         // 拐点二
-                                        path.add(new Coordi(x,y+j));
+                                        path.add(new Crd(x,y+j));
                                         // 终点
-                                        path.add(new Coordi(x+NumMap[x][y+j][w][1]*dir[w][0],y+j));
+                                        path.add(new Crd(x+NumMap[x][y+j][w][1]*dir[w][0],y+j));
                                         return path;
                                     }
                                 }
@@ -341,18 +341,18 @@ public class LinkyMap {
     }
 
     /// 自动单拐点路径返回(输入已知合法的拐点坐标)
-    ArrayList<Coordi> OneTwiPath(int x, int y) {
+    ArrayList<Crd> OneTwiPath(int x, int y) {
         // 四个方向 0上 1右 2下 3左
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-        ArrayList<Coordi> path = new ArrayList<>();
+        ArrayList<Crd> path = new ArrayList<>();
         for (int d = 0; d < 4; d++) {
             if (NumMap[x][y][d][0] != -1 && NumMap[x][y][d][0] == NumMap[x][y][(d + 1) % 4][0]) {
                 int k1 = NumMap[x][y][d][1], k2 = NumMap[x][y][(d + 1) % 4][1]; // 记录两个方向的步数
-                path.add(new Coordi(x+dir[d][0]*k1,y+dir[d][1]*k1));
-                path.add(new Coordi(x,y));
+                path.add(new Crd(x+dir[d][0]*k1,y+dir[d][1]*k1));
+                path.add(new Crd(x,y));
                 // 使用新方向
                 int t = (d + 1) % 4;
-                path.add(new Coordi(x+dir[t][0]*k2,y+dir[t][1]*k2));
+                path.add(new Crd(x+dir[t][0]*k2,y+dir[t][1]*k2));
                 return path;
             }
         }
@@ -360,12 +360,12 @@ public class LinkyMap {
     }
 
     /// 横向自动寻找双拐点路径，已经发挥最大作用
-    ArrayList<Coordi> rowTwoTwi(int[][][][] NumMap_, int[][] map_) {
+    ArrayList<Crd> rowTwoTwi(int[][][][] NumMap_, int[][] map_) {
         // 四个方向 0上 1右 2下 3左
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
         int MAPX = map_.length;
         int MAPY = map_[0].length;
-        ArrayList<Coordi> path = new ArrayList<>();
+        ArrayList<Crd> path = new ArrayList<>();
         for (int x = 0; x < MAPX; x++) {
             for (int y = 0; y < MAPY; y++) {
                 if (map_[x][y] == -1 && NumMap_[x][y][1][1] >= 2) {
@@ -378,13 +378,13 @@ public class LinkyMap {
                                 for (int w : mmm) {
                                     if (NumMap_[x][y + i][z][0] != -1 && NumMap_[x][y + i][z][0] == NumMap_[x][y + j][w][0]) {
                                         // 起点
-                                        path.add(new Coordi(x+NumMap_[x][y+i][z][1]*dir[z][0],y+i));
+                                        path.add(new Crd(x+NumMap_[x][y+i][z][1]*dir[z][0],y+i));
                                         // 拐点一
-                                        path.add(new Coordi(x, y+i));
+                                        path.add(new Crd(x, y+i));
                                         // 拐点二
-                                        path.add(new Coordi(x,y+j));
+                                        path.add(new Crd(x,y+j));
                                         // 终点
-                                        path.add(new Coordi(x+NumMap_[x][y+j][w][1]*dir[w][0],y+j));
+                                        path.add(new Crd(x+NumMap_[x][y+j][w][1]*dir[w][0],y+j));
                                         return path;
                                     }
                                 }
@@ -424,10 +424,10 @@ public class LinkyMap {
     }
 
     /// path用的转置函数
-    public ArrayList<Coordi> Tsp(ArrayList<Coordi> path) {
-        ArrayList<Coordi> pt = new ArrayList<>();
-        for (Coordi p : path) {
-            pt.add(new Coordi(p.y(), p.x()));
+    public ArrayList<Crd> Tsp(ArrayList<Crd> path) {
+        ArrayList<Crd> pt = new ArrayList<>();
+        for (Crd p : path) {
+            pt.add(new Crd(p.y(), p.x()));
         }
         return pt;
     }
@@ -452,22 +452,22 @@ public class LinkyMap {
     }
 
     //将ArrayList转化成HashSet
-    public HashSet<Coordi> HashPath(ArrayList<Coordi> path)
+    public HashSet<Crd> HashPath(ArrayList<Crd> path)
     {
         return new HashSet<>(path);
     }
 
     /// 给定点找连线的函数(无路径则返回空路径)
-    public ArrayList<Coordi> pickPath(Coordi p1, Coordi p2) {
+    public ArrayList<Crd> pickPath(Crd p1, Crd p2) {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
-        ArrayList<Coordi> path = new ArrayList<>();
+        ArrayList<Crd> path = new ArrayList<>();
         int val = map[x1][y1];
 
         for (int i = 0; i < 4; i++) {
             if (NumMap[x1][y1][i][0] == val && x1 + NumMap[x1][y1][i][1] * dir[i][0] == x2 && y1 + NumMap[x1][y1][i][1] * dir[i][1] == y2) {
-                path.add(new Coordi(x1,y1));
-                path.add(new Coordi(x2,y2));
+                path.add(new Crd(x1,y1));
+                path.add(new Crd(x2,y2));
                 return path;
             }
         }
@@ -495,15 +495,15 @@ public class LinkyMap {
         for (int i = x1 - NumMap[x1][y1][0][1] + 1; i <= x1 + NumMap[x1][y1][2][1] - 1; i++) {
             if (map[i][y2] == -1 && NumMap[i][y1][2 - oney][1] > (y2 - y1) * oney) {
                 for (int j = y1; j != y2 + oney; j += oney) {
-                    path.add(new Coordi(i, j));
+                    path.add(new Crd(i, j));
                 }
                 int one1 = (i > x1) ? 1 : -1;
                 for (int j = x1; j != i; j += one1) {
-                    path.add(new Coordi(j, y1));
+                    path.add(new Crd(j, y1));
                 }
                 int one2 = (i > x2) ? 1 : -1;
                 for (int j = x2; j != i; j += one2) {
-                    path.add(new Coordi(j, y2));
+                    path.add(new Crd(j, y2));
                 }
                 return path;
             }
@@ -515,15 +515,15 @@ public class LinkyMap {
         for (int i = x1 - NumMap_T[x1][y1][0][1] + 1; i <= x1 + NumMap_T[x1][y1][2][1] - 1; i++) {
             if (map_T[i][y2] == -1 && NumMap_T[i][y1][2 - oney][1] > (y2 - y1) * oney) {
                 for (int j = y1; j != y2 + oney; j += oney) {
-                    path.add(new Coordi(i, j));
+                    path.add(new Crd(i, j));
                 }
                 int one1 = (i > x1) ? 1 : -1;
                 for (int j = x1; j != i; j += one1) {
-                    path.add(new Coordi(j, y1));
+                    path.add(new Crd(j, y1));
                 }
                 int one2 = (i > x2) ? 1 : -1;
                 for (int j = x2; j != i; j += one2) {
-                    path.add(new Coordi(j, y2));
+                    path.add(new Crd(j, y2));
                 }
                 return Tsp(path);
             }
@@ -531,36 +531,36 @@ public class LinkyMap {
         return path;
     }
 
-    public ArrayList<Coordi> Rdown1_Lup2(Coordi p1, Coordi p2) {
+    public ArrayList<Crd> Rdown1_Lup2(Crd p1, Crd p2) {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
-        ArrayList<Coordi> path = new ArrayList<>();
-        path.add(new Coordi(x1,y1));
+        ArrayList<Crd> path = new ArrayList<>();
+        path.add(new Crd(x1,y1));
         if (NumMap[x1][y2][0][1] == x1 - x2) {
-            path.add(new Coordi(x1,y2));
-            path.add(new Coordi(x2,y2));
+            path.add(new Crd(x1,y2));
+            path.add(new Crd(x2,y2));
             return path;
         }
         if (NumMap[x2][y1][2][1] == x1 - x2) {
-            path.add(new Coordi(x2,y1));
-            path.add(new Coordi(x2,y2));
+            path.add(new Crd(x2,y1));
+            path.add(new Crd(x2,y2));
             return path;
         }
         return path;
     }
 
-    public ArrayList<Coordi> Rup1_Ldown2(Coordi p1, Coordi p2) {
+    public ArrayList<Crd> Rup1_Ldown2(Crd p1, Crd p2) {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
-        ArrayList<Coordi> path = new ArrayList<>();
+        ArrayList<Crd> path = new ArrayList<>();
         if (NumMap[x2][y1][0][1] == x2 - x1) {
-            path.add(new Coordi(x2,y1));
-            path.add(new Coordi(x2,y2));
+            path.add(new Crd(x2,y1));
+            path.add(new Crd(x2,y2));
             return path;
         }
         if (NumMap[x1][y2][2][1] == x2 - x1) {
-            path.add(new Coordi(x1,y2));
-            path.add(new Coordi(x2,y2));
+            path.add(new Crd(x1,y2));
+            path.add(new Crd(x2,y2));
             return path;
         }
         return path;

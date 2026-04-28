@@ -6,10 +6,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-// 样例
-// 从AI贴的代码，看看咋适配
-// 在这里
-/*public class FileUserDao implements UserDao {
+public class FileUserDao implements UserDao {
     private final Path userDataPath;
 
     @Override
@@ -38,18 +35,6 @@ import java.util.*;
         // 存在用户主目录下的 .game/data/users.prop
         String home = System.getProperty("user.home");
         this.userDataPath = Paths.get(home, ".game", "data", "users.prop");
-        createFileIfNotExists();
-    }
-
-    private void createFileIfNotExists() {
-        try {
-            Files.createDirectories(userDataPath.getParent());
-            if (!Files.exists(userDataPath)) {
-                Files.createFile(userDataPath);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("无法创建用户数据文件", e);
-        }
     }
 
     @Override
@@ -93,4 +78,4 @@ import java.util.*;
             throw new RuntimeException("保存用户数据失败", e);
         }
     }
-}*/
+}

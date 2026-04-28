@@ -1,7 +1,7 @@
 package model.entity;
 
 
-public record Coordi(int x, int y) {
+public record Crd(int x, int y) {
 
     @Override
     public String toString() {

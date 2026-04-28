@@ -1,10 +1,10 @@
 package controller;
 
-import model.entity.Coordi;
+import model.entity.Crd;
 
 public class GameCtrl {
 
-    public void handleCellClick(Coordi p) {
+    public void handleCellClick(Crd p) {
 
     }
 

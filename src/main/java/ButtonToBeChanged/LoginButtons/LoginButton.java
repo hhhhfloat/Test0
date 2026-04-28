@@ -17,8 +17,7 @@ public class LoginButton {
     public static Button login(Stage stage, Account account) {
         Map<String, String> users = account.getMap();
 
-        Stage loginStage = new Stage();
-        loginStage.setTitle("Account Login");
+
 
         VBox loginBox = new VBox(8), registerBox = new VBox(8);
         Scene loginScene = new Scene(loginBox,300,120), registerScene = new Scene(registerBox, 300, 90);
@@ -97,32 +96,7 @@ public class LoginButton {
             hBox.getChildren().addAll(cancel, confirm);
 
             confirm.setOnAction(actionEvent1 -> {
-                String s1 = accountIn.getText(), s2 = passwordIn.getText();
-                if (s1.trim().isEmpty()) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setContentText("Username can't be null!");
-                    alert.showAndWait();
-                } else if (!users.containsKey(s1)) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setContentText("Username doesn't exist!");
-                    alert.showAndWait();
-                } else {
-                    if (s2.equals(users.get(s1))) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setContentText("Login succeeded!");
-                        alert.showAndWait();
-                        account.setAccountName(s1);
-                        loginStage.close();
-                        stage.setScene(AccountScene.getAccountScene(stage, account, false));
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Warning");
-                        alert.setContentText("Password is incorrect!");
-                        alert.showAndWait();
-                    }
-                }
+
             });
             cancel.setOnAction(actionEvent1 -> loginStage.close());
 
