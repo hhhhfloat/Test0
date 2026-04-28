@@ -1,11 +1,10 @@
 package LoginPage.Buttons;
 
 import LoginPage.Account;
-import LoginPage.AccountScene;
+import LoginPage.Scenes.AccountScene;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -14,7 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
-public class LoginButton {
+public class Login {
     public static Button login(Stage stage, Account account) {
         Map<String, String> users = account.getMap();
 

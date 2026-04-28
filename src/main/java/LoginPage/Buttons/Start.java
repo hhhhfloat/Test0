@@ -1,10 +1,10 @@
 package LoginPage.Buttons;
 
-import GamePage.LevelScene;
+import GamePage.Scenes.LevelScene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class StartButton {
+public class Start {
     public static Button startButton(Stage stage) {
         Button startButton = new Button("Start");
         startButton.setPrefSize(400, 50);

@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class LeaderboardButton {
+public class Leaderboard {
     public static Button leaderboard(Account account) {
         Button leaderboard = new Button("Leaderboard");
         leaderboard.setPrefSize(400, 50);

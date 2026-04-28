@@ -1,6 +1,6 @@
 package Page;
 
-import LoginPage.LoginScene;
+import LoginPage.Scenes.LoginScene;
 import Page.rsc.BgImage;
 import Page.rsc.BgMusic;
 import javafx.application.Application;

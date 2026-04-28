@@ -1,11 +1,11 @@
 package LoginPage.Buttons;
 
 import LoginPage.Account;
-import LoginPage.AccountScene;
+import LoginPage.Scenes.AccountScene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class TouristModeButton {
+public class TouristMode {
     public static Button touristMode(Stage stage, Account account) {
         Button tourist = new Button("Tourist Mode");
         tourist.setPrefSize(400, 50);

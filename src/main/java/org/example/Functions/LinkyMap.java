@@ -7,37 +7,37 @@ public class LinkyMap {
     // 四个方向 0上 1右 2下 3左
     final int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
     static final int[][][] Pos =
-    {
-        {
-            {0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,1,1,1,1,0,0,0,0,0,0,0},
-            {0,1,1,1,1,0,0,0,0,0,0,0},
-            {0,1,1,1,1,0,0,0,0,0,0,0},
-            {0,1,1,1,1,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,1,1,1,1,0},
-            {0,0,0,0,0,0,0,1,1,1,1,0},
-            {0,0,0,0,0,0,0,1,1,1,1,0},
-            {0,0,0,0,0,0,0,1,1,1,1,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0}
-        },
-        {
-            {0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,1,1,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,1,1,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0}
-        }
-    };
-    static final int[] nType = {6,12};
+            {
+                    {
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                    },
+                    {
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                    }
+            };
+    static final int[] nType = {6, 12};
     static final int[] nToPut = {32, 100};
 
     private int MAPX_, MAPY_;
@@ -51,7 +51,6 @@ public class LinkyMap {
 
     /// VVVVVV
     // getters
-
     public int[][] getMap() {
         return map;
     }
@@ -60,21 +59,25 @@ public class LinkyMap {
         return NumMap;
     }
 
-    public int getMAPX_() {return MAPX_;}
+    public int getMAPX_() {
+        return MAPX_;
+    }
 
-    public int getMAPY_() {return MAPY_;}
+    public int getMAPY_() {
+        return MAPY_;
+    }
 
     public int getChangeCount() {
         return ChangeCount;
     }
-    
+
     /// 构造函数，会生成地图以及对应数表
-    public LinkyMap(int MAPX, int MAPY, int mpType) throws InterruptedException {
+    public LinkyMap(int MAPX, int MAPY, int mpType) {
         MAPX_ = MAPX;
         MAPY_ = MAPY;
         MapType = mpType;
         map = new int[MAPX_][MAPY_];
-        map_T = new int [MAPY_][MAPX_];
+        map_T = new int[MAPY_][MAPX_];
 
         //随机生成初始地图
         initMap();
@@ -83,7 +86,7 @@ public class LinkyMap {
     }
 
     /// 自动生成地图
-    public void initMap() throws InterruptedException {
+    public void initMap() {
         Count = new int[nType[MapType]];
         int[][] pos = new int[MAPX_][MAPY_];
         int[][] buf_map = new int[MAPX_][MAPY_];
@@ -95,41 +98,38 @@ public class LinkyMap {
         }
 
         for (int i = 0; i < MAPX_; i++) {
-            System.arraycopy(Pos[MapType][i],0,pos[i],0,MAPY_);
+            System.arraycopy(Pos[MapType][i], 0, pos[i], 0, MAPY_);
         }
         do {
             sRandCount();
             sRandMap(pos, buf_map);
-            //PrintMap(map);
-            //Sleep(60000);
             initNumMap();
-        }while(!canComplete());
+        } while (!canComplete());
         for (int i = 0; i < MAPX_; i++) {
-            System.arraycopy(buf_map[i],0,map[i],0,MAPY_);
+            System.arraycopy(buf_map[i], 0, map[i], 0, MAPY_);
         }
     }
-    public void sRandCount()
-    {
+
+    public void sRandCount() {
         Random rand = new Random();
         int n = nType[MapType];
         int times = nToPut[MapType];
         for (int i = 0; i < n; i++) {
             Count[i] = 2;
         }
-        for (int i = 0; i < times/2 - n; i++) {
-            Count[rand.nextInt(n)]+=2;
+        for (int i = 0; i < times / 2 - n; i++) {
+            Count[rand.nextInt(n)] += 2;
         }
     }
-    public void sRandMap(int[][] pos, int[][] buf_map)
-    {
+
+    public void sRandMap(int[][] pos, int[][] buf_map) {
         int n = nType[MapType];
         Random rand = new Random();
         for (int x = 0; x < MAPX_; x++) {
             for (int y = 0; y < MAPY_; y++) {
-                if(pos[x][y]==1)
-                {
+                if (pos[x][y] == 1) {
                     int r = rand.nextInt(n);
-                    while(Count[r] == 0)r = rand.nextInt(n);
+                    while (Count[r] == 0) r = rand.nextInt(n);
                     map[x][y] = r;
                     buf_map[x][y] = r;
                     Count[r]--;
@@ -137,13 +137,12 @@ public class LinkyMap {
             }
         }
     }
-    public boolean canComplete()
-    {
-        while(!isComplete())
-        {
+
+    public boolean canComplete() {
+        while (!isComplete()) {
             HashSet<Point> path = autoFindPath();
             delNumMap(path);
-            if(path.isEmpty() && !isComplete()) return false;
+            if (path.isEmpty() && !isComplete()) return false;
         }
         return true;
     }
@@ -230,7 +229,7 @@ public class LinkyMap {
 
         for (Point p : points) {
             int x = p.x(), y = p.y();
-            if(map[x][y] == -1) continue;
+            if (map[x][y] == -1) continue;
             //延申原先方向的（不知道如何避免重复）（知道如何避免重复了但是好复杂）
             for (int i = 0; i < 4; i++) {
                 int t0 = 1;
@@ -255,8 +254,8 @@ public class LinkyMap {
                     // 走到这里了就先改了
                     NumMap[px][py][ii][0] = val;
                     NumMap[px][py][ii][1] = dis + t0;
-                    NumMap_T[py][px][3-ii][0] = val;
-                    NumMap_T[py][px][3-ii][1] = dis + t0;
+                    NumMap_T[py][px][3 - ii][0] = val;
+                    NumMap_T[py][px][3 - ii][1] = dis + t0;
                     boolean b = points.contains(new Point(px, py));
                     // System.out.println(b);
                     if (map[x + t0 * dx][y + t0 * dy] != -1 && !b) // 不是空格且哈希匹配不是消掉的——停步
@@ -271,7 +270,7 @@ public class LinkyMap {
         // 覆写全部完成，更新地图
         for (Point p : points) {
             map[p.x()][p.y()] = -1;
-            map_T[p.y()][p.x()]=-1;
+            map_T[p.y()][p.x()] = -1;
         }
 
     }
@@ -279,7 +278,7 @@ public class LinkyMap {
     /// VVVVVV
     /// 自动寻找路径（无路则返回空HashSet）
     public HashSet<Point> autoFindPath() {
-        if(isComplete())return new HashSet<>();
+        if (isComplete()) return new HashSet<>();
 
         // 全部一次性枚举！
 
@@ -335,7 +334,7 @@ public class LinkyMap {
                     // 别忘了最后这一个单拐点还没检测
                     path = OneTwiPath(x, y + k - 1);
                     if (!path.isEmpty()) return path;
-                    y += k-1;
+                    y += k - 1;
                 }
             }
         }
@@ -452,6 +451,7 @@ public class LinkyMap {
         }
         return true;
     }
+
     public boolean isComplete(int[][] map_) {
         for (int i = 0; i < MAPX_; i++) {
             for (int j = 0; j < MAPY_; j++) {
@@ -462,18 +462,16 @@ public class LinkyMap {
     }
 
     /// 给定点找连线的函数(无路径则返回空路径)
-    public HashSet<Point> pickPath(Point p1, Point p2)
-    {
+    public HashSet<Point> pickPath(Point p1, Point p2) {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
         HashSet<Point> path = new HashSet<>();
         int val = map[x1][y1];
 
         for (int i = 0; i < 4; i++) {
-            if(NumMap[x1][y1][i][0] == val && x1+NumMap[x1][y1][i][1]*dir[i][0] == x2 && y1 + NumMap[x1][y1][i][1] * dir[i][1] == y2)
-            {
+            if (NumMap[x1][y1][i][0] == val && x1 + NumMap[x1][y1][i][1] * dir[i][0] == x2 && y1 + NumMap[x1][y1][i][1] * dir[i][1] == y2) {
                 for (int j = 0; j <= NumMap[x1][y1][i][1]; j++) {
-                    Point p = new Point(x1+dir[i][0]*j,y1+dir[i][1]*j);
+                    Point p = new Point(x1 + dir[i][0] * j, y1 + dir[i][1] * j);
                     path.add(p);
                 }
                 return path;
@@ -481,44 +479,37 @@ public class LinkyMap {
         }
         // 剩下的情况必定不在直线上
         // 单拐点
-        if(x1>x2 && y1>y2)
-        {
-            path = Rdown1_Lup2(p1,p2);
-            if(!path.isEmpty())return path;
+        if (x1 > x2 && y1 > y2) {
+            path = Rdown1_Lup2(p1, p2);
+            if (!path.isEmpty()) return path;
         }
-        if(x1<x2 && y1<y2)
-        {
-            path = Rdown1_Lup2(p2,p1);
-            if(!path.isEmpty())return path;
+        if (x1 < x2 && y1 < y2) {
+            path = Rdown1_Lup2(p2, p1);
+            if (!path.isEmpty()) return path;
         }
-        if(x1>x2 && y1<y2)
-        {
-            path = Rup1_Ldown2(p2,p1);
-            if(!path.isEmpty())return path;
+        if (x1 > x2 && y1 < y2) {
+            path = Rup1_Ldown2(p2, p1);
+            if (!path.isEmpty()) return path;
         }
-        if(x1<x2 && y1>y2)
-        {
-            path = Rup1_Ldown2(p1,p2);
-            if(!path.isEmpty())return path;
+        if (x1 < x2 && y1 > y2) {
+            path = Rup1_Ldown2(p1, p2);
+            if (!path.isEmpty()) return path;
         }
 
         // 双拐点检测
-        int oney = (y1>y2)?-1:1;
-        for(int i = x1-NumMap[x1][y1][0][1]+1;i<=x1+NumMap[x1][y1][2][1]-1;i++)
-        {
-            if(map[i][y2] == -1 && NumMap[i][y1][2-oney][1] > (y2-y1)*oney)
-            {
-                for(int j = y1;j!=y2+oney;j+=oney)
-                {
-                    path.add(new Point(i,j));
+        int oney = (y1 > y2) ? -1 : 1;
+        for (int i = x1 - NumMap[x1][y1][0][1] + 1; i <= x1 + NumMap[x1][y1][2][1] - 1; i++) {
+            if (map[i][y2] == -1 && NumMap[i][y1][2 - oney][1] > (y2 - y1) * oney) {
+                for (int j = y1; j != y2 + oney; j += oney) {
+                    path.add(new Point(i, j));
                 }
-                int one1 = (i>x1)?1:-1;
-                for (int j = x1; j != i; j+=one1) {
-                    path.add(new Point(j,y1));
+                int one1 = (i > x1) ? 1 : -1;
+                for (int j = x1; j != i; j += one1) {
+                    path.add(new Point(j, y1));
                 }
-                int one2 = (i>x2)?1:-1;
-                for (int j = x2; j != i; j+=one2) {
-                    path.add(new Point(j,y2));
+                int one2 = (i > x2) ? 1 : -1;
+                for (int j = x2; j != i; j += one2) {
+                    path.add(new Point(j, y2));
                 }
                 return path;
             }
@@ -527,45 +518,41 @@ public class LinkyMap {
         x2 = p2.y();
         y1 = p1.x();
         y2 = p2.x();
-        for(int i = x1-NumMap_T[x1][y1][0][1]+1;i<=x1+NumMap_T[x1][y1][2][1]-1;i++)
-        {
-            if(map_T[i][y2] == -1 && NumMap_T[i][y1][2-oney][1] > (y2-y1)*oney)
-            {
-                for(int j = y1;j!=y2+oney;j+=oney)
-                {
-                    path.add(new Point(i,j));
+        for (int i = x1 - NumMap_T[x1][y1][0][1] + 1; i <= x1 + NumMap_T[x1][y1][2][1] - 1; i++) {
+            if (map_T[i][y2] == -1 && NumMap_T[i][y1][2 - oney][1] > (y2 - y1) * oney) {
+                for (int j = y1; j != y2 + oney; j += oney) {
+                    path.add(new Point(i, j));
                 }
-                int one1 = (i>x1)?1:-1;
-                for (int j = x1; j != i; j+=one1) {
-                    path.add(new Point(j,y1));
+                int one1 = (i > x1) ? 1 : -1;
+                for (int j = x1; j != i; j += one1) {
+                    path.add(new Point(j, y1));
                 }
-                int one2 = (i>x2)?1:-1;
-                for (int j = x2; j != i; j+=one2) {
-                    path.add(new Point(j,y2));
+                int one2 = (i > x2) ? 1 : -1;
+                for (int j = x2; j != i; j += one2) {
+                    path.add(new Point(j, y2));
                 }
                 return Tsp(path);
             }
         }
         return path;
     }
-    public HashSet<Point> Rdown1_Lup2(Point p1, Point p2)
-    {
+
+    public HashSet<Point> Rdown1_Lup2(Point p1, Point p2) {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
         HashSet<Point> path = new HashSet<>();
-        if(NumMap[x1][y2][0][1] == x1-x2)
-        {
-            for (int i = 0; i < x1-x2; i++) {
+        if (NumMap[x1][y2][0][1] == x1 - x2) {
+            for (int i = 0; i < x1 - x2; i++) {
                 Point p = new Point(x1 - i, y2);
                 path.add(p);
             }
-            for (int i = 0; i <= y1-y2; i++) {
-                Point p = new Point(x1, y1-i);
+            for (int i = 0; i <= y1 - y2; i++) {
+                Point p = new Point(x1, y1 - i);
                 path.add(p);
             }
             return path;
         }
-        if(NumMap[x2][y1][2][1] == x1-x2) {
+        if (NumMap[x2][y1][2][1] == x1 - x2) {
             for (int i = 0; i < x1 - x2; i++) {
                 Point p = new Point(x1 - i, y1);
                 path.add(p);
@@ -578,24 +565,23 @@ public class LinkyMap {
         }
         return path;
     }
-    public HashSet<Point> Rup1_Ldown2(Point p1, Point p2)
-    {
+
+    public HashSet<Point> Rup1_Ldown2(Point p1, Point p2) {
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
         HashSet<Point> path = new HashSet<>();
-        if(NumMap[x2][y1][0][1] == x2-x1)
-        {
-            for (int i = 0; i < x2-x1; i++) {
+        if (NumMap[x2][y1][0][1] == x2 - x1) {
+            for (int i = 0; i < x2 - x1; i++) {
                 Point p = new Point(x1 + i, y1);
                 path.add(p);
             }
-            for (int i = 0; i <= y1-y2; i++) {
-                Point p = new Point(x2, y1-i);
+            for (int i = 0; i <= y1 - y2; i++) {
+                Point p = new Point(x2, y1 - i);
                 path.add(p);
             }
             return path;
         }
-        if(NumMap[x1][y2][2][1] == x2-x1) {
+        if (NumMap[x1][y2][2][1] == x2 - x1) {
             for (int i = 0; i < x2 - x1; i++) {
                 Point p = new Point(x2 - i, y2);
                 path.add(p);
@@ -620,8 +606,5 @@ public class LinkyMap {
             }
             System.out.println();
         }
-    }
-    public void Sleep(int MiliS) throws InterruptedException {
-        Thread.sleep(MiliS);
     }
 }

@@ -1,10 +1,10 @@
 package LoginPage.Buttons;
 
-import LoginPage.LoginScene;
+import LoginPage.Scenes.LoginScene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class LogoutButton {
+public class Logout {
     public static Button logoutButton(final Stage stage) {
         Button LogoutButton = new Button("Logout");
         LogoutButton.setPrefSize(400, 50);

@@ -1,6 +1,7 @@
-package LoginPage;
+package LoginPage.Scenes;
 
-import GamePage.LevelScene;
+import GamePage.Scenes.LevelScene;
+import LoginPage.Account;
 import LoginPage.Buttons.*;
 import Page.rsc.BgImage;
 import javafx.geometry.Insets;
@@ -20,7 +21,7 @@ public class LoginScene {
 
         Account account = new Account();
         VBox list = new VBox(20);
-        list.getChildren().addAll(LoginButton.login(stage, account), TouristModeButton.touristMode(stage, account), LeaderboardButton.leaderboard(account), SettingsButton.settings(), ExitButton.exit(), admin);
+        list.getChildren().addAll(Login.login(stage, account), TouristMode.touristMode(stage, account), Leaderboard.leaderboard(account), Settings.settings(), Exit.exit(), admin);
         list.setAlignment(Pos.CENTER);
 
         StackPane pane = new StackPane(list);

@@ -7,18 +7,18 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class Points {
-    int x, y, length, width, num;
+    int x, y, length, height, num;
     Group group = new Group();
     double xCoordinate, yCoordinate;
 
-    public Points(int x, int y, int length, int width, int num) {
+    public Points(int x, int y, int length, int height, int num) {
         this.x = x;
         this.y = y;
         this.length = length;
-        this.width = width;
+        this.height = height;
         this.num = num;
         xCoordinate = (x + 0.5) * length;
-        yCoordinate = (y + 0.5) * width;
+        yCoordinate = (y + 0.5) * height;
     }
 
     public Group point() {
@@ -29,16 +29,11 @@ public class Points {
         number.setLayoutY(yCoordinate);
         group.getChildren().addAll(circle, number);
         group.setOnMouseClicked(event -> {
-            Rectangle chooseBox = new Rectangle(x * length + 1.5, y * width + 1.5, length - 3, width - 3);
+            Rectangle chooseBox = new Rectangle(x * length + 1.5, y * height + 1.5, length - 3, height - 3);
             chooseBox.setFill(Color.TRANSPARENT);
             chooseBox.setStroke(Color.RED);
             chooseBox.setStrokeWidth(3);
-            if (Board.isFirst) {
 
-            } else {
-
-                Board.isFirst = false;
-            }
             group.getChildren().add(chooseBox);
             chooseBox.toFront();
             //group.getChildren().clear();

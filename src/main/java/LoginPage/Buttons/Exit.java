@@ -5,7 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 
-public class ExitButton {
+public class Exit {
     public static Button exit() {
         Button exitButton = new Button("Exit");
         exitButton.setPrefSize(400, 50);

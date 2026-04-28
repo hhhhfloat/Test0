@@ -1,6 +1,6 @@
 package GamePage.Buttons;
 
-import LoginPage.Buttons.SettingsButton;
+import LoginPage.Buttons.Settings;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -63,10 +63,10 @@ public class Pause {
 
     public static Button getButton() {
         Button pauseButton = new Button("Pause");
-        pauseButton.setPrefSize(400, 50);
+        pauseButton.setPrefSize(100, 50);
         pauseButton.setOnAction(event -> {
             VBox list = new VBox();
-            list.getChildren().addAll(save(), exit(), SettingsButton.settings(), cancel());
+            list.getChildren().addAll(save(), exit(), Settings.settings(), cancel());
             Stage pauseStage = new Stage();
             pauseStage.setScene(new Scene(list));
             pauseStage.show();

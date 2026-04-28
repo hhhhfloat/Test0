@@ -1,4 +1,4 @@
-package GamePage;
+package GamePage.Scenes;
 
 import GamePage.Buttons.Difficult;
 import GamePage.Buttons.Easy;

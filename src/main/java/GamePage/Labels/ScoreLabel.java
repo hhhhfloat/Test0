@@ -1,6 +1,7 @@
-package GamePage;
+package GamePage.Labels;
 
 import javafx.scene.control.Label;
+import javafx.scene.text.Font;
 
 public class ScoreLabel {
     int points;
@@ -10,7 +11,8 @@ public class ScoreLabel {
     }
 
     public Label getPointsLabel() {
-        Label pointsLabel = new Label(String.valueOf(points));
+        Label pointsLabel = new Label("Total Scores: "+String.valueOf(points));
+        pointsLabel.setFont(Font.font(30));
         return pointsLabel;
     }
 }
