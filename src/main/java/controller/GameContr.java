@@ -8,7 +8,7 @@ public class GameContr {
     {
 
     }
-    public void handlePause()
+    public static void handlePause()
     {
 
     }

@@ -14,9 +14,9 @@ public class ButtonUtils {
     // 创建文字按钮
     public static Button createTextButton(String text)
     {
-        Button but = new Button(text);
-        but.getStyleClass().add("menu-btn");
-        return but;
+        Button btn = new Button(text);
+        btn.getStyleClass().add("menu-btn");
+        return btn;
     }
 
     // 创建控制按钮
