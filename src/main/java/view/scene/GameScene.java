@@ -7,8 +7,7 @@ import javafx.scene.layout.BorderPane;
 import view.common.ButtonUtils;
 
 public class GameScene {
-    public static Scene gameScene()
-    {
+    public static Scene gameScene() {
 
         Button pauseBtn = ButtonUtils.createButton("pause");
         pauseBtn.setOnAction(e -> GameCtrl.handlePause());

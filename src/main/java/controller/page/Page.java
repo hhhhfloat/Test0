@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
-import view.scene.LoginScene;
+import view.scene.InitialScene;
 
 import java.nio.file.Paths;
 
@@ -19,7 +19,7 @@ public class Page extends Application {
 
     public void start(Stage stage) {
         playMusic();
-        Scene primaryScene = LoginScene.loginScene();
+        Scene primaryScene = InitialScene.initialScene();
         stage.setScene(primaryScene);
         stage.show();
     }

@@ -18,8 +18,7 @@ public class App extends Application {
 
     public void start(Stage stage) {
         playMusic();
-        SceneCtrl sceneCtrl = new SceneCtrl();
-        stage.setScene(sceneCtrl.);
+        stage.setScene(SceneCtrl.getPrimaryScene());
         stage.show();
     }
 }

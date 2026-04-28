@@ -87,10 +87,7 @@ public class LoginButton {
         Button loginButton = new Button("Login");
         loginButton.setPrefSize(400, 50);
         loginButton.setOnAction(actionEvent -> {
-            TextField accountIn = new TextField();
-            TextField passwordIn = new PasswordField();
-            accountIn.setPromptText("Please enter your account:");
-            passwordIn.setPromptText("Please enter your password:");
+
 
             Button confirm = new Button("Confirm");
             Button cancel = new Button("Cancel");

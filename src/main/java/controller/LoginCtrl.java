@@ -3,36 +3,41 @@ package controller;
 import LoginPage.Account;
 
 public class LoginCtrl {
-    public void handleLogin(String usename, String password)
-    {
+    SceneCtrl sceneCtrl = new SceneCtrl();
+
+    public void setSceneCtrl(SceneCtrl sceneCtrl) {
+        this.sceneCtrl = sceneCtrl;
+    }
+
+    public void handleLogin(String usename, String password) {
+        sceneCtrl.switchToLogin();
+    }
+
+    public void handleRegister(String username, String password) {
+        sceneCtrl.switchToRegister();
+    }
+
+    public void handleTouristMode() {
+        sceneCtrl.switchToAccount();
+    }
+
+    public void handleLogout() {
+        sceneCtrl.switchToLogin();
+    }
+
+    public void handleStartGame() {
+        sceneCtrl.switchToLevelSelect();
+    }
+
+    public void handleLeaderboard() {
 
     }
-    public void handleRegister(String username, String password)
-    {
 
-    }
-    public void handleTouristMode()
-    {
-
-    }
-    public void handleLogout()
-    {
-
-    }
-    public void handleStartGame()
-    {
-
-    }
-    public void handleLeaderboard()
-    {
-
-    }
-    public boolean isLoggedIn()
-    {
+    public boolean isLoggedIn() {
         return true;
     }
-    public Account getCurrentAccount()
-    {
+
+    public Account getCurrentAccount() {
         return new Account();
     }
 }

@@ -1,45 +1,35 @@
 package controller;
 
 import LoginPage.Account;
+import LoginPage.LoginScene_;
 import javafx.scene.Scene;
-import model.state.GameSnapshot;
+import view.scene.*;
 
 public class SceneCtrl {
-    Scene primaryScene;
-    public Scene getPrimaryScene() {
+    static Scene primaryScene;
 
+    public static Scene getPrimaryScene() {
+        return primaryScene;
     }
 
-    public void switchToLogin()
-    {
-
+    public static void switchToLogin() {
+        primaryScene = LoginScene.loginScene();
     }
-    public void switchToAccount(Account acc, boolean tourist)
-    {
 
+    public static void switchToRegister() {
+        primaryScene = InitialScene.initialScene();
     }
-    public void switchToGame()
-    {
 
+    public static void switchToAccount(Account acc, boolean tourist) {
+        primaryScene = AccountScene.accountScene();
     }
-    public void switchToLoadGame(GameSnapshot snapshot)
-    {
 
+    public static void switchToGame() {
+        primaryScene = GameScene.gameScene();
     }
-    public void switchToSettings()
-    {
 
+    public static void switchToLevelSelect() {
+        primaryScene = LevelScene.levelScene();
     }
-    public void switchToLevelSelect()
-    {
 
-    }
-    public void switchToLeaderboard()
-    {
-
-    }
-    public void exitApp()
-    {
-
-    }
 }

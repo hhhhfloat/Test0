@@ -1,22 +1,14 @@
 package view.scene;
 
-import controller.GameCtrl;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
-import view.common.ButtonUtils;
+import javafx.scene.layout.BorderPane;
+import view.scene.Boxes.LoginBox;
 
 public class LoginScene {
-    public static Scene loginScene()
-    {
-        Button loginBtn = ButtonUtils.createButton("start");
-        loginBtn.setOnAction(e -> GameCtrl.handlePause());
-        Button touristBtn = ButtonUtils.createButton("start");
-        touristBtn.setOnAction(e -> GameCtrl.handlePause());
-        Button exitBtn = ButtonUtils.createButton("start");
-        exitBtn.setOnAction(e -> GameCtrl.handlePause());
-        VBox list = new VBox(10, loginBtn, touristBtn, exitBtn);
-        Scene scene = new Scene(list);
+    public static Scene loginScene() {
+
+        BorderPane borderPane = new BorderPane(LoginBox.loginBox());
+        Scene scene = new Scene(borderPane);
         return scene;
     }
 }
