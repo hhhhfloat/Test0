@@ -4,6 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.ArrayDeque;
@@ -48,7 +49,7 @@ public class AppTest
 
     // Test Functions have to be named after "test", like "testABC"
 
-    public int[][] ShowPath(HashSet<Point> path, int[][] map_, int MAPX, int MAPY) {
+    public int[][] ShowPath(ArrayList<Point> path, int[][] map_, int MAPX, int MAPY) {
         int[][] temp = new int[MAPX][MAPY];
         for (int i = 0; i < MAPX; i++) {
             System.arraycopy(map_[i], 0, temp[i], 0, MAPY);
@@ -112,11 +113,40 @@ public class AppTest
     }
 
     // 测试自动生成地图
-    public void testMapSummon() throws InterruptedException {
+    public void _testMapSummon() throws InterruptedException {
         int Count = 0;
         int MAPX = 10, MAPY = 10;
         int nType = 50;
         LinkyMap level = new LinkyMap(12, 12, 1);
         PrintMap(level.getMap());
+    }
+
+    public void testFunc() throws InterruptedException {
+        int MAPX = 12, MAPY = 12;
+        int nType = 1;
+        LinkyMap level = new LinkyMap(MAPX, MAPY, nType);
+
+        boolean msg = true;
+        while(!isComplete(level.getMap()))
+        {
+            ArrayList<Point> path = level.autoFindPath();
+            if(path.isEmpty())
+            {
+                System.out.println("没有路径了");
+                msg = false;
+                break;
+            }
+            // 选用打印路径与地图
+            int[][] map_p = ShowPath(path, level.getMap(), MAPX, MAPY);
+            PrintMap(map_p);
+
+            // 必须更新的
+            level.delNumMap(level.HashPath(path));
+            Sleep(3000);
+        }
+        if(msg)
+        {
+            System.out.println("消除完毕!");
+        }
     }
 }
