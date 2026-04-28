@@ -6,9 +6,6 @@ import junit.framework.TestSuite;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Scanner;
-import java.util.ArrayDeque;
-import java.util.regex.Pattern;
 
 import org.example.Functions.*;
 
@@ -49,12 +46,12 @@ public class AppTest
 
     // Test Functions have to be named after "test", like "testABC"
 
-    public int[][] ShowPath(ArrayList<Point> path, int[][] map_, int MAPX, int MAPY) {
+    public int[][] ShowPath(ArrayList<Coordi> path, int[][] map_, int MAPX, int MAPY) {
         int[][] temp = new int[MAPX][MAPY];
         for (int i = 0; i < MAPX; i++) {
             System.arraycopy(map_[i], 0, temp[i], 0, MAPY);
         }
-        for (Point p : path) {
+        for (Coordi p : path) {
             temp[p.x()][p.y()] = -2;
         }
         return temp;
@@ -88,8 +85,8 @@ public class AppTest
     }
 
     // Use this to Print the path
-    public void PrintPath(HashSet<Point> path) {
-        for (Point p : path) {
+    public void PrintPath(HashSet<Coordi> path) {
+        for (Coordi p : path) {
             System.out.printf("(%d, %d) ", p.x(), p.y());
         }
         System.out.println();
@@ -129,7 +126,7 @@ public class AppTest
         boolean msg = true;
         while(!isComplete(level.getMap()))
         {
-            ArrayList<Point> path = level.autoFindPath();
+            ArrayList<Coordi> path = level.autoFindPath();
             if(path.isEmpty())
             {
                 System.out.println("没有路径了");
