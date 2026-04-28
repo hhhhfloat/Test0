@@ -26,6 +26,6 @@ public class MainApp extends Application {
         SceneCtrl sceneCtrl = new SceneCtrl(stage);
         GameCtrl gameCtrl = new GameCtrl(userDao, sceneCtrl);
         LoginCtrl loginCtrl = new LoginCtrl(userDao, sceneCtrl);
-        loginCtrl.showLoginScene();
+        loginCtrl.showInitialScene();
     }
 }

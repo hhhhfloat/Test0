@@ -22,7 +22,3 @@
 .menu-btn:hover {
     -fx-background-color: #45a049;
 }
-
-.game-control-btn:pressed {
-    -fx-background-color: #0b7dda;
-}

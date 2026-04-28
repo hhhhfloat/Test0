@@ -24,11 +24,31 @@ public class LoginCtrl {
         this.sceneCtrl = sceneCtrl;
     }
 
+    //设定InitialScene的按钮相应
     public void handleLogin() {
         LoginScene loginScene = new LoginScene(this);//this传递？？？解决了循环问题
         sceneCtrl.setScene(loginScene);
     }
 
+    public void handleTouristMode() {
+        /*AccountScene accountScene = new AccountScene();
+        sceneCtrl.setScene();*/
+    }
+
+    public void handleExit() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm");
+        alert.setHeaderText("Are you sure you want to exit?");
+        alert.setContentText("All the unsaved data will be lost!");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                Platform.exit();
+            }
+        });
+    }
+
+    //设定LoginScene的按钮响应
     public void handleLoginCancel() {
         InitialScene initialScene = new InitialScene(this);
         sceneCtrl.setScene(initialScene);
@@ -70,41 +90,26 @@ public class LoginCtrl {
         }
     }
 
+    //设定RegisterScene的按钮响应
     public void handleRegisterCancel() {
-        //
+
     }
 
     public void handleRegisterConfirm() {
-        //
+
     }
 
-    public void handleTouristMode() {
-       //
-    }
-
-    public void handleExit() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm");
-        alert.setHeaderText("Are you sure you want to exit?");
-        alert.setContentText("All the unsaved data will be lost!");
-
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                Platform.exit();
-            }
-        });
-    }
-
+    //设定AccountScene的按钮响应
     public void handleLogout() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
         alert.setHeaderText("Are you sure you want to logout?");
         alert.showAndWait();
-        //
+
     }
 
     public void handleStart() {
-        //
+
     }
 
     public void handleLeaderboard() {
@@ -127,9 +132,10 @@ public class LoginCtrl {
         leaderboardStage.show();
     }
 
-    public void showAccountScene(Account account, boolean isTourist) {
-        AccountScene accountScene = new AccountScene(account, isTourist, this);
-        sceneCtrl.setScene(accountScene);
+    //显示不同界面
+    public void showInitialScene() {
+        InitialScene initialScene = new InitialScene(this);
+        sceneCtrl.setScene(initialScene);
     }
 
     public void showLoginScene() {
@@ -137,6 +143,12 @@ public class LoginCtrl {
         sceneCtrl.setScene(loginScene);
     }
 
+    public void showAccountScene(Account account, boolean isTourist) {
+        AccountScene accountScene = new AccountScene(account, isTourist, this);
+        sceneCtrl.setScene(accountScene);
+    }
+
+    //选择存档
     public void handleLoad1() {
 
     }
@@ -148,4 +160,5 @@ public class LoginCtrl {
     public void handleLoad3() {
 
     }
+
 }

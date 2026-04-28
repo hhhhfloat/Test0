@@ -33,13 +33,11 @@ public class LoginBox extends VBox {
         messageLabel = new Label();
         //messageLabel.setStyle("-fx-text-fill: red;");
 
-        confirmBtn.setOnAction(e -> {
-            loginCtrl.handleLoginConfirm(usernameField.getText(), passwordField.getText());
-        });
+        cancelBtn.setOnAction(event -> loginCtrl.showInitialScene());
 
-        registerBtn.setOnAction(e -> {
-            loginCtrl.handleRegister(usernameField.getText(), passwordField.getText());
-        });
+        confirmBtn.setOnAction(e -> loginCtrl.handleLoginConfirm(usernameField.getText(), passwordField.getText()));
+
+        registerBtn.setOnAction(e -> loginCtrl.handleRegister(usernameField.getText(), passwordField.getText()));
 
         getChildren().addAll(usernameField, passwordField, confirmBtn, cancelBtn, registerBtn, messageLabel);
     }
