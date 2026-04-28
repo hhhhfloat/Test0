@@ -1,6 +1,7 @@
 package controller;
 
 import LoginPage.Account;
+import model.state.GameSnapshot;
 
 public class SceneContr {
     public void switchToLogin()

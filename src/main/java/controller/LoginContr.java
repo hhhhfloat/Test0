@@ -29,10 +29,10 @@ public class LoginContr {
     }
     public boolean isLoggedIn()
     {
-        
+        return true;
     }
     public Account getCurrentAccount()
     {
-
+        return new Account();
     }
 }
