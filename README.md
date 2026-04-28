@@ -23,8 +23,9 @@ import java.util.HashSet;
 public void Func()
 {
     int MAPX = 6, MAPY = 6;
-    int nType = 10;
-    LinkyMap level = new LinkyMap(MAPX, MAPY, nType);
+    int mapType = 0;
+    // 0简单1困难
+    LinkyMap level = new LinkyMap(MAPX, MAPY, mapType);
     
     boolean msg = true;
     while(!isComplete(level.getMap()))
