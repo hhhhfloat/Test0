@@ -2,12 +2,9 @@ package view.boxes;
 
 import controller.LoginCtrl;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import view.common.ButtonUtils;
 
 public class RegisterBox extends VBox{
     private TextField usernameField;
@@ -15,8 +12,6 @@ public class RegisterBox extends VBox{
 
     public RegisterBox(LoginCtrl loginCtrl) {
         super(15);
-        //setAlignment(Pos.CENTER);
-        //setStyle("-fx-padding: 20; -fx-background-color: rgba(0,0,0,0.7); -fx-background-radius: 10;");
 
         usernameField = new TextField();
         usernameField.setPromptText("Please enter your username: ");
@@ -26,10 +21,9 @@ public class RegisterBox extends VBox{
         passwordField.setPromptText("Please enter your password: ");
         passwordField.setMaxWidth(200);
 
-        Button confirmBtn = ButtonUtils.createButton("Confirm");
-        Button cancelBtn = ButtonUtils.createButton("Cancel");
+        Button confirmBtn = new Button("Confirm");
+        Button cancelBtn = new Button("Cancel");
 
-        //messageLabel.setStyle("-fx-text-fill: red;");
 
         /*confirmBtn.setOnAction(e -> {
             String result = loginCtrl.handleLoginConfirm(usernameField.getText(), passwordField.getText());

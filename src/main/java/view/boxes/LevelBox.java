@@ -3,14 +3,13 @@ package view.boxes;
 import controller.GameCtrl;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import view.common.ButtonUtils;
 
 public class LevelBox extends VBox{
     public LevelBox(GameCtrl gameCtrl){
         super(10);
-        Button easyBtn = ButtonUtils.createButton("Easy");
+        Button easyBtn = new Button("Easy");
         easyBtn.setOnAction(event -> gameCtrl.handleEasy());
-        Button difficultBtn = ButtonUtils.createButton("Difficult");
+        Button difficultBtn = new Button("Difficult");
         difficultBtn.setOnAction(event -> gameCtrl.handleDifficult());
         getChildren().addAll(easyBtn, difficultBtn);
     }

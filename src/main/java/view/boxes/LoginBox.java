@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import view.common.ButtonUtils;
 
 public class LoginBox extends VBox {
     private TextField usernameField;
@@ -26,9 +25,9 @@ public class LoginBox extends VBox {
         passwordField.setPromptText("Please enter your password: ");
         passwordField.setMaxWidth(200);
 
-        Button confirmBtn = ButtonUtils.createButton("Confirm");
-        Button cancelBtn = ButtonUtils.createButton("Cancel");
-        Button registerBtn = ButtonUtils.createButton("Register");
+        Button confirmBtn = new Button("Confirm");
+        Button cancelBtn = new Button("Cancel");
+        Button registerBtn = new Button("Register");
 
         messageLabel = new Label();
         //messageLabel.setStyle("-fx-text-fill: red;");

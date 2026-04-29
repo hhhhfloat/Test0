@@ -6,7 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import model.entity.Account;
-import view.common.ButtonUtils;
 
 public class AccountBox extends VBox {
     public AccountBox(Account account, boolean isTourist, LoginCtrl loginCtrl) {
@@ -22,8 +21,8 @@ public class AccountBox extends VBox {
         }
         welcomeLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18px;");
 
-        Button startBtn = ButtonUtils.createButton("Start");
-        Button logoutBtn = ButtonUtils.createButton("Logout");
+        Button startBtn = new Button("Start");
+        Button logoutBtn = new Button("Logout");
 
         startBtn.setOnAction(e -> {
             // sceneCtrl.setScene(new GameScene(...));

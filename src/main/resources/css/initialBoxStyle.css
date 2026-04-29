@@ -1,0 +1,78 @@
+.button {
+    -fx-pref-width: 100px;
+    -fx-pref-height: 40px;
+    -fx-min-width: 80px;
+    -fx-max-width: 200px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+    -fx-alignment: center;
+
+    -fx-background-radius: 4px;
+    -fx-background-color: rgba(50, 150, 200, 0.8);
+    /*-fx-background-image: url("");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;*/
+
+    /*-fx-border-color: Blue;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+     -fx-border-style: solid;
+    -fx-border-style: dashed dotted;*/
+
+    /*-fx-graphic: url("icon.png");
+   -fx-graphic-text-gap: 10px;
+   -fx-content-display: left;
+   -fx-graphic-fit: true;
+   -fx-opacity: 0.9;*/
+
+    -fx-text-fill: Black;
+    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-weight: normal;
+    -fx-font-style: italic;
+    -fx-underline: false;
+    -fx-letter-spacing: 10px;
+
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.button:hover {
+    //-fx-background-color: Blue;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
+}
+
+.button:pressed {
+    -fx-background-color: rgba(70, 170, 220, 0.8);
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 1px;
+}
+
+/* 获得焦点 */
+.button:focused {
+
+}
+
+/* 禁用状态 */
+.button:disabled {
+    -fx-opacity: 0.6;
+    -fx-background-color: White;
+    -fx-effect: null;
+}
+
+/* 默认按钮（回车键触发）*/
+.button:default {
+
+}
+
+/* 取消按钮（ESC键触发）*/
+.button:cancel {
+    -fx-background-color: #e74c3c;
+}
+
