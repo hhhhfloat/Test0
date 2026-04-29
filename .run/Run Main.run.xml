@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Main" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="app.MainApp" />
+    <module name="Test0" />
+    <option name="VM_PARAMETERS" value="--module-path C:\javafx-sdk-26\lib --add-modules javafx.controls,javafx.fxml,javafx.web,javafx.swing --enable-native-access=javafx.graphics,javafx.media,javafx.web" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
