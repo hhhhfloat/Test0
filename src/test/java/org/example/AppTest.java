@@ -113,7 +113,7 @@ public class AppTest
         int Count = 0;
         int MAPX = 10, MAPY = 10;
         int nType = 50;
-        LinkyMap level = new LinkyMap(12, 12, 1);
+        LinkyMap level = new LinkyMap(12, 12, 1, true);
         PrintMap(level.getMap());
     }
 }

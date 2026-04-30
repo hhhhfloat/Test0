@@ -40,7 +40,7 @@ public class LinkyMap {
                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
                     }
             };
-    static final int[] nType = {6, 40};
+    static final int[] nType = {6, 12};
     static final int[] nToPut = {32, 100};
 
     private int MAPX_, MAPY_;
@@ -239,9 +239,33 @@ public class LinkyMap {
         // 数表生成完成
     }
 
+    /// 检测输入的点是否合理
+    public boolean isValidPick(Crd p1, Crd p2)
+    {
+        int x1 = p1.x(),x2= p2.x();
+        int y1= p1.y();
+        int y2= p2.y();
+        if(x1==x2 && y1 == y2) return false; // 同一点
+        else if(x1<0||x1>=MAPX_||x2<0||x2>=MAPX_||y1<0||y2<0||y1>=MAPY_||y2>=MAPY_)return false; // 超范围
+        else if(map[x1][y1] == -1 || map[x2][y2] == -1) return false; // 选了空格
+        else if(!(map[x1][y1]/2 == map[x2][y2]/2 && Math.abs(map[x1][x2]-map[x2][y2]) == isPair-1))return false;// 点值不相等
+        else return true;
+    }
+
     ///  VVVVVV
     /// 消去后更新数表与地图（给定消去的非零点）
     public void delNumMap(HashSet<Crd> crds) {
+        boolean msg = false;
+//        for(Crd p:crds)
+//        {
+//            int x = p.x(), y = p.y();
+//            if(x>=12||y>=12||x<0||y<0) {
+//                System.out.println("breakkkkkk");
+//                msg = true;
+//                break;
+//            }
+//        }
+//        if(!msg) System.out.println("Normal");
         for (Crd p : crds) {
             int x = p.x(), y = p.y();
             if (map[x][y] == -1) continue;
@@ -300,7 +324,7 @@ public class LinkyMap {
                 if (map[x][y] != -1)    // 非空格，找直线
                 {
                     for (int i = 0; i < 4; i++) {
-                        if (map[x][y]/2 == NumMap[x][y][i][0]/2 && Math.abs(map[x][y]-NumMap[x][y][i][0]) == isPair-1) //因为map[x][y]不是-1，不用考虑空条
+                        if (NumMap[x][y][i][0] != -1 && map[x][y]/2 == NumMap[x][y][i][0]/2 && Math.abs(map[x][y]-NumMap[x][y][i][0]) == isPair-1) //因为map[x][y]不是-1，不用考虑空条
                         {
                             ArrayList<Crd> path = new ArrayList<>();
                             int dx = dir[i][0], dy = dir[i][1];
@@ -326,7 +350,7 @@ public class LinkyMap {
                             int[] mmm = {0, 2}; // 枚举空格对中每一个的上/下数字
                             for (int z : mmm) {
                                 for (int w : mmm) {
-                                    if (NumMap[x][y + i][z][0] != -1 && NumMap[x][y + i][z][0]/2 == NumMap[x][y + j][w][0]/2 && Math.abs(NumMap[x][y + i][z][0]-NumMap[x][y + j][w][0])==isPair-1) {
+                                    if (NumMap[x][y + i][z][0] != -1 && NumMap[x][y + j][w][0] != -1 && NumMap[x][y + i][z][0]/2 == NumMap[x][y + j][w][0]/2 && Math.abs(NumMap[x][y + i][z][0]-NumMap[x][y + j][w][0])==isPair-1) {
                                         // 起点
                                         path.add(new Crd(x+NumMap[x][y+i][z][1]*dir[z][0],y+i));
                                         // 拐点一
@@ -359,7 +383,7 @@ public class LinkyMap {
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
         ArrayList<Crd> path = new ArrayList<>();
         for (int d = 0; d < 4; d++) {
-            if (NumMap[x][y][d][0] != -1 && NumMap[x][y][d][0]/2 == NumMap[x][y][(d + 1) % 4][0]/2 && Math.abs(NumMap[x][y][d][0]-NumMap[x][y][(d + 1) % 4][0])==isPair-1) {
+            if (NumMap[x][y][d][0] != -1 && NumMap[x][y][(d+1)%4][0] != -1 && NumMap[x][y][d][0]/2 == NumMap[x][y][(d + 1) % 4][0]/2 && Math.abs(NumMap[x][y][d][0]-NumMap[x][y][(d + 1) % 4][0])==isPair-1) {
                 int k1 = NumMap[x][y][d][1], k2 = NumMap[x][y][(d + 1) % 4][1]; // 记录两个方向的步数
                 path.add(new Crd(x+dir[d][0]*k1,y+dir[d][1]*k1));
                 path.add(new Crd(x,y));
@@ -389,7 +413,7 @@ public class LinkyMap {
                             int[] mmm = {0, 2}; // 枚举空格对中每一个的上/下数字
                             for (int z : mmm) {
                                 for (int w : mmm) {
-                                    if (NumMap_T[x][y + i][z][0] != -1 && NumMap_T[x][y + i][z][0]/2 == NumMap_T[x][y + j][w][0]/2 && Math.abs(NumMap_T[x][y + i][z][0] - NumMap_T[x][y + j][w][0]) == isPair-1) {
+                                    if (NumMap_T[x][y + i][z][0] != -1 && NumMap_T[x][y + j][w][0] != -1 && NumMap_T[x][y + i][z][0]/2 == NumMap_T[x][y + j][w][0]/2 && Math.abs(NumMap_T[x][y + i][z][0] - NumMap_T[x][y + j][w][0]) == isPair-1) {
                                         // 起点
                                         path.add(new Crd(x+NumMap_T[x][y+i][z][1]*dir[z][0],y+i));
                                         // 拐点一
@@ -472,6 +496,7 @@ public class LinkyMap {
 
     /// 给定点找连线的函数(无路径则返回空路径) ，默认传入的是正确的选点
     public ArrayList<Crd> pickPath(Crd p1, Crd p2) {
+        if(!isValidPick(p1,p2))return new ArrayList<>();
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
         ArrayList<Crd> path = new ArrayList<>();
