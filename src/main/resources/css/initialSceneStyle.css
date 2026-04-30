@@ -1,0 +1,36 @@
+.root {
+    -fx-background-image: url('/Sprites/bg.png');
+    -fx-background-size: cover;
+}
+
+InitialBox {
+    -fx-alignment: Center;
+}
+
+.button {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 40px;
+
+    -fx-background-radius: 4px;
+    -fx-background-color: rgba(50, 150, 200, 0.8);
+
+    -fx-text-fill: Black;
+    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-style: italic;
+
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.button:hover {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
+}
+
+.button:pressed {
+    -fx-background-color: rgba(70, 170, 220, 0.8);
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 1px;
+}

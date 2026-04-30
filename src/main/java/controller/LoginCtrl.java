@@ -24,9 +24,8 @@ public class LoginCtrl {
         this.sceneCtrl = sceneCtrl;
     }
 
-    //设定InitialScene的按钮相应
     public void handleLogin() {
-        LoginScene loginScene = new LoginScene(this);//this传递？？？解决了循环问题
+        LoginScene loginScene = new LoginScene(this);
         sceneCtrl.setScene(loginScene);
     }
 
@@ -48,7 +47,6 @@ public class LoginCtrl {
         });
     }
 
-    //设定LoginScene的按钮响应
     public void handleLoginCancel() {
         InitialScene initialScene = new InitialScene(this);
         sceneCtrl.setScene(initialScene);
@@ -90,7 +88,6 @@ public class LoginCtrl {
         }
     }
 
-    //设定RegisterScene的按钮响应
     public void handleRegisterCancel() {
 
     }
@@ -99,7 +96,6 @@ public class LoginCtrl {
 
     }
 
-    //设定AccountScene的按钮响应
     public void handleLogout() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
@@ -132,7 +128,6 @@ public class LoginCtrl {
         leaderboardStage.show();
     }
 
-    //显示不同界面
     public void showInitialScene() {
         InitialScene initialScene = new InitialScene(this);
         sceneCtrl.setScene(initialScene);
@@ -148,7 +143,6 @@ public class LoginCtrl {
         sceneCtrl.setScene(accountScene);
     }
 
-    //选择存档
     public void handleLoad1() {
 
     }

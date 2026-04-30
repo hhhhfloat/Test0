@@ -1,0 +1,72 @@
+.root {
+    -fx-background-image: url('/Sprites/bg.png');
+    -fx-background-size: cover;
+}
+
+LoginBox {
+    -fx-alignment: Center;
+}
+
+HBox {
+    -fx-alignment: Center;
+}
+
+HBox Button {
+    -fx-pref-width: 100px;
+    -fx-pref-height: 20px;
+
+    -fx-background-color: rgba(70, 170, 220, 0.8);
+
+    -fx-text-fill: Black;
+    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-style: italic;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
+}
+
+HBox > Button:hover {
+    -fx-background-color: rgba(70, 170, 220, 0.8);
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 2);
+}
+
+HBox > Button:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 1px;
+}
+
+LoginBox > Button {
+    -fx-pref-width: 400px;
+    -fx-pref-height: 20px;
+
+    -fx-background-color: rgba(0, 0, 0, 0.0);
+
+    -fx-text-fill: Black;
+    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-style: italic;
+    -fx-underline: true;
+}
+
+
+LoginBox > Button:hover {
+    -fx-text-fill: rgba(70, 170, 220, 0.8);
+    -fx-cursor: hand;
+}
+
+LoginBox > Button:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 1px;
+}
+
+.text-field {
+    -fx-max-width: 400px;
+    -fx-pref-height: 50px;
+}
+
+/*PasswordField {
+    -fx-pref-width: 400px;
+    -fx-pref-height: 40px;
+}*/

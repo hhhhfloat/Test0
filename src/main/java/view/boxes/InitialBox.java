@@ -14,6 +14,5 @@ public class InitialBox extends VBox{
         Button exitBtn = new Button("Exit");
         exitBtn.setOnAction(event -> loginCtrl.handleExit());
         getChildren().addAll(loginBtn, touristBtn, exitBtn);
-        getStylesheets().add(getClass().getResource("/css/initialBoxStyle.css").toExternalForm());
     }
 }
