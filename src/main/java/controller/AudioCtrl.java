@@ -16,10 +16,6 @@ public class AudioCtrl {
         mediaPlayer.play();
     }
 
-    public void stopBgMusic() {
-
-    }
-
     public void pauseBgMusic() {
 
     }

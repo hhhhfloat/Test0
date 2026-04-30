@@ -9,8 +9,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class RegisterBox extends VBox{
-    private TextField usernameField;
-    private PasswordField passwordField;
+    private final TextField usernameField;
+    private final PasswordField passwordField;
 
     public RegisterBox(LoginCtrl loginCtrl) {
         super(15);

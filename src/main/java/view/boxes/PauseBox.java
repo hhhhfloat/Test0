@@ -1,7 +1,6 @@
 package view.boxes;
 
 import controller.GameCtrl;
-import controller.LoginCtrl;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 

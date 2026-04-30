@@ -1,5 +1,7 @@
-package GamePage;
+package view.game_nodes;
 
+import view.labels.ScoreLabel;
+import view.labels.TimerLabel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;

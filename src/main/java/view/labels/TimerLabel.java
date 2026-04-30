@@ -1,4 +1,4 @@
-package GamePage;
+package view.labels;
 
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;

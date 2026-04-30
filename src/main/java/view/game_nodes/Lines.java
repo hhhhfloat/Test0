@@ -1,4 +1,4 @@
-package GamePage;
+package view.game_nodes;
 
 import javafx.scene.Group;
 import javafx.scene.shape.Line;

@@ -12,7 +12,7 @@ import view.scenes.RegisterScene;
 
 public class LoginCtrl {
     private final UserDao userDao;
-    private GameCtrl gameCtrl;
+    private final GameCtrl gameCtrl;
     private final SceneCtrl sceneCtrl;
 
     public LoginCtrl(UserDao userDao, SceneCtrl sceneCtrl, GameCtrl gameCtrl) {

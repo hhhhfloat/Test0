@@ -9,7 +9,6 @@ public class SceneCtrl {
     public SceneCtrl(Stage stage) {
         primaryStage = stage;
     }
-
     public void setScene(Scene scene) {
         primaryStage.setScene(scene);
         primaryStage.show();

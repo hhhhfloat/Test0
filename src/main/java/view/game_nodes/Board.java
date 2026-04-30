@@ -1,4 +1,4 @@
-package GamePage;
+package view.game_nodes;
 
 import model.entity.LinkyMap;
 
