@@ -2,8 +2,10 @@ package view.boxes;
 
 import controller.LoginCtrl;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class RegisterBox extends VBox{
@@ -21,28 +23,15 @@ public class RegisterBox extends VBox{
         passwordField.setPromptText("Please enter your password: ");
         passwordField.setMaxWidth(200);
 
-        Button confirmBtn = new Button("Confirm");
         Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(event -> loginCtrl.handleRegisterCancel());
+        Button confirmBtn = new Button("Confirm");
+        confirmBtn.setOnAction(event -> loginCtrl.handleRegisterConfirm(usernameField.getText(), passwordField.getText()));
+        HBox hBox = new HBox(80, cancelBtn, confirmBtn);
 
+        Label messageLabel;
+        messageLabel = new Label("Register Your Account");
 
-        /*confirmBtn.setOnAction(e -> {
-            String result = loginCtrl.handleLoginConfirm(usernameField.getText(), passwordField.getText());
-            if (result != null) {
-                messageLabel.setText(result);
-            }
-        });
-
-        registerBtn.setOnAction(e -> {
-            String result = loginCtrl.handleRegister(usernameField.getText(), passwordField.getText());
-            if (result != null) {
-                messageLabel.setText(result);
-            } else {
-                messageLabel.setText("Register succeeded! Please login");
-                usernameField.clear();
-                passwordField.clear();
-            }
-        });*/
-
-        getChildren().addAll(usernameField, passwordField, confirmBtn, cancelBtn);
+        getChildren().addAll(messageLabel, usernameField, passwordField, hBox);
     }
 }

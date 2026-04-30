@@ -11,8 +11,6 @@ public class LoadScene extends Scene{
         getStylesheets().add(getClass().getResource("/css/loadSceneStyle.css").toExternalForm());
     }
     public static BorderPane createRoot(GameCtrl gameCtrl) {
-        LoadBox loadBox = new LoadBox(gameCtrl);
-        BorderPane borderPane = new BorderPane(loadBox);
-        return borderPane;
+        return new BorderPane(new LoadBox(gameCtrl));
     }
 }

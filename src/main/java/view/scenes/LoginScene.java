@@ -12,8 +12,6 @@ public class LoginScene extends Scene {
     }
 
     private static StackPane createRoot(LoginCtrl loginCtrl) {
-        StackPane root = new StackPane();
-        root.getChildren().add(new LoginBox(loginCtrl));
-        return root;
+        return new StackPane(new LoginBox(loginCtrl));
     }
 }

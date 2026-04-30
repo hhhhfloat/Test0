@@ -4,7 +4,7 @@ import model.state.GameSnapshot;
 
 public class Account {
     String userName, password;
-    //GameSnapshot saveLoad;
+    GameSnapshot saveLoad;
 
     public Account(String userName) {
         this.userName = userName;

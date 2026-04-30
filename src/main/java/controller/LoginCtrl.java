@@ -1,56 +1,29 @@
 package controller;
 
 import dao.UserDao;
-import dao.impl.FileUserDao;
 import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import model.entity.Account;
 import view.scenes.AccountScene;
 import view.scenes.InitialScene;
 import view.scenes.LoginScene;
+import view.scenes.RegisterScene;
 
 public class LoginCtrl {
-    private UserDao userDao = new FileUserDao();
+    private final UserDao userDao;
+    private GameCtrl gameCtrl;
     private final SceneCtrl sceneCtrl;
 
-    public LoginCtrl(UserDao userDao, SceneCtrl sceneCtrl) {
+    public LoginCtrl(UserDao userDao, SceneCtrl sceneCtrl, GameCtrl gameCtrl) {
         this.userDao = userDao;
         this.sceneCtrl = sceneCtrl;
+        this.gameCtrl = gameCtrl;
     }
 
-    public void handleLogin() {
-        LoginScene loginScene = new LoginScene(this);
-        sceneCtrl.setScene(loginScene);
-    }
+    public void handleLogin() { showLoginScene(); }
 
-    public void handleTouristMode() {
-        /*AccountScene accountScene = new AccountScene();
-        sceneCtrl.setScene();*/
-    }
-
-    public void handleExit() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm");
-        alert.setHeaderText("Are you sure you want to exit?");
-        alert.setContentText("All the unsaved data will be lost!");
-
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                Platform.exit();
-            }
-        });
-    }
-
-    public void handleLoginCancel() {
-        InitialScene initialScene = new InitialScene(this);
-        sceneCtrl.setScene(initialScene);
-    }
+    public void handleLoginCancel() { showInitialScene(); }
 
     public void handleLoginConfirm(String username, String password) {
         if (username.trim().isEmpty()) {
@@ -58,18 +31,18 @@ public class LoginCtrl {
             alert.setTitle("Warning");
             alert.setContentText("Username can't be null!");
             alert.showAndWait();
-        } /*else if () {
+        } else if (userDao.exist(username)) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
             alert.setContentText("Username doesn't exist!");
             alert.showAndWait();
-        }*/ else {
+        } else {
             if (userDao.validate(username, password)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText("Login succeeded!");
                 alert.showAndWait();
                 Account account = userDao.findByUsername(username);
-                showAccountScene(account, false);
+                showAccountScene(account);
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -79,80 +52,46 @@ public class LoginCtrl {
         }
     }
 
-    public void handleRegister(String username, String password) {
-        if (userDao.createUser(username, password)) {
-            Account account = userDao.findByUsername(username);
-            showAccountScene(account, false);
-        } else {
-            // 通知 View 用户名已存在
-        }
-    }
+    public void handleTouristMode() { showAccountScene(); }
 
-    public void handleRegisterCancel() {
-
-    }
-
-    public void handleRegisterConfirm() {
-
-    }
-
-    public void handleLogout() {
+    public void handleExit() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
-        alert.setHeaderText("Are you sure you want to logout?");
-        alert.showAndWait();
-
+        alert.setHeaderText("Are you sure you want to exit?");
+        alert.setContentText("All the unsaved data will be lost!");
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                Platform.exit();
+            }
+        });
     }
 
-    public void handleStart() {
+    public void handleRegister() { showRegisterScene(); }
 
-    }
+    public void handleRegisterCancel() { sceneCtrl.setScene(new LoginScene(this)); }
 
-    public void handleLeaderboard() {
-        VBox list = new VBox(10);
-        for (int i = 1; i <= 30; i++) {
-            Label menuItem = new Label("No." + i);
-            menuItem.setMaxWidth(Double.MAX_VALUE);
-            menuItem.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
-            list.getChildren().add(menuItem);
+    public void handleRegisterConfirm(String username, String password) {
+        if(userDao.exist(username)) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("Username's already used!");
+            alert.showAndWait();
+        } else {
+            userDao.createUser(username, password);
+            Account account = userDao.findByUsername(username);
+            showAccountScene(account);
         }
-
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(list);
-        scrollPane.setFitToWidth(true);
-        //scrollPane.setPrefSize(300, 300);
-
-        Scene scene = new Scene(scrollPane, 350, 500);
-        Stage leaderboardStage = new Stage();
-        leaderboardStage.setScene(scene);
-        leaderboardStage.show();
     }
 
-    public void showInitialScene() {
-        InitialScene initialScene = new InitialScene(this);
-        sceneCtrl.setScene(initialScene);
+    public void showInitialScene() { sceneCtrl.setScene(new InitialScene(this)); }
+
+    public void showLoginScene() { sceneCtrl.setScene(new LoginScene(this)); }
+
+    public void showRegisterScene() { sceneCtrl.setScene(new RegisterScene(this)); }
+
+    public void showAccountScene() { sceneCtrl.setScene(new AccountScene(gameCtrl)); }
+
+    public void showAccountScene(Account account) {
+        gameCtrl.setAccount(account);
+        sceneCtrl.setScene(new AccountScene(account, gameCtrl));
     }
-
-    public void showLoginScene() {
-        LoginScene loginScene = new LoginScene(this);
-        sceneCtrl.setScene(loginScene);
-    }
-
-    public void showAccountScene(Account account, boolean isTourist) {
-        AccountScene accountScene = new AccountScene(account, isTourist, this);
-        sceneCtrl.setScene(accountScene);
-    }
-
-    public void handleLoad1() {
-
-    }
-
-    public void handleLoad2() {
-
-    }
-
-    public void handleLoad3() {
-
-    }
-
 }

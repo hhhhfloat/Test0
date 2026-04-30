@@ -11,7 +11,6 @@ import javafx.scene.layout.VBox;
 public class LoginBox extends VBox {
     private TextField usernameField;
     private PasswordField passwordField;
-    private Label messageLabel;
 
     public LoginBox(LoginCtrl loginCtrl) {
         super(15);
@@ -22,18 +21,18 @@ public class LoginBox extends VBox {
         passwordField = new PasswordField();
         passwordField.setPromptText("Please enter your password: ");
 
-        Button confirmBtn = new Button("Confirm");
         Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(event -> loginCtrl.handleLoginCancel());
+        Button confirmBtn = new Button("Confirm");
+        confirmBtn.setOnAction(e -> loginCtrl.handleLoginConfirm(usernameField.getText(), passwordField.getText()));
         Button registerBtn = new Button("Don't have an account yet? Click here to register");
+        registerBtn.setOnAction(e -> loginCtrl.handleRegister());
 
         HBox hBox = new HBox(80, cancelBtn, confirmBtn);
 
-        messageLabel = new Label();
+        Label messageLabel;
+        messageLabel = new Label("Login Your Account");
 
-        cancelBtn.setOnAction(event -> loginCtrl.showInitialScene());
-        confirmBtn.setOnAction(e -> loginCtrl.handleLoginConfirm(usernameField.getText(), passwordField.getText()));
-        registerBtn.setOnAction(e -> loginCtrl.handleRegister(usernameField.getText(), passwordField.getText()));
-
-        getChildren().addAll(usernameField, passwordField, hBox, registerBtn, messageLabel);
+        getChildren().addAll(messageLabel, usernameField, passwordField, hBox, registerBtn);
     }
 }

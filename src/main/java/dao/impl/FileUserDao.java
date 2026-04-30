@@ -51,29 +51,32 @@ public class FileUserDao implements UserDao {
         }
     }
 
+
+    @Override
+    public boolean exist(String username) {
+        Properties properties = loadProperties();
+        return properties.containsKey(username);
+    }
+
     @Override
     public boolean validate(String username, String password) {
-        Properties props = loadProperties();
-        String storedPwd = props.getProperty(username + ".pwd");
+        Properties properties = loadProperties();
+        String storedPwd = properties.getProperty(username + ".pwd");
         return storedPwd != null && storedPwd.equals(password);
     }
 
     @Override
-    public boolean createUser(String username, String password) {
-        Properties props = loadProperties();
-        if (props.containsKey(username + ".pwd")) {
-            return false;
-        }
-        props.setProperty(username + ".pwd", password);
-        props.setProperty(username + ".highscore", "0");
-        saveProperties(props);
-        return true;
+    public void createUser(String username, String password) {
+        Properties properties = loadProperties();
+        properties.setProperty(username + ".pwd", password);
+        properties.setProperty(username + ".highscore", "0");
+        saveProperties(properties);
     }
 
     @Override
     public int getHighScore(String username) {
-        Properties props = loadProperties();
-        String scoreStr = props.getProperty(username + ".highscore");
+        Properties properties = loadProperties();
+        String scoreStr = properties.getProperty(username + ".highscore");
         if (scoreStr == null) return -1;
         try {
             return Integer.parseInt(scoreStr);

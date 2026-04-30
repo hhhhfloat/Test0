@@ -12,8 +12,6 @@ public class LevelScene extends Scene{
     }
 
     private static BorderPane createRoot(GameCtrl gameCtrl) {
-        LevelBox levelBox = new LevelBox(gameCtrl);
-        BorderPane root = new BorderPane(levelBox);
-        return root;
+        return new BorderPane(new LevelBox(gameCtrl));
     }
 }

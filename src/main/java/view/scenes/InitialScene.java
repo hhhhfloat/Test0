@@ -12,8 +12,6 @@ public class InitialScene extends Scene{
         getStylesheets().add(getClass().getResource("/css/initialSceneStyle.css").toExternalForm());
     }
     private static StackPane createRoot(LoginCtrl loginCtrl) {
-        InitialBox initialBox = new InitialBox(loginCtrl);
-        StackPane root = new StackPane(initialBox);
-        return root;
+        return new StackPane(new InitialBox(loginCtrl));
     }
 }

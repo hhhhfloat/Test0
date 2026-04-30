@@ -42,13 +42,12 @@ LoginBox > Button {
 
     -fx-background-color: rgba(0, 0, 0, 0.0);
 
-    -fx-text-fill: Black;
+    -fx-text-fill: white;
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
     -fx-font-size: 15px;
     -fx-font-style: italic;
     -fx-underline: true;
 }
-
 
 LoginBox > Button:hover {
     -fx-text-fill: rgba(70, 170, 220, 0.8);
@@ -61,12 +60,19 @@ LoginBox > Button:pressed {
     -fx-translate-y: 1px;
 }
 
+.label {
+    -fx-background-color: rgba(70, 170, 200, 0.4);
+    -fx-background-radius: 5px;
+
+    -fx-text-fill: white;
+    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-size: 30px;
+    -fx-font-style: italic;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 1);
+}
+
 .text-field {
     -fx-max-width: 400px;
     -fx-pref-height: 50px;
 }
-
-/*PasswordField {
-    -fx-pref-width: 400px;
-    -fx-pref-height: 40px;
-}*/

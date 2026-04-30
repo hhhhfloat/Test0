@@ -3,7 +3,7 @@
     -fx-background-size: cover;
 }
 
-InitialBox {
+AccountBox {
     -fx-alignment: Center;
 }
 
@@ -39,22 +39,4 @@ InitialBox {
     -fx-scale-x: 0.97;
     -fx-scale-y: 0.97;
     -fx-translate-y: 1px;
-}
-
-.button:focused {
-
-}
-
-.button:disabled {
-    -fx-opacity: 0.6;
-    -fx-background-color: White;
-    -fx-effect: null;
-}
-
-.button:default {
-
-}
-
-.button:cancel {
-    -fx-background-color: #e74c3c;
 }

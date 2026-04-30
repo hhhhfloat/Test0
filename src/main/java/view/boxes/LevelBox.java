@@ -6,7 +6,7 @@ import javafx.scene.layout.VBox;
 
 public class LevelBox extends VBox{
     public LevelBox(GameCtrl gameCtrl){
-        super(10);
+        super(40);
         Button easyBtn = new Button("Easy");
         easyBtn.setOnAction(event -> gameCtrl.handleEasy());
         Button difficultBtn = new Button("Difficult");

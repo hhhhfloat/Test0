@@ -13,7 +13,6 @@ public class PauseScene extends Scene{
 
     public static BorderPane createRoot(GameCtrl gameCtrl) {
         PauseBox pauseBox = new PauseBox(gameCtrl);
-        BorderPane borderPane = new BorderPane(pauseBox);
-        return borderPane;
+        return new BorderPane(pauseBox);
     }
 }

@@ -12,7 +12,6 @@ public class RegisterScene extends Scene{
     }
     public static BorderPane createRoot(LoginCtrl loginCtrl) {
         RegisterBox registerBox = new RegisterBox(loginCtrl);
-        BorderPane borderPane = new BorderPane(registerBox);
-        return borderPane;
+        return new BorderPane(registerBox);
     }
 }

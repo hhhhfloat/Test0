@@ -1,17 +1,105 @@
 package controller;
 
 import dao.UserDao;
-import dao.impl.FileUserDao;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import model.entity.Account;
 import model.entity.Crd;
+import view.scenes.AccountScene;
+import view.scenes.LevelScene;
+import view.scenes.LoadScene;
+import view.scenes.LoginScene;
 
 public class GameCtrl {
-    private UserDao userDao = new FileUserDao();
-    private SceneCtrl sceneCtrl;
+    private final UserDao userDao;
+    private final SceneCtrl sceneCtrl;
+    private Account account;
 
     public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl) {
         this.userDao = userDao;
         this.sceneCtrl = sceneCtrl;
     }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public void handleStart() { showLoadScene(); }
+
+    public void handleLogout() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm");
+        alert.setHeaderText("Are you sure you want to logout?");
+        alert.showAndWait();
+        showLoginScene();
+    }
+
+    public void handleLeaderboard() {
+        VBox list = new VBox(10);
+        for (int i = 1; i <= 30; i++) {
+            Label menuItem = new Label("No." + i);
+            menuItem.setMaxWidth(Double.MAX_VALUE);
+            menuItem.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
+            list.getChildren().add(menuItem);
+        }
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(list);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefSize(300, 300);
+
+        Scene scene = new Scene(scrollPane, 350, 500);
+        Stage leaderboardStage = new Stage();
+        leaderboardStage.setScene(scene);
+        leaderboardStage.show();
+    }
+
+    public void handleExit() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm");
+        alert.setHeaderText("Are you sure you want to exit?");
+        alert.setContentText("All the unsaved data will be lost!");
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                Platform.exit();
+            }
+        });
+    }
+
+    public void handleLoad1() {
+        showLevelScene();
+    }
+
+    public void handleLoad2() {
+
+    }
+
+    public void handleLoad3() {
+
+    }
+
+    public void handleBack() {
+        sceneCtrl.setScene(new AccountScene(account, this));
+    }
+
+    public void handleEasy() {
+
+    }
+
+    public void handleDifficult() {
+
+    }
+
+    public void showLoadScene() {
+        sceneCtrl.setScene(new LoadScene(this));
+    }
+
     public void handleCellClick(Crd p) {
 
     }
@@ -28,19 +116,7 @@ public class GameCtrl {
 
     }
 
-    public void handleExit() {
-
-    }
-
     public void handleRestart() {
-
-    }
-
-    public void handleEasy() {
-
-    }
-
-    public void handleDifficult() {
 
     }
 
@@ -54,7 +130,15 @@ public class GameCtrl {
         return time;
     }
 
+    public void showLoginScene() { sceneCtrl.setScene(new LoginScene(new LoginCtrl(userDao, sceneCtrl, this))); }
 
+    public void showLevelScene() {
+        sceneCtrl.setScene(new LevelScene(this));
+    }
+
+    public void showGameScene() {
+
+    }
 
     // 供view刷新用
     public boolean isGameRunning() {
