@@ -10,10 +10,6 @@ public class Account {
         this.userName = userName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getUserName() {
         return userName;
     }

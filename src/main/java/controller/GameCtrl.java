@@ -11,10 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.entity.Account;
 import model.entity.Crd;
-import view.scenes.AccountScene;
-import view.scenes.LevelScene;
-import view.scenes.LoadScene;
-import view.scenes.LoginScene;
+import view.scenes.*;
 
 public class GameCtrl {
     private final UserDao userDao;
@@ -89,11 +86,11 @@ public class GameCtrl {
     }
 
     public void handleEasy() {
-
+        showGameScene(0);
     }
 
     public void handleDifficult() {
-
+        showGameScene(1);
     }
 
     public void showLoadScene() {
@@ -136,8 +133,8 @@ public class GameCtrl {
         sceneCtrl.setScene(new LevelScene(this));
     }
 
-    public void showGameScene() {
-
+    public void showGameScene(int mode) {
+        sceneCtrl.setScene(new GameScene(this));
     }
 
     // 供view刷新用
