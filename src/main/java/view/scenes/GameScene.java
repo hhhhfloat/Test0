@@ -8,6 +8,9 @@ import view.game_nodes.CellNode;
 
 public class GameScene extends Scene{
 
+    private static final int ROWS = 12;
+    private static final int COLS = 12;
+
     public GameScene() {
 
     }

@@ -89,6 +89,18 @@ public class LinkyMap {
         initNumMap();
     }
 
+    public LinkyMap(int MAPX, int MAPY, int[][]mp)
+    {
+        MAPX_ = MAPX;
+        MAPY_ = MAPY;
+        MapType = 1;
+        map = new int[MAPX][MAPY];
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(mp[i], 0, map[i], 0, MAPY);
+        }
+        initNumMap();
+    }
+
     /// 自动生成地图
     public void initMap() {
         Count = new int[nType[MapType]*isPair];
@@ -247,28 +259,16 @@ public class LinkyMap {
         int y2= p2.y();
         if(x1==x2 && y1 == y2) return false; // 同一点
         else if(x1<0||x1>=MAPX_||x2<0||x2>=MAPX_||y1<0||y2<0||y1>=MAPY_||y2>=MAPY_)return false; // 超范围
-        else if(map[x1][y1] == -1 || map[x2][y2] == -1) return false; // 选了空格
-        else if(!(map[x1][y1]/2 == map[x2][y2]/2 && Math.abs(map[x1][x2]-map[x2][y2]) == isPair-1))return false;// 点值不相等
-        else return true;
+        else if(map[x1][y1] < 0 || map[x2][y2] < 0) return false; // 选了空格/障碍物
+        else return map[x1][y1] / 2 == map[x2][y2] / 2 && Math.abs(map[x1][x2] - map[x2][y2]) == isPair - 1;// 点值不相等
     }
 
     ///  VVVVVV
     /// 消去后更新数表与地图（给定消去的非零点）
     public void delNumMap(HashSet<Crd> crds) {
-        boolean msg = false;
-//        for(Crd p:crds)
-//        {
-//            int x = p.x(), y = p.y();
-//            if(x>=12||y>=12||x<0||y<0) {
-//                System.out.println("breakkkkkk");
-//                msg = true;
-//                break;
-//            }
-//        }
-//        if(!msg) System.out.println("Normal");
         for (Crd p : crds) {
             int x = p.x(), y = p.y();
-            if (map[x][y] == -1) continue;
+            if (map[x][y] == -1) continue; // 值为-2代表障碍物，不能跳过
             //延申原先方向的（不知道如何避免重复）（知道如何避免重复了但是好复杂）
             for (int i = 0; i < 4; i++) {
                 int t0 = 1;
@@ -296,7 +296,6 @@ public class LinkyMap {
                     NumMap_T[py][px][3 - ii][0] = val;
                     NumMap_T[py][px][3 - ii][1] = dis + t0;
                     boolean b = crds.contains(new Crd(px, py));
-                    // System.out.println(b);
                     if (map[x + t0 * dx][y + t0 * dy] != -1 && !b) // 不是空格且哈希匹配不是消掉的——停步
                     {
                         break;
@@ -321,10 +320,10 @@ public class LinkyMap {
         // 全部一次性枚举！
         for (int x = 0; x < MAPX_; x++) {
             for (int y = 0; y < MAPY_; y++) {
-                if (map[x][y] != -1)    // 非空格，找直线
+                if (map[x][y] >= 0)    // 非空格，找直线
                 {
                     for (int i = 0; i < 4; i++) {
-                        if (NumMap[x][y][i][0] != -1 && map[x][y]/2 == NumMap[x][y][i][0]/2 && Math.abs(map[x][y]-NumMap[x][y][i][0]) == isPair-1) //因为map[x][y]不是-1，不用考虑空条
+                        if (NumMap[x][y][i][0] >= 0 && map[x][y]/2 == NumMap[x][y][i][0]/2 && Math.abs(map[x][y]-NumMap[x][y][i][0]) == isPair-1) //因为map[x][y]不是-1，不用考虑空条
                         {
                             ArrayList<Crd> path = new ArrayList<>();
                             int dx = dir[i][0], dy = dir[i][1];
@@ -350,7 +349,7 @@ public class LinkyMap {
                             int[] mmm = {0, 2}; // 枚举空格对中每一个的上/下数字
                             for (int z : mmm) {
                                 for (int w : mmm) {
-                                    if (NumMap[x][y + i][z][0] != -1 && NumMap[x][y + j][w][0] != -1 && NumMap[x][y + i][z][0]/2 == NumMap[x][y + j][w][0]/2 && Math.abs(NumMap[x][y + i][z][0]-NumMap[x][y + j][w][0])==isPair-1) {
+                                    if (NumMap[x][y + i][z][0] >= 0 && NumMap[x][y + j][w][0] >= 0 && NumMap[x][y + i][z][0]/2 == NumMap[x][y + j][w][0]/2 && Math.abs(NumMap[x][y + i][z][0]-NumMap[x][y + j][w][0])==isPair-1) {
                                         // 起点
                                         path.add(new Crd(x+NumMap[x][y+i][z][1]*dir[z][0],y+i));
                                         // 拐点一
@@ -383,7 +382,7 @@ public class LinkyMap {
         int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
         ArrayList<Crd> path = new ArrayList<>();
         for (int d = 0; d < 4; d++) {
-            if (NumMap[x][y][d][0] != -1 && NumMap[x][y][(d+1)%4][0] != -1 && NumMap[x][y][d][0]/2 == NumMap[x][y][(d + 1) % 4][0]/2 && Math.abs(NumMap[x][y][d][0]-NumMap[x][y][(d + 1) % 4][0])==isPair-1) {
+            if (NumMap[x][y][d][0] >= 0 && NumMap[x][y][(d+1)%4][0] >= 0 && NumMap[x][y][d][0]/2 == NumMap[x][y][(d + 1) % 4][0]/2 && Math.abs(NumMap[x][y][d][0]-NumMap[x][y][(d + 1) % 4][0])==isPair-1) {
                 int k1 = NumMap[x][y][d][1], k2 = NumMap[x][y][(d + 1) % 4][1]; // 记录两个方向的步数
                 path.add(new Crd(x+dir[d][0]*k1,y+dir[d][1]*k1));
                 path.add(new Crd(x,y));
@@ -413,7 +412,7 @@ public class LinkyMap {
                             int[] mmm = {0, 2}; // 枚举空格对中每一个的上/下数字
                             for (int z : mmm) {
                                 for (int w : mmm) {
-                                    if (NumMap_T[x][y + i][z][0] != -1 && NumMap_T[x][y + j][w][0] != -1 && NumMap_T[x][y + i][z][0]/2 == NumMap_T[x][y + j][w][0]/2 && Math.abs(NumMap_T[x][y + i][z][0] - NumMap_T[x][y + j][w][0]) == isPair-1) {
+                                    if (NumMap_T[x][y + i][z][0] >= 0 && NumMap_T[x][y + j][w][0] >= 0 && NumMap_T[x][y + i][z][0]/2 == NumMap_T[x][y + j][w][0]/2 && Math.abs(NumMap_T[x][y + i][z][0] - NumMap_T[x][y + j][w][0]) == isPair-1) {
                                         // 起点
                                         path.add(new Crd(x+NumMap_T[x][y+i][z][1]*dir[z][0],y+i));
                                         // 拐点一
@@ -473,7 +472,7 @@ public class LinkyMap {
     public boolean isComplete() {
         for (int i = 0; i < MAPX_; i++) {
             for (int j = 0; j < MAPY_; j++) {
-                if (map[i][j] != -1) return false;
+                if (map[i][j] >= 0) return false;
             }
         }
         return true;
@@ -482,7 +481,7 @@ public class LinkyMap {
     public boolean isComplete(int[][] map_) {
         for (int i = 0; i < MAPX_; i++) {
             for (int j = 0; j < MAPY_; j++) {
-                if (map_[i][j] != -1) return false;
+                if (map_[i][j] >= 0) return false;
             }
         }
         return true;
