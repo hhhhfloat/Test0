@@ -8,6 +8,7 @@ import dao.UserDao;
 import dao.impl.FileUserDao;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import view.scenes.GameScene;
 
 public class MainApp extends Application {
     public void start(Stage stage) {

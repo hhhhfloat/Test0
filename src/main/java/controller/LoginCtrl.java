@@ -31,7 +31,7 @@ public class LoginCtrl {
             alert.setTitle("Warning");
             alert.setContentText("Username can't be null!");
             alert.showAndWait();
-        } else if (userDao.exist(username)) {
+        } else if (!userDao.exist(username)) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
             alert.setContentText("Username doesn't exist!");

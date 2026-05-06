@@ -7,14 +7,12 @@ import javafx.scene.layout.VBox;
 public class PauseBox extends VBox{
     public PauseBox(GameCtrl gameCtrl) {
         super(10);
-        Button restartBtn = new Button("Save");
+        Button restartBtn = new Button("Restart");
         restartBtn.setOnAction(event -> gameCtrl.handleRestart());
         Button saveBtn = new Button("Save");
         saveBtn.setOnAction(event -> gameCtrl.handleSave());
         Button continueBtn = new Button("Continue");
-        continueBtn.setOnAction(event ->{
-
-        });
+        continueBtn.setOnAction(e->gameCtrl.handleContinue());
         Button exitToMenuBtn = new Button("Exit To Menu");
         exitToMenuBtn.setOnAction(event -> gameCtrl.handleExitToMenu());
         Button exitBtn = new Button("Exit");

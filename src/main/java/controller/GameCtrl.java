@@ -11,18 +11,49 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.entity.Account;
 import model.entity.Crd;
+import view.labels.TimerLabel;
 import view.scenes.*;
+import javafx.util.Duration;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
 
 public class GameCtrl {
     private final UserDao userDao;
     private final SceneCtrl sceneCtrl;
     private Account account;
+    private GameScene gameScene;
+    private Timeline gameTimeline;
+    private int remainingTime = 300;
 
     public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl) {
         this.userDao = userDao;
         this.sceneCtrl = sceneCtrl;
     }
 
+    /// 时间控制
+    private void startGameTimer()
+    {
+        if(gameTimeline != null)
+            gameTimeline.stop();
+        // 创建新的Timeline
+        gameTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(1),e->{
+                    remainingTime--;
+                    if(gameScene != null){
+                        gameScene.updateTime(remainingTime);
+                    }
+                    if(remainingTime<=0){
+                        gameTimeline.stop();
+                        // 添加游戏结束逻辑
+
+                    }
+                })
+        );
+        gameTimeline.setCycleCount(Timeline.INDEFINITE); // 无限循环
+        gameTimeline.play(); // 开始计时
+    }
+
+    /// 登录控制（为什么不在LoginCtrl）
     public void setAccount(Account account) {
         this.account = account;
     }
@@ -69,6 +100,7 @@ public class GameCtrl {
         });
     }
 
+    /// 读档控制
     public void handleLoad1() {
         showLevelScene();
     }
@@ -134,6 +166,7 @@ public class GameCtrl {
     }
 
     public void showGameScene(int mode) {
+        gameScene = new GameScene(this);
         sceneCtrl.setScene(new GameScene(this));
     }
 
@@ -147,4 +180,9 @@ public class GameCtrl {
 
     }
 
+    public void handleContinue() {
+        // 关闭暂停窗口，回到游戏场景
+        sceneCtrl.setScene(gameScene);
+        if(gameTimeline != null) gameTimeline.play();
+    }
 }

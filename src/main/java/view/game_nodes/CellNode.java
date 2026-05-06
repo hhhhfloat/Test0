@@ -15,6 +15,8 @@ public class CellNode extends StackPane {
     private final static String[] outlook1 = {null, "baidu", "brave", "edge", "firefox", "google",  "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"};
 
     public CellNode(int row, int col, int size, int type) {
+        image = new ImageView();
+
         this.row = row;
         this.col = col;
         this.type = type;
@@ -31,13 +33,14 @@ public class CellNode extends StackPane {
         getChildren().addAll(image);
     }
 
+
     public void setType(int type) {
         this.type = type;
         updateImage();
     }
 
     private void updateImage() {
-        if (type == 0) {
+        if (type == -1) {
             image.setImage(null);
         } else if (type < outlook1.length) {
             String path = "/Sprites/Block/Browsers/"+outlook1[type]+".png";
