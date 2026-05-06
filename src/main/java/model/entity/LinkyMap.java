@@ -94,10 +94,13 @@ public class LinkyMap {
         MAPX_ = MAPX;
         MAPY_ = MAPY;
         MapType = 1;
+        isPair = 1;
         map = new int[MAPX][MAPY];
+        map_T = new int[MAPY_][MAPX_];
         for (int i = 0; i < MAPX; i++) {
             System.arraycopy(mp[i], 0, map[i], 0, MAPY);
         }
+        map_T = Tsp(map);
         initNumMap();
     }
 
@@ -257,10 +260,18 @@ public class LinkyMap {
         int x1 = p1.x(),x2= p2.x();
         int y1= p1.y();
         int y2= p2.y();
-        if(x1==x2 && y1 == y2) return false; // 同一点
-        else if(x1<0||x1>=MAPX_||x2<0||x2>=MAPX_||y1<0||y2<0||y1>=MAPY_||y2>=MAPY_)return false; // 超范围
-        else if(map[x1][y1] < 0 || map[x2][y2] < 0) return false; // 选了空格/障碍物
-        else return map[x1][y1] / 2 == map[x2][y2] / 2 && Math.abs(map[x1][x2] - map[x2][y2]) == isPair - 1;// 点值不相等
+        if(x1==x2 && y1 == y2) {
+            return false; // 同一点
+        }
+        else if(x1<0||x1>=MAPX_||x2<0||x2>=MAPX_||y1<0||y2<0||y1>=MAPY_||y2>=MAPY_) {
+            return false; // 超范围
+        }
+        else if(map[x1][y1] < 0 || map[x2][y2] < 0) {
+            return false; // 选了空格/障碍物
+        }
+        else {
+            return map[x1][y1] / 2 == map[x2][y2] / 2 && Math.abs(map[x1][y1] - map[x2][y2]) == isPair - 1;// 点值不相等
+        }
     }
 
     ///  VVVVVV
@@ -501,6 +512,7 @@ public class LinkyMap {
         ArrayList<Crd> path = new ArrayList<>();
         int val = map[x1][y1];
 
+        // 直线
         for (int i = 0; i < 4; i++) {
             if (NumMap[x1][y1][i][0] == val && x1 + NumMap[x1][y1][i][1] * dir[i][0] == x2 && y1 + NumMap[x1][y1][i][1] * dir[i][1] == y2) {
                 path.add(new Crd(x1,y1));
