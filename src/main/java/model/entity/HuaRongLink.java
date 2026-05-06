@@ -10,7 +10,7 @@ public class HuaRongLink {
     private int MAPX;
     private int MAPY;
     private LinkyMap level;
-    private ArrayList<HR_Block> blks;
+    private ArrayList<HR_Block> HRblocks;
     private int[][] blkMap;
     private int nBlk;
 
@@ -25,10 +25,10 @@ public class HuaRongLink {
         this.MAPY = MAPY;
         level = new LinkyMap(MAPX, MAPY, mp);
         nBlk = crds.size();
-        blks = new ArrayList<>();
+        HRblocks = new ArrayList<>();
         for (int i = 0; i < nBlk; i++) {
             HR_Block b = new HR_Block(crds.get(i));
-            blks.add(b);
+            HRblocks.add(b);
         }
         blkMap = new int[MAPX][MAPY];
         InitBlkMap();
@@ -40,7 +40,7 @@ public class HuaRongLink {
 
     public void syncObstaclesToLinkyMap()
     {
-        for (HR_Block b : blks) {
+        for (HR_Block b : HRblocks) {
             for (Crd c : b.getAllCrd()) {
                 level.getMap()[c.x()][c.y()] = -2;
             }
@@ -54,9 +54,9 @@ public class HuaRongLink {
                 blkMap[i][j] = -1;
             }
         }
-        for(int i = 0;i<blks.size();i++)
+        for(int i = 0; i< HRblocks.size(); i++)
         {
-            for(Crd c : blks.get(i).getAllCrd())
+            for(Crd c : HRblocks.get(i).getAllCrd())
             {
                 blkMap[c.x()][c.y()] = i;
             }
@@ -67,7 +67,7 @@ public class HuaRongLink {
     {
         int index = blkMap[c.x()][c.y()];
         if(index == -1) return false;
-        HR_Block b = blks.get(index);
+        HR_Block b = HRblocks.get(index);
         for(Crd p : b.getDirCrd().get(dirct))
         {
             // 需要检测的坐标
@@ -83,7 +83,7 @@ public class HuaRongLink {
     public void Move(Crd c, int dirct, boolean isRecorded)
     {
         int index = blkMap[c.x()][c.y()];
-        HR_Block b = blks.get(index);
+        HR_Block b = HRblocks.get(index);
         if(canMove(c,dirct))
         {
             // 记录操作
@@ -102,7 +102,7 @@ public class HuaRongLink {
                 blkMap[p.x()][p.y()] = -1;
             }
             b = new HR_Block(newBlk);
-            blks.set(index,b);
+            HRblocks.set(index,b);
             for(Crd p: b.getDirCrd().get(dirct))
             {
                 blkMap[p.x()][p.y()] = index;
@@ -116,7 +116,7 @@ public class HuaRongLink {
         int packed = Moves.pop(); // 掰下末尾元素（已经删除）
         int index = packed >> 2;
         int oppDir = packed & 0x3;
-        HR_Block b = blks.get(index);
+        HR_Block b = HRblocks.get(index);
         if(b == null) return;
         Crd anyCrd = b.getAllCrd().iterator().next();
         Move(anyCrd, oppDir,false);
