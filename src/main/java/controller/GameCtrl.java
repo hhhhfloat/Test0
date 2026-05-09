@@ -10,9 +10,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.entity.Account;
-import model.entity.Crd;
+import model.entity.LinkyMap;
 import view.game_nodes.CellNode;
-import view.labels.TimerLabel;
 import view.scenes.*;
 import javafx.util.Duration;
 import javafx.animation.Timeline;
@@ -24,11 +23,18 @@ public class GameCtrl {
     private Account account;
     private GameScene gameScene;
     private Timeline gameTimeline;
+    private LinkyMap linkyMap;
     private int remainingTime = 300;
+    private CellNode temp;
 
     public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl) {
         this.userDao = userDao;
         this.sceneCtrl = sceneCtrl;
+        temp = null;
+    }
+
+    private void setLinkyMap(int row, int col, int mode, boolean isPair) {
+        linkyMap = new LinkyMap(row, col, mode, isPair);
     }
 
     /// 时间控制
@@ -130,7 +136,22 @@ public class GameCtrl {
     }
 
     public void handleCellClick(CellNode cellNode) {
-        cellNode.setHighlight(true);
+        if (temp == null) {
+            temp = cellNode;
+            temp.setHighlight(true);
+        } else {
+            if (!linkyMap.pickPath(temp.getCrd(), cellNode.getCrd()).isEmpty()) {
+                cellNode.setHighlight(true);
+                temp.eliminate();
+                cellNode.eliminate();
+                temp = null;
+            } else {
+                temp.setHighlight(false);
+                cellNode.setHighlight(true);
+                temp = cellNode;
+            }
+        }
+
     }
 
     public void handlePause() {
@@ -167,11 +188,11 @@ public class GameCtrl {
 
     public void showGameScene(int mode) {
         if(mode == 0){
-            gameScene = new GameScene(this);
-            sceneCtrl.setScene(new GameScene(this));
+            setLinkyMap(12, 12, 0, false);
+            sceneCtrl.setScene(new GameScene(this, linkyMap));
         } else {
-            gameScene = new GameScene(this);
-            sceneCtrl.setScene(new GameScene(this));
+            setLinkyMap(12, 12, 1, false);
+            sceneCtrl.setScene(new GameScene(this, linkyMap));
         }
 
     }

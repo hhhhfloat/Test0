@@ -11,17 +11,17 @@ public class CellNode extends StackPane {
     private final Crd crd;
     private int type;
 
-    private ImageView image = null;
+    private ImageView image;
 
-    private final static String[] outlook1 = {null, "baidu", "brave", "edge", "firefox", "google",  "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"};
+    private final static String[] outlook1 = {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"};
 
     public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl) {
         crd = new Crd(row, col);
         this.type = type;
         this.gameCtrl = gameCtrl;
         setPrefSize(size, size);
-        setLayoutX(row * (size+10));
-        setLayoutY(col * (size+10));
+        setLayoutX(row * (size + 10));
+        setLayoutY(col * (size + 10));
         setOnMouseClicked(event -> gameCtrl.handleCellClick(this));
 
         image = new ImageView();
@@ -31,6 +31,9 @@ public class CellNode extends StackPane {
         getChildren().addAll(image);
     }
 
+    public Crd getCrd() {
+        return crd;
+    }
 
     public void setType(int type) {
         this.type = type;
@@ -41,7 +44,7 @@ public class CellNode extends StackPane {
         if (type == -1) {
             image.setImage(null);
         } else if (type < outlook1.length) {
-            String path = "/Sprites/Block/Browsers/"+outlook1[type]+".png";
+            String path = "/Sprites/Block/Browsers/" + outlook1[type] + ".png";
             try {
                 Image img = new Image(getClass().getResourceAsStream(path));
                 image.setImage(img);
@@ -59,16 +62,12 @@ public class CellNode extends StackPane {
         }
     }
 
-    //消除动画
-    public void playEliminateAnimation(Runnable onFinished) {
+    public void eliminate() {
         javafx.animation.ScaleTransition st =
                 new javafx.animation.ScaleTransition(javafx.util.Duration.millis(200), this);
         st.setToX(0);
         st.setToY(0);
-        st.setOnFinished(e -> {
-            setVisible(false);
-            if (onFinished != null) onFinished.run();
-        });
+        st.setOnFinished(e -> setVisible(false));
         st.play();
     }
 }
