@@ -10,35 +10,17 @@ import java.util.*;
 
 public class FileUserDao implements UserDao {
     private final Path userFile;
-    public FileUserDao() {
-        Path dataDir = Paths.get("./data");
-        try {
-            Files.createDirectories(dataDir);
-        } catch (IOException e) {
-            System.err.println("无法创建数据目录: " + e.getMessage());
-        }
-        this.userFile = dataDir.resolve("users.properties");
-        createFileIfNotExists();
-    }
 
-    private void createFileIfNotExists() {
-        if (!Files.exists(userFile)) {
-            try {
-                Files.createFile(userFile);
-            } catch (IOException e) {
-                System.err.println("无法创建用户文件: " + e.getMessage());//err流？
-            }
-        }
+    public FileUserDao() {
+        userFile  = Paths.get("Data/users.properties");
     }
 
     private Properties loadProperties() {
         Properties props = new Properties();
-        if (Files.exists(userFile)) {
-            try (InputStream in = Files.newInputStream(userFile)) {
-                props.load(in);
-            } catch (IOException e) {
-                System.err.println("读取用户文件失败: " + e.getMessage());
-            }
+        try (InputStream in = Files.newInputStream(userFile)) {
+            props.load(in);
+        } catch (IOException e) {
+            System.err.println("读取用户文件失败: " + e.getMessage());
         }
         return props;
     }
@@ -51,11 +33,10 @@ public class FileUserDao implements UserDao {
         }
     }
 
-
     @Override
     public boolean exist(String username) {
         Properties properties = loadProperties();
-        return properties.containsKey(username);
+        return properties.contains(username);
     }
 
     @Override

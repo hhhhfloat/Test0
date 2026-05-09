@@ -1,35 +1,33 @@
 package view.game_nodes;
 
+import controller.GameCtrl;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import model.entity.Crd;
 
 public class CellNode extends StackPane {
-    private final int row;
-    private final int col;
-    private final int size;
+    private final GameCtrl gameCtrl;
+    private final Crd crd;
     private int type;
 
     private ImageView image = null;
 
     private final static String[] outlook1 = {null, "baidu", "brave", "edge", "firefox", "google",  "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"};
 
-    public CellNode(int row, int col, int size, int type) {
-        image = new ImageView();
-
-        this.row = row;
-        this.col = col;
+    public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl) {
+        crd = new Crd(row, col);
         this.type = type;
-        this.size = size;
-
-        image.setFitWidth(size - 10);
-        image.setFitHeight(size - 10);
-        image.setPreserveRatio(true);
-
+        this.gameCtrl = gameCtrl;
         setPrefSize(size, size);
-        setStyle("-fx-border-color: #888; -fx-border-width: 1px; -fx-background-color: #f0f0f0;");
+        setLayoutX(row * (size+10));
+        setLayoutY(col * (size+10));
+        setOnMouseClicked(event -> gameCtrl.handleCellClick(this));
 
+        image = new ImageView();
         updateImage();
+        image.setFitWidth(size);
+        image.setFitHeight(size);
         getChildren().addAll(image);
     }
 

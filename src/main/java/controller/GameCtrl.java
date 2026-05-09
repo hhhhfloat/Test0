@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.entity.Account;
 import model.entity.Crd;
+import view.game_nodes.CellNode;
 import view.labels.TimerLabel;
 import view.scenes.*;
 import javafx.util.Duration;
@@ -53,7 +54,6 @@ public class GameCtrl {
         gameTimeline.play(); // 开始计时
     }
 
-    /// 登录控制（为什么不在LoginCtrl）
     public void setAccount(Account account) {
         this.account = account;
     }
@@ -129,8 +129,8 @@ public class GameCtrl {
         sceneCtrl.setScene(new LoadScene(this));
     }
 
-    public void handleCellClick(Crd p) {
-
+    public void handleCellClick(CellNode cellNode) {
+        cellNode.setHighlight(true);
     }
 
     public void handlePause() {
@@ -166,8 +166,14 @@ public class GameCtrl {
     }
 
     public void showGameScene(int mode) {
-        gameScene = new GameScene(this);
-        sceneCtrl.setScene(new GameScene(this));
+        if(mode == 0){
+            gameScene = new GameScene(this);
+            sceneCtrl.setScene(new GameScene(this));
+        } else {
+            gameScene = new GameScene(this);
+            sceneCtrl.setScene(new GameScene(this));
+        }
+
     }
 
     // 供view刷新用
