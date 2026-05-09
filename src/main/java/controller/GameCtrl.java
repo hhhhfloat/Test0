@@ -19,7 +19,6 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class GameCtrl {
     private final UserDao userDao;
@@ -151,7 +150,7 @@ public class GameCtrl {
                 cellNode.eliminate();
                 temp = null;
                 // 新增：需要更新四维数表
-                linkyMap.delNumMap(linkyMap.HashPath(path));
+                linkyMap.delNumMap(linkyMap.hashPath(path));
             } else {
                 temp.setHighlight(false);
                 cellNode.setHighlight(true);
