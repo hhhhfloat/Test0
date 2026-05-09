@@ -3,6 +3,7 @@ package model.entity;
 
 import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 public class LinkyMap {
@@ -171,7 +172,7 @@ public class LinkyMap {
 
     public boolean canComplete() {
         while (!isComplete()) {
-            ArrayList<Crd> path = autoFindPath();
+            ArrayList<Crd> path = pathAutoFind();
             delNumMap(HashPath(path));
             if (path.isEmpty() && !isComplete()) return false;
         }
@@ -326,7 +327,7 @@ public class LinkyMap {
 
     /// VVVVVV
     /// 自动寻找路径（无路则返回空ArrayList）返回起点-(拐点-拐点-)终点
-    public ArrayList<Crd> autoFindPath() {
+    public ArrayList<Crd> pathAutoFind() {
         if (isComplete()) return new ArrayList<>();
         // 全部一次性枚举！
         for (int x = 0; x < MAPX_; x++) {
@@ -505,7 +506,7 @@ public class LinkyMap {
     }
 
     /// 给定点找连线的函数(无路径则返回空路径) ，默认传入的是正确的选点
-    public ArrayList<Crd> pickPath(Crd p1, Crd p2) {
+    public ArrayList<Crd> pathFindByPoint(Crd p1, Crd p2) {
         if(!isValidPick(p1,p2))return new ArrayList<>();
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
@@ -522,83 +523,99 @@ public class LinkyMap {
         }
         // 剩下的情况必定不在直线上
         // 单拐点
-        if (x1 > x2 && y1 > y2) {
-            path = Rdown1_Lup2(p1, p2);
-            if (!path.isEmpty()) return path;
-        }
-        if (x1 < x2 && y1 < y2) {
-            path = Rdown1_Lup2(p2, p1);
-            if (!path.isEmpty()) return path;
-        }
-        if (x1 > x2 && y1 < y2) {
-            path = Rup1_Ldown2(p2, p1);
-            if (!path.isEmpty()) return path;
-        }
-        if (x1 < x2 && y1 > y2) {
-            path = Rup1_Ldown2(p1, p2);
-            if (!path.isEmpty()) return path;
-        }
-
-        // 双拐点检测
-        int oney = (y1 > y2) ? -1 : 1;
-        for (int i = x1 - NumMap[x1][y1][0][1] + 1; i <= x1 + NumMap[x1][y1][2][1] - 1; i++) {
-            if (map[i][y2] == -1 && NumMap[i][y1][2 - oney][1] > (y2 - y1) * oney) {
-                path.add(new Crd(x1,y1));
-                path.add(new Crd(i,y1));
-                path.add(new Crd(i,y2));
-                path.add(new Crd(x2,y2));
-                return path;
-            }
-        }
-        x1 = p1.y();
-        x2 = p2.y();
-        y1 = p1.x();
-        y2 = p2.x();
-        for (int i = x1 - NumMap_T[x1][y1][0][1] + 1; i <= x1 + NumMap_T[x1][y1][2][1] - 1; i++) {
-            if (map_T[i][y2] == -1 && NumMap_T[i][y1][2 - oney][1] > (y2 - y1) * oney) {
-                path.add(new Crd(y1,x1));
-                path.add(new Crd(y1,i));
-                path.add(new Crd(y2,i));
-                path.add(new Crd(y2,x2));
-                return path;
-            }
-        }
-        return path;
-    }
-
-    public ArrayList<Crd> Rdown1_Lup2(Crd p1, Crd p2) {
-        int x1 = p1.x(), x2 = p2.x();
-        int y1 = p1.y(), y2 = p2.y();
-        ArrayList<Crd> path = new ArrayList<>();
-        path.add(new Crd(x1,y1));
-        if (NumMap[x1][y2][0][1] == x1 - x2) {
+        if(isAllVoid(x1,y1,x1,y2) && isAllVoid(x1,y2,x2,y2) && map[x1][y2] == -1){
+            path.add(new Crd(x1,y1));
             path.add(new Crd(x1,y2));
             path.add(new Crd(x2,y2));
             return path;
         }
-        if (NumMap[x2][y1][2][1] == x1 - x2) {
+        if(isAllVoid(x1,y1,x2,y1) && isAllVoid(x2,y1,x2,y2) && map[x2][y1] == -1) {
+            path.add(new Crd(x1,y1));
             path.add(new Crd(x2,y1));
             path.add(new Crd(x2,y2));
             return path;
         }
+
+        // 双拐点
+        // 纵向
+        ArrayList<Integer> possible = new ArrayList<>();
+        for (int i = y1-NumMap[x1][y1][3][1]+1; i < y1+NumMap[x1][y1][1][1]; i++) {
+            if(i==y1 || i == y2)continue;
+            if(map[x1][i] == -1 && map[x2][i] == -1 && isAllVoid(x1,y1,x1,i) && isAllVoid(x1,i,x2,i) && isAllVoid(x2,i,x2,y2)){
+                possible.add(i);
+            }
+        }
+        if(!possible.isEmpty()) {
+            if (possible.getFirst() > y1 && possible.getFirst() > y2) {
+                int i = possible.getFirst();
+                path.add(new Crd(x1, y1));
+                path.add(new Crd(x1, i));
+                path.add(new Crd(x2, i));
+                path.add(new Crd(x2, y2));
+                return path;
+            } else if (possible.getLast() < y1 && possible.getLast() < y2) {
+                int i = possible.getLast();
+                path.add(new Crd(x1, y1));
+                path.add(new Crd(x1, i));
+                path.add(new Crd(x2, i));
+                path.add(new Crd(x2, y2));
+                return path;
+            } else {
+                int min = MAPY_*2;
+                int rec = 0;
+                for (int t : possible) {
+                    int s = Math.abs(t-y1)+ Math.abs(t-y2);
+                    if(s<min) {
+                        min = s;
+                        rec = t;
+                    }
+                }
+                path.add(new Crd(x1, y1));
+                path.add(new Crd(x1, rec));
+                path.add(new Crd(x2, rec));
+                path.add(new Crd(x2, y2));
+                return path;
+            }
+        }
+        // 横向
+        for (int i = x1-NumMap[x1][y1][0][1]+1; i < x1+NumMap[x1][y1][2][1]; i++) {
+            if(i==x1||i==x2)continue;
+            if(map[i][y1] == -1 && map[y2][i] == -1 && isAllVoid(x1,y1,i,y1) && isAllVoid(i,y1,i,y2) && isAllVoid(i,y2,x2,y2)){
+                possible.add(i);
+            }
+        }
+        if(possible.isEmpty())return path;
+        int min = MAPX_*2;
+        int rec = 0;
+        for (int t : possible) {
+            int s = Math.abs(t-y1)+ Math.abs(t-x2);
+            if(s<min) {
+                min = s;
+                rec = t;
+            }
+        }
+        path.add(new Crd(x1, y1));
+        path.add(new Crd(rec, y1));
+        path.add(new Crd(rec, y2));
+        path.add(new Crd(x2, y2));
         return path;
     }
 
-    public ArrayList<Crd> Rup1_Ldown2(Crd p1, Crd p2) {
-        int x1 = p1.x(), x2 = p2.x();
-        int y1 = p1.y(), y2 = p2.y();
-        ArrayList<Crd> path = new ArrayList<>();
-        if (NumMap[x2][y1][0][1] == x2 - x1) {
-            path.add(new Crd(x2,y1));
-            path.add(new Crd(x2,y2));
-            return path;
+    // 只是为了方便写一个 探查同行/列点之间是否都是空
+    public boolean isAllVoid(int x1,int y1,int x2,int y2)
+    {
+        // 1 -> 2
+        if(x1==x2)
+        {
+            int yDir = (y1<y2)?1:3;
+            return NumMap[x1][y1][yDir][1] >= Math.abs(y1 - y2);
         }
-        if (NumMap[x1][y2][2][1] == x2 - x1) {
-            path.add(new Crd(x1,y2));
-            path.add(new Crd(x2,y2));
-            return path;
+        if(y1==y2)
+        {
+            int xDir = (x1<x2)?2:0;
+            return NumMap[x1][y1][xDir][1] >= Math.abs(x1-x2);
         }
-        return path;
+        return false;
     }
 
     // 测试用函数

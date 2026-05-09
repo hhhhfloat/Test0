@@ -10,18 +10,20 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.entity.Account;
+import model.entity.Crd;
 import model.entity.LinkyMap;
+import view.game_nodes.Board;
 import view.game_nodes.CellNode;
 import view.scenes.*;
-import javafx.util.Duration;
 import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
+
+import java.util.ArrayList;
 
 public class GameCtrl {
     private final UserDao userDao;
     private final SceneCtrl sceneCtrl;
+    private Board board;
     private Account account;
-    private GameScene gameScene;
     private Timeline gameTimeline;
     private LinkyMap linkyMap;
     private int remainingTime = 300;
@@ -35,10 +37,11 @@ public class GameCtrl {
 
     private void setLinkyMap(int row, int col, int mode, boolean isPair) {
         linkyMap = new LinkyMap(row, col, mode, isPair);
+        board = new Board(row, col,50,linkyMap,this);
     }
 
     /// 时间控制
-    private void startGameTimer()
+    /*private void startGameTimer()
     {
         if(gameTimeline != null)
             gameTimeline.stop();
@@ -58,7 +61,7 @@ public class GameCtrl {
         );
         gameTimeline.setCycleCount(Timeline.INDEFINITE); // 无限循环
         gameTimeline.play(); // 开始计时
-    }
+    }*/
 
     public void setAccount(Account account) {
         this.account = account;
@@ -136,22 +139,26 @@ public class GameCtrl {
     }
 
     public void handleCellClick(CellNode cellNode) {
-        if (temp == null) {
-            temp = cellNode;
-            temp.setHighlight(true);
-        } else {
-            if (!linkyMap.pickPath(temp.getCrd(), cellNode.getCrd()).isEmpty()) {
-                cellNode.setHighlight(true);
-                temp.eliminate();
-                cellNode.eliminate();
+        if(linkyMap.getMap()[cellNode.getCrd().x()][cellNode.getCrd().y()]!=-1) {
+            if (temp == null) {
+                temp = cellNode;
+                temp.setHighlight(true);
+            } else if (temp == cellNode) {
+                cellNode.setHighlight(false);
                 temp = null;
             } else {
-                temp.setHighlight(false);
-                cellNode.setHighlight(true);
-                temp = cellNode;
+                ArrayList<Crd> route = linkyMap.pathFindByPoint(temp.getCrd(), cellNode.getCrd());
+                if (route.isEmpty()) {
+                    temp.setHighlight(false);
+                    cellNode.setHighlight(true);
+                    temp = cellNode;
+                } else {
+                    cellNode.setHighlight(true);
+                    board.eliminate(temp, cellNode, route);
+                    temp = null;
+                }
             }
         }
-
     }
 
     public void handlePause() {
@@ -167,6 +174,10 @@ public class GameCtrl {
     }
 
     public void handleRestart() {
+
+    }
+
+    public void handleContinue() {
 
     }
 
@@ -189,27 +200,12 @@ public class GameCtrl {
     public void showGameScene(int mode) {
         if(mode == 0){
             setLinkyMap(12, 12, 0, false);
-            sceneCtrl.setScene(new GameScene(this, linkyMap));
+            GameScene scene = new GameScene(this, linkyMap);
+            board = scene.getBoard();
+            sceneCtrl.setScene(scene);
         } else {
             setLinkyMap(12, 12, 1, false);
             sceneCtrl.setScene(new GameScene(this, linkyMap));
         }
-
-    }
-
-    // 供view刷新用
-    public boolean isGameRunning() {
-        return true;
-    }
-
-
-    public void handleLoad() {
-
-    }
-
-    public void handleContinue() {
-        // 关闭暂停窗口，回到游戏场景
-        sceneCtrl.setScene(gameScene);
-        if(gameTimeline != null) gameTimeline.play();
     }
 }

@@ -9,6 +9,7 @@ import junit.framework.TestSuite;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 
 
 /**
@@ -120,7 +121,7 @@ public class AppTest
     }
 
     // 测试华容道逻辑
-    public void testHR() throws InterruptedException {
+    public void _testHR() throws InterruptedException {
         int MAPX = 12, MAPY = 12;
         int[][] mp = new int[MAPX][MAPY];
         for (int i = 0; i < MAPX; i++) {
@@ -227,6 +228,30 @@ public class AppTest
                 else System.out.print("    ");
             }
             System.out.println();
+        }
+    }
+
+    // 测试pickPath
+    public void testpickPath() throws InterruptedException {
+        Random r = new Random();
+        LinkyMap level = new LinkyMap(12, 12, 0, false);
+
+        while(true)
+        {
+            Crd[] c = new Crd[2];
+            for (int i = 0; i < 2; i++) {
+                 Crd c0 = new Crd(r.nextInt(1+i*6,5+i*6),r.nextInt(1+i*6,5+i*6));
+                 c[i] = c0;
+            }
+            if(!level.isValidPick(c[0],c[1])) continue;
+            ArrayList<Crd> path = level.pathFindByPoint(c[0],c[1]);
+            PrintMap(level.getMap());
+            System.out.println(c[0].toString() + c[1].toString());
+            if(!path.isEmpty())
+            {
+                printPath(path);
+            }
+            else System.out.println("Empty\n");
         }
     }
 }

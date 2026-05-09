@@ -20,6 +20,7 @@ public class CellNode extends StackPane {
         this.type = type;
         this.gameCtrl = gameCtrl;
         setPrefSize(size, size);
+        setStyle("-fx-background-color: WHITE;");
         setLayoutX(row * (size + 10));
         setLayoutY(col * (size + 10));
         setOnMouseClicked(event -> gameCtrl.handleCellClick(this));
@@ -58,11 +59,11 @@ public class CellNode extends StackPane {
         if (highlight) {
             setStyle("-fx-border-color: gold; -fx-border-width: 3px; -fx-background-color: #ffffcc;");
         } else {
-            setStyle("-fx-border-color: #888; -fx-border-width: 1px; -fx-background-color: #f0f0f0;");
+            setStyle("-fx-background-color: WHITE;");
         }
     }
 
-    public void eliminate() {
+    public void eliminateCell() {
         javafx.animation.ScaleTransition st =
                 new javafx.animation.ScaleTransition(javafx.util.Duration.millis(200), this);
         st.setToX(0);

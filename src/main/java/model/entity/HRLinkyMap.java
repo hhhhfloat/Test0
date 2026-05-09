@@ -2,7 +2,6 @@ package model.entity;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 public class HRLinkyMap {
@@ -141,7 +140,7 @@ public class HRLinkyMap {
             return new ArrayList<>();
         }
         level.initNumMap();
-        ArrayList<Crd> path = level.pickPath(p1,p2);
+        ArrayList<Crd> path = level.pathFindByPoint(p1,p2);
 
         if(path.isEmpty()) {
             return path;
