@@ -140,7 +140,7 @@ public class GameCtrl {
             temp = cellNode;
             temp.setHighlight(true);
         } else {
-            if (!linkyMap.pickPath(temp.getCrd(), cellNode.getCrd()).isEmpty()) {
+            if (!linkyMap.pathFindByPoint(temp.getCrd(), cellNode.getCrd()).isEmpty()) {
                 cellNode.setHighlight(true);
                 temp.eliminate();
                 cellNode.eliminate();
