@@ -10,12 +10,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.entity.Account;
+import model.entity.Crd;
 import model.entity.LinkyMap;
 import view.game_nodes.CellNode;
 import view.scenes.*;
 import javafx.util.Duration;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class GameCtrl {
     private final UserDao userDao;
@@ -140,11 +144,14 @@ public class GameCtrl {
             temp = cellNode;
             temp.setHighlight(true);
         } else {
-            if (!linkyMap.pathFindByPoint(temp.getCrd(), cellNode.getCrd()).isEmpty()) {
+            ArrayList<Crd> path = linkyMap.pathFindByPoint(temp.getCrd(), cellNode.getCrd());
+            if (!path.isEmpty()) {
                 cellNode.setHighlight(true);
                 temp.eliminate();
                 cellNode.eliminate();
                 temp = null;
+                // 新增：需要更新四维数表
+                linkyMap.delNumMap(linkyMap.HashPath(path));
             } else {
                 temp.setHighlight(false);
                 cellNode.setHighlight(true);
