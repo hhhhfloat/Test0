@@ -3,7 +3,6 @@ package model.entity;
 
 import java.util.HashSet;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Random;
 
 public class LinkyMap {
@@ -173,7 +172,7 @@ public class LinkyMap {
     public boolean canComplete() {
         while (!isComplete()) {
             ArrayList<Crd> path = pathAutoFind();
-            delNumMap(HashPath(path));
+            delNumMap(hashPath(path));
             if (path.isEmpty() && !isComplete()) return false;
         }
         return true;
@@ -500,7 +499,7 @@ public class LinkyMap {
     }
 
     //将ArrayList转化成HashSet
-    public HashSet<Crd> HashPath(ArrayList<Crd> path)
+    public HashSet<Crd> hashPath(ArrayList<Crd> path)
     {
         return new HashSet<>(path);
     }
