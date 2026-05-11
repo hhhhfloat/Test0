@@ -128,6 +128,7 @@ public class LinkyMap {
         for (int i = 0; i < MAPX_; i++) {
             System.arraycopy(buf_map[i], 0, map[i], 0, MAPY_);
         }
+        map_T = Tsp(map);
     }
 
     public void sRandCount() {

@@ -145,7 +145,7 @@ public class HRLinkyMap {
         if(path.isEmpty()) {
             return path;
         }
-        HashSet<Crd> del = new HashSet<>();
+        ArrayList<Crd> del = new ArrayList<>();
         del.add(p1);
         del.add(p2);
         level.delNumMap(del);
