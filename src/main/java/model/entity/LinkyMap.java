@@ -508,7 +508,9 @@ public class LinkyMap {
 
     /// 给定点找连线的函数(无路径则返回空路径) ，默认传入的是正确的选点
     public ArrayList<Crd> pathFindByPoint(Crd p1, Crd p2) {
+        // System.out.println("Check -1");
         if(!isValidPick(p1,p2))return new ArrayList<>();
+        // System.out.println("Check 0");
         int x1 = p1.x(), x2 = p2.x();
         int y1 = p1.y(), y2 = p2.y();
         ArrayList<Crd> path = new ArrayList<>();
@@ -522,6 +524,7 @@ public class LinkyMap {
                 return path;
             }
         }
+        // System.out.println("Check 1");
         // 剩下的情况必定不在直线上
         // 单拐点
         if(isAllVoid(x1,y1,x1,y2) && isAllVoid(x1,y2,x2,y2) && map[x1][y2] == -1){
@@ -537,12 +540,13 @@ public class LinkyMap {
             return path;
         }
 
+        // System.out.println("Check 2");
         // 双拐点
         // 纵向
         ArrayList<Integer> possible = new ArrayList<>();
         for (int i = y1-NumMap[x1][y1][3][1]+1; i < y1+NumMap[x1][y1][1][1]; i++) {
             if(i==y1 || i == y2)continue;
-            if(map[x1][i] == -1 && map[x2][i] == -1 && isAllVoid(x1,y1,x1,i) && isAllVoid(x1,i,x2,i) && isAllVoid(x2,i,x2,y2)){
+            if(map[x1][i] == -1 && map[x2][i] == -1 && isAllVoid(x1,i,x2,i) && isAllVoid(x2,i,x2,y2)){
                 possible.add(i);
             }
         }
@@ -578,10 +582,12 @@ public class LinkyMap {
                 return path;
             }
         }
+        // System.out.println("Check 3");
+
         // 横向
         for (int i = x1-NumMap[x1][y1][0][1]+1; i < x1+NumMap[x1][y1][2][1]; i++) {
             if(i==x1||i==x2)continue;
-            if(map[i][y1] == -1 && map[y2][i] == -1 && isAllVoid(x1,y1,i,y1) && isAllVoid(i,y1,i,y2) && isAllVoid(i,y2,x2,y2)){
+            if(map[i][y1] == -1 && map[i][y2] == -1 && isAllVoid(i,y1,i,y2) && isAllVoid(i,y2,x2,y2)){
                 possible.add(i);
             }
         }
@@ -599,6 +605,7 @@ public class LinkyMap {
         path.add(new Crd(rec, y1));
         path.add(new Crd(rec, y2));
         path.add(new Crd(x2, y2));
+        // System.out.println("Check 4");
         return path;
     }
 
