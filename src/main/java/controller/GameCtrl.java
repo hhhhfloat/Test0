@@ -13,55 +13,25 @@ import model.entity.Account;
 import model.entity.Crd;
 import model.entity.LinkyMap;
 import view.game_nodes.Board;
+import view.game_nodes.BoardInterface;
 import view.game_nodes.CellNode;
 import view.scenes.*;
-import javafx.animation.Timeline;
 
 import java.util.ArrayList;
 
 public class GameCtrl {
     private final UserDao userDao;
     private final SceneCtrl sceneCtrl;
-    private Board board;
+    private BoardInterface board;
     private Account account;
-    private Timeline gameTimeline;
     private LinkyMap linkyMap;
-    private int remainingTime = 300;
-    private CellNode temp;
+    private CellNode selectedCell;
 
     public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl) {
         this.userDao = userDao;
         this.sceneCtrl = sceneCtrl;
-        temp = null;
+        selectedCell = null;
     }
-
-    private void setLinkyMap(int row, int col, int mode, boolean isPair) {
-        linkyMap = new LinkyMap(row, col, mode, isPair);
-        board = new Board(row, col,50,linkyMap,this);
-    }
-
-    /// 时间控制
-    /*private void startGameTimer()
-    {
-        if(gameTimeline != null)
-            gameTimeline.stop();
-        // 创建新的Timeline
-        gameTimeline = new Timeline(
-                new KeyFrame(Duration.seconds(1),e->{
-                    remainingTime--;
-                    if(gameScene != null){
-                        gameScene.updateTime(remainingTime);
-                    }
-                    if(remainingTime<=0){
-                        gameTimeline.stop();
-                        // 添加游戏结束逻辑
-
-                    }
-                })
-        );
-        gameTimeline.setCycleCount(Timeline.INDEFINITE); // 无限循环
-        gameTimeline.play(); // 开始计时
-    }*/
 
     public void setAccount(Account account) {
         this.account = account;
@@ -109,7 +79,6 @@ public class GameCtrl {
         });
     }
 
-    /// 读档控制
     public void handleLoad1() {
         showLevelScene();
     }
@@ -140,22 +109,22 @@ public class GameCtrl {
 
     public void handleCellClick(CellNode cellNode) {
         if(linkyMap.getMap()[cellNode.getCrd().x()][cellNode.getCrd().y()]!=-1) {
-            if (temp == null) {
-                temp = cellNode;
-                temp.setHighlight(true);
-            } else if (temp == cellNode) {
+            if (selectedCell == null) {
+                selectedCell = cellNode;
+                selectedCell.setHighlight(true);
+            } else if (selectedCell == cellNode) {
                 cellNode.setHighlight(false);
-                temp = null;
+                selectedCell = null;
             } else {
-                ArrayList<Crd> route = linkyMap.pathFindByPoint(temp.getCrd(), cellNode.getCrd());
+                ArrayList<Crd> route = linkyMap.pathFindByPoint(selectedCell.getCrd(), cellNode.getCrd());
                 if (route.isEmpty()) {
-                    temp.setHighlight(false);
+                    selectedCell.setHighlight(false);
                     cellNode.setHighlight(true);
-                    temp = cellNode;
+                    selectedCell = cellNode;
                 } else {
                     cellNode.setHighlight(true);
-                    board.eliminate(temp, cellNode, route);
-                    temp = null;
+                    board.eliminate(selectedCell, cellNode, route);
+                    selectedCell = null;
                 }
             }
         }
@@ -197,15 +166,19 @@ public class GameCtrl {
         sceneCtrl.setScene(new LevelScene(this));
     }
 
+    private void setLinkyMap(int row, int col, int mode, boolean isPair) {
+        linkyMap = new LinkyMap(row, col, mode, isPair);
+        Board boardImpl = new Board(row, col, 50, linkyMap, this);
+        this.board = boardImpl;
+    }
+
     public void showGameScene(int mode) {
         if(mode == 0){
             setLinkyMap(12, 12, 0, false);
-            GameScene scene = new GameScene(this, linkyMap);
-            board = scene.getBoard();
-            sceneCtrl.setScene(scene);
+            sceneCtrl.setScene(new GameScene(board));
         } else {
             setLinkyMap(12, 12, 1, false);
-            sceneCtrl.setScene(new GameScene(this, linkyMap));
+            sceneCtrl.setScene(new GameScene(board));
         }
     }
 }

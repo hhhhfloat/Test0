@@ -1,41 +1,23 @@
 package view.scenes;
 
-import controller.GameCtrl;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import model.entity.LinkyMap;
-import view.game_nodes.Board;
+import view.game_nodes.BoardInterface;
 
 public class GameScene extends Scene{
-    private final GameCtrl gameCtrl;
-    private LinkyMap linkyMap;
-    private static Board board;
+    private BoardInterface board;
     private Label scoreLabel;
     private Label timeLabel;
-    private Label remainLabel;
 
-    public GameScene(GameCtrl gameCtrl, LinkyMap linkyMap) {
-        super(new BorderPane(createRoot(gameCtrl, linkyMap)),800,600);
-        this.linkyMap = linkyMap;
-        this.gameCtrl = gameCtrl;
+    public GameScene(BoardInterface board) {
+        super(new BorderPane(createRoot(board)),800,800);
+        this.board = board;
     }
 
-    public Board getBoard() {
-        return board;
-    }
-
-    private static StackPane createRoot(GameCtrl gameCtrl, LinkyMap linkyMap) {
-        board = new Board(12, 12, 50, linkyMap, gameCtrl);
-        StackPane root = new StackPane(board);
+    private static BorderPane createRoot(BoardInterface board) {
+        BorderPane root = new BorderPane((Node)board);
         return root;
-    }
-
-    public void updateTime(int seconds)
-    {
-        int minutes = seconds / 60;
-        int secs = seconds % 60;
-        timeLabel.setText(String.format("Time: %02d:%02d",minutes,secs));
     }
 }

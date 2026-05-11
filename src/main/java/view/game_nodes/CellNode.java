@@ -7,29 +7,24 @@ import javafx.scene.layout.StackPane;
 import model.entity.Crd;
 
 public class CellNode extends StackPane {
-    private final GameCtrl gameCtrl;
     private final Crd crd;
     private int type;
 
-    private ImageView image;
+    private final ImageView image;
 
     private final static String[] outlook1 = {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"};
 
     public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl) {
         crd = new Crd(row, col);
         this.type = type;
-        this.gameCtrl = gameCtrl;
         setPrefSize(size, size);
-        setStyle("-fx-background-color: WHITE;");
-        setLayoutX(row * (size + 10));
-        setLayoutY(col * (size + 10));
         setOnMouseClicked(event -> gameCtrl.handleCellClick(this));
 
         image = new ImageView();
         updateImage();
         image.setFitWidth(size);
         image.setFitHeight(size);
-        getChildren().addAll(image);
+        getChildren().add(image);
     }
 
     public Crd getCrd() {
@@ -57,7 +52,7 @@ public class CellNode extends StackPane {
 
     public void setHighlight(boolean highlight) {
         if (highlight) {
-            setStyle("-fx-border-color: gold; -fx-border-width: 3px; -fx-background-color: #ffffcc;");
+            setStyle("-fx-border-color: gold; -fx-border-width: 3px; -fx-box-sizing: border-box; -fx-background-color: #ffffcc;");
         } else {
             setStyle("-fx-background-color: WHITE;");
         }

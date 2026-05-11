@@ -4,9 +4,6 @@ import controller.GameCtrl;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
@@ -18,9 +15,9 @@ import javafx.animation.*;
 import javafx.scene.layout.*;
 
 
-public class Board extends StackPane {
-    private final GridPane gridPane;
-    private final Pane lineLayer;
+public class Board extends Pane implements BoardInterface{
+    private StackPane grid;
+    private Pane lineLayer;
     private final double size;
     private final double hgap = 10;
     private final double vgap = 10;
@@ -28,37 +25,28 @@ public class Board extends StackPane {
     public Board(int row, int col, double size, LinkyMap linkyMap, GameCtrl gameCtrl) {
         this.size = size;
 
-        gridPane = new GridPane();
+
         lineLayer = new Pane();
-
-        gridPane.setHgap(hgap);
-        gridPane.setVgap(vgap);
-
-        getChildren().addAll(gridPane, lineLayer);
+        lineLayer.setMouseTransparent(true);
 
         for (int i = 0; i < row; i++) {
-            RowConstraints rowConstraint = new RowConstraints();
-            rowConstraint.setMinHeight(size);
-            rowConstraint.setPrefHeight(size);
-            rowConstraint.setMaxHeight(size);
-            gridPane.getRowConstraints().add(rowConstraint);
             for (int j = 0; j < col; j++) {
-                ColumnConstraints colConstraint = new ColumnConstraints();
-                colConstraint.setMinWidth(size);
-                colConstraint.setPrefWidth(size);
-                colConstraint.setMaxWidth(size);
-                gridPane.getColumnConstraints().add(colConstraint);
                 CellNode cellNode = new CellNode(i, j, size, linkyMap.getMap()[i][j], gameCtrl);
-                gridPane.add(cellNode, col, row);
+                cellNode.setLayoutX(i*(size+hgap));
+                cellNode.setLayoutY(j*(size+hgap));
+                getChildren().add(cellNode);
+
             }
         }
+
+        getChildren().add(lineLayer);
     }
 
     private Line createLine(Crd from, Crd to) {
-        double startX = from.y() * (size + hgap) + size / 2;
-        double startY = from.x() * (size + vgap) + size / 2;
-        double endX = to.y() * (size + hgap) + size / 2;
-        double endY = to.x() * (size + vgap) + size / 2;
+        double startX = from.x() * (size + hgap) + size / 2;
+        double startY = from.y() * (size + vgap) + size / 2;
+        double endX = to.x() * (size + hgap) + size / 2;
+        double endY = to.y() * (size + vgap) + size / 2;
 
         Line line = new Line(startX, startY, endX, endY);
         line.setStroke(Color.YELLOW);
@@ -68,6 +56,7 @@ public class Board extends StackPane {
         return line;
     }
 
+    @Override
     public void eliminate(CellNode cellNode1, CellNode cellNode2, ArrayList<Crd> route) {
         Group lineGroup = new Group();
         for (int i = 0; i < route.size() - 1; i++) {
