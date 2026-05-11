@@ -125,6 +125,8 @@ public class GameCtrl {
                     cellNode.setHighlight(true);
                     board.eliminate(selectedCell, cellNode, route);
                     selectedCell = null;
+                    /// 新增：更新四维数表
+                    linkyMap.delNumMap(route);
                 }
             }
         }
