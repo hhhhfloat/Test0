@@ -173,7 +173,7 @@ public class LinkyMap {
     public boolean canComplete() {
         while (!isComplete()) {
             ArrayList<Crd> path = pathAutoFind();
-            delNumMap(hashPath(path));
+            delNumMap(path);
             if (path.isEmpty() && !isComplete()) return false;
         }
         return true;
