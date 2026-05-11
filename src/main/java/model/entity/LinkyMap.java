@@ -277,7 +277,8 @@ public class LinkyMap {
 
     ///  VVVVVV
     /// 消去后更新数表与地图（给定消去的非零点）
-    public void delNumMap(HashSet<Crd> crds) {
+    public void delNumMap(ArrayList<Crd> crde) {
+        HashSet<Crd> crds = new HashSet<>(crde);
         for (Crd p : crds) {
             int x = p.x(), y = p.y();
             if (map[x][y] == -1) continue; // 值为-2代表障碍物，不能跳过
