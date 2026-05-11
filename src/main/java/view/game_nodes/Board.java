@@ -73,11 +73,11 @@ public class Board extends Pane implements BoardInterface{
         lineGroup.setOpacity(0);
         Timeline fadeIn = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(lineGroup.opacityProperty(), 0)),
-                new KeyFrame(Duration.millis(150), new KeyValue(lineGroup.opacityProperty(), 1))
+                new KeyFrame(Duration.millis(50), new KeyValue(lineGroup.opacityProperty(), 1))
         );
         fadeIn.play();
 
-        PauseTransition delay = new PauseTransition(Duration.millis(300));
+        PauseTransition delay = new PauseTransition(Duration.millis(150));
         delay.setOnFinished(e -> {
             cellNode1.eliminateCell();
             cellNode2.eliminateCell();
