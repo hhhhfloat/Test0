@@ -10,6 +10,8 @@ import view.scenes.InitialScene;
 import view.scenes.LoginScene;
 import view.scenes.RegisterScene;
 
+import java.io.IOException;
+
 public class LoginCtrl {
     private final UserDao userDao;
     private final GameCtrl gameCtrl;
