@@ -1,6 +1,8 @@
-package view.game_nodes;
+package view.game_nodes.Interfaces;
 
 import model.entity.Crd;
+import view.game_nodes.CellNode;
+
 import java.util.ArrayList;
 
 public interface BoardInterface {

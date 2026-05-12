@@ -24,6 +24,7 @@ LoadBox {
 }
 
 .button:hover {
+    -fx-background-color: rgba(50, 150, 215, 0.8);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
 }

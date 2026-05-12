@@ -12,9 +12,14 @@ import javafx.stage.Stage;
 import model.entity.Account;
 import model.entity.Crd;
 import model.entity.LinkyMap;
-import view.game_nodes.Board;
-import view.game_nodes.BoardInterface;
-import view.game_nodes.CellNode;
+import view.game_nodes.*;
+import view.game_nodes.Interfaces.BoardInterface;
+import view.game_nodes.Interfaces.ProgressLabelInterface;
+import view.game_nodes.Interfaces.ScoreLabelInterface;
+import view.game_nodes.Interfaces.TimeLabelInterface;
+import view.game_nodes.Labels.ProgressLabel;
+import view.game_nodes.Labels.ScoreLabel;
+import view.game_nodes.Labels.TimeLabel;
 import view.scenes.*;
 
 import java.util.ArrayList;
@@ -22,10 +27,18 @@ import java.util.ArrayList;
 public class GameCtrl {
     private final UserDao userDao;
     private final SceneCtrl sceneCtrl;
+
     private BoardInterface board;
+    private TimeLabelInterface timeLabel;
+    private ScoreLabelInterface scoreLabel;
+    private ProgressLabelInterface progressLabel;
+
     private Account account;
     private LinkyMap linkyMap;
+    private GameScene gameScene;
     private CellNode selectedCell;
+    private int mode;
+    private int combo = 0;
 
     public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl) {
         this.userDao = userDao;
@@ -84,11 +97,11 @@ public class GameCtrl {
     }
 
     public void handleLoad2() {
-
+        showLevelScene();
     }
 
     public void handleLoad3() {
-
+        showLevelScene();
     }
 
     public void handleBack() {
@@ -96,16 +109,16 @@ public class GameCtrl {
     }
 
     public void handleEasy() {
-        showGameScene(0);
+        mode = 0;
+        showNewGameScene();
     }
 
     public void handleDifficult() {
-        showGameScene(1);
+        mode = 1;
+        showNewGameScene();
     }
 
-    public void showLoadScene() {
-        sceneCtrl.setScene(new LoadScene(this));
-    }
+    public void showLoadScene() { sceneCtrl.setScene(new LoadScene(this)); }
 
     public void handleCellClick(CellNode cellNode) {
         if(linkyMap.getMap()[cellNode.getCrd().x()][cellNode.getCrd().y()]!=-1) {
@@ -121,66 +134,63 @@ public class GameCtrl {
                     selectedCell.setHighlight(false);
                     cellNode.setHighlight(true);
                     selectedCell = cellNode;
+                    combo = 0;
                 } else {
                     cellNode.setHighlight(true);
                     board.eliminate(selectedCell, cellNode, route);
                     selectedCell = null;
-                    /// 新增：更新四维数表
                     linkyMap.delNumMap(route);
+                    scoreLabel.addScore(++combo);
                 }
             }
         }
     }
 
     public void handlePause() {
-
+        sceneCtrl.setScene(new PauseScene(this));
+        timeLabel.pauseTime();
     }
 
     public void handleSave() {
 
     }
 
-    public void handleExitToMenu() {
-
-    }
+    public void handleExitToMenu() { showLoginScene(); }
 
     public void handleRestart() {
-
+        //
     }
 
     public void handleContinue() {
-
+        sceneCtrl.setScene(gameScene);
+        timeLabel.continueTime();
     }
 
-    public int getCurrentScore() {
-        int score = 0;
-        return score;
-    }
+    public void timeUp() {
 
-    public int getRemainTime() {
-        int time = 0;
-        return time;
     }
 
     public void showLoginScene() { sceneCtrl.setScene(new LoginScene(new LoginCtrl(userDao, sceneCtrl, this))); }
 
-    public void showLevelScene() {
-        sceneCtrl.setScene(new LevelScene(this));
-    }
+    public void showLevelScene() { sceneCtrl.setScene(new LevelScene(this)); }
 
     private void setLinkyMap(int row, int col, int mode, boolean isPair) {
         linkyMap = new LinkyMap(row, col, mode, isPair);
-        Board boardImpl = new Board(row, col, 50, linkyMap, this);
-        this.board = boardImpl;
+        board = new Board(row, col, 50, linkyMap, this);
     }
 
-    public void showGameScene(int mode) {
+    public void showNewGameScene() {
         if(mode == 0){
+            timeLabel = new TimeLabel(180, this);
             setLinkyMap(12, 12, 0, false);
-            sceneCtrl.setScene(new GameScene(board));
+            timeLabel.start();
         } else {
+            timeLabel = new TimeLabel(300, this);
             setLinkyMap(12, 12, 1, false);
-            sceneCtrl.setScene(new GameScene(board));
         }
+        scoreLabel = new ScoreLabel();
+        progressLabel = new ProgressLabel();
+        gameScene = new GameScene(board, timeLabel, scoreLabel, progressLabel,this);
+        sceneCtrl.setScene(gameScene);
     }
 }

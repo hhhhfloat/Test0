@@ -11,12 +11,11 @@ import model.entity.Crd;
 import model.entity.LinkyMap;
 import java.util.ArrayList;
 
-import javafx.animation.*;
 import javafx.scene.layout.*;
+import view.game_nodes.Interfaces.BoardInterface;
 
 
-public class Board extends Pane implements BoardInterface{
-    private StackPane grid;
+public class Board extends Pane implements BoardInterface {
     private Pane lineLayer;
     private final double size;
     private final double hgap = 10;
@@ -24,7 +23,6 @@ public class Board extends Pane implements BoardInterface{
 
     public Board(int row, int col, double size, LinkyMap linkyMap, GameCtrl gameCtrl) {
         this.size = size;
-
 
         lineLayer = new Pane();
         lineLayer.setMouseTransparent(true);
