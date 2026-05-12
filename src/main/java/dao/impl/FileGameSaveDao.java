@@ -5,6 +5,7 @@ import dao.GameSaveDao;
 import com.google.gson.Gson;
 import model.entity.MapSaveData;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -72,7 +73,15 @@ public class FileGameSaveDao implements GameSaveDao {
 
     @Override
     public void saveMap(MapSaveData mapData){
-
+        if(currentUser == null || saveRoot == null){
+            throw new IllegalStateException("Undefined user");
+        }
+        Path mapPath = saveRoot.resolve("MapSave.json");
+        try(FileWriter writer = new FileWriter(mapPath.toFile())){
+            gson.toJson(mapData,writer);
+        }catch(IOException e){
+            throw new RuntimeException("Failed map data saving: "+e.getMessage(),e);
+        }
     }
     @Override
     public MapSaveData loadMaps() {

@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import model.entity.Account;
 import model.entity.Crd;
 import model.entity.LinkyMap;
+import model.entity.MapSaveData;
 import view.game_nodes.*;
 import view.game_nodes.Interfaces.BoardInterface;
 import view.game_nodes.Interfaces.ProgressLabelInterface;
@@ -35,7 +36,6 @@ public class GameCtrl {
     private GameSaveDao gameSaveDao;
     // controller 连接部分
     private final SceneCtrl sceneCtrl;
-
     // 持有view与model引用
     private BoardInterface board;
     private TimeLabelInterface timeLabel;
@@ -61,10 +61,6 @@ public class GameCtrl {
         // 将当前User送到SaveDao
         if(account != null) {
             gameSaveDao.setCurrentUser(account.getUserName());
-            Properties test = new Properties();
-            test.setProperty("volumn","70");
-            test.setProperty("free","asdf");
-            gameSaveDao.saveConfig(test);
         }
     }
 
@@ -171,7 +167,21 @@ public class GameCtrl {
 
     /// 找不到了
     public void handleSave() {
+        MapSaveData data = new MapSaveData();
+        if(linkyMap.getMapType()==1){
+            data.setHardMap(linkyMap.getMap());
+            data.setIsPair(linkyMap.getIsPair()==2);
+        }
+        else {
+            data.setIsPair(linkyMap.getIsPair()==2);
+            data.setEasyMap(linkyMap.copyMap());
+        }
+        gameSaveDao.saveMap(data);
 
+        Properties config = new Properties();
+        config.setProperty("volumn",String.valueOf(123));
+        gameSaveDao.saveConfig(config);
+        System.out.println("Game Saved!");
     }
 
     public void handleExitToMenu() { showLoginScene(); }

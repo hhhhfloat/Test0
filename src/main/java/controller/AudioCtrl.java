@@ -10,6 +10,7 @@ public class AudioCtrl {
     public AudioCtrl(String audioPath) {
         bgMusic = new Media(Paths.get(audioPath).toUri().toString());
     }
+    private int volume;
     public void playBgMusic() {
         MediaPlayer mediaPlayer = new MediaPlayer(bgMusic);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
