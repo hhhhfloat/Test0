@@ -11,8 +11,8 @@ public interface GameSaveDao {
 
 
     // 保存地图
-    void saveMap(MapSaveData mapData);
-    MapSaveData loadMaps();
+    void saveMap(MapSaveData mapData,int loadNumber);
+    MapSaveData loadMaps(int loadNumber);
     // 保存Config
     Properties loadConfig();
     void saveConfig(Properties config);

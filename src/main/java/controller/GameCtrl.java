@@ -48,6 +48,7 @@ public class GameCtrl {
     private CellNode selectedCell;
     private int mode;
     private int combo = 0;
+    private int loadNumber;
 
     public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl, GameSaveDao gameSaveDao) {
         this.userDao = userDao;
@@ -107,14 +108,17 @@ public class GameCtrl {
     }
 
     public void handleLoad1() {
+        loadNumber = 1;
         showLevelScene();
     }
 
     public void handleLoad2() {
+        loadNumber = 2;
         showLevelScene();
     }
 
     public void handleLoad3() {
+        loadNumber = 3;
         showLevelScene();
     }
 
@@ -167,7 +171,7 @@ public class GameCtrl {
 
     /// 找不到了
     public void handleSave() {
-        MapSaveData data = new MapSaveData();
+        MapSaveData data = new MapSaveData(loadNumber);
         if(linkyMap.getMapType()==1){
             data.setHardMap(linkyMap.getMap());
             data.setIsPair(linkyMap.getIsPair()==2);
@@ -176,7 +180,7 @@ public class GameCtrl {
             data.setIsPair(linkyMap.getIsPair()==2);
             data.setEasyMap(linkyMap.copyMap());
         }
-        gameSaveDao.saveMap(data);
+        gameSaveDao.saveMap(data,loadNumber);
 
         Properties config = new Properties();
         config.setProperty("volumn",String.valueOf(123));
@@ -204,7 +208,23 @@ public class GameCtrl {
     public void showLevelScene() { sceneCtrl.setScene(new LevelScene(this)); }
 
     private void setLinkyMap(int row, int col, int mode, boolean isPair) {
-        linkyMap = new LinkyMap(row, col, mode, isPair);
+        MapSaveData maps = gameSaveDao.loadMaps(loadNumber);
+        if(maps == null){
+            linkyMap = new LinkyMap(row, col, mode, isPair);
+            System.out.println("Default map applied");
+        }
+        else if(mode == 1 && maps.getHardMap()!=null){
+            System.out.println("Map save loaded");
+            linkyMap = new LinkyMap(row, col, maps.getHardMap());
+        }
+        else if (mode == 0 && maps.getEasyMap()!=null) {
+            linkyMap = new LinkyMap(row, col, maps.getEasyMap());
+            System.out.println("Map save loaded");
+        }else {
+            System.out.println("Default map applied for this mode");
+            linkyMap = new LinkyMap(row, col, mode, isPair);
+        }
+
         board = new Board(row, col, 50, linkyMap, this);
     }
 

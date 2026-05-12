@@ -5,10 +5,7 @@ import dao.GameSaveDao;
 import com.google.gson.Gson;
 import model.entity.MapSaveData;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -72,11 +69,11 @@ public class FileGameSaveDao implements GameSaveDao {
 
 
     @Override
-    public void saveMap(MapSaveData mapData){
+    public void saveMap(MapSaveData mapData,int loadNumber){
         if(currentUser == null || saveRoot == null){
             throw new IllegalStateException("Undefined user");
         }
-        Path mapPath = saveRoot.resolve("MapSave.json");
+        Path mapPath = saveRoot.resolve("MapSave"+loadNumber+".json");
         try(FileWriter writer = new FileWriter(mapPath.toFile())){
             gson.toJson(mapData,writer);
         }catch(IOException e){
@@ -84,8 +81,19 @@ public class FileGameSaveDao implements GameSaveDao {
         }
     }
     @Override
-    public MapSaveData loadMaps() {
-        return new MapSaveData();
+    public MapSaveData loadMaps(int loadNumber) {
+        if(currentUser == null || saveRoot == null){
+            return null;
+        }
+        Path mapPath = saveRoot.resolve("MapSave"+loadNumber+ ".json");
+        if(!Files.exists(mapPath)){
+            return null;
+        }
+        try(FileReader reader = new FileReader(mapPath.toFile())){
+            return gson.fromJson(reader,MapSaveData.class);
+        }catch(IOException e){
+            throw new RuntimeException("Failed map loading: "+e.getMessage(),e);
+        }
     }
 
 
