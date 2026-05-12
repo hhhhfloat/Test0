@@ -103,6 +103,20 @@ public class LinkyMap {
         map_T = Tsp(map);
         initNumMap();
     }
+    public LinkyMap(int MAPX, int MAPY, int[][]mp, boolean isPair)
+    {
+        MAPX_ = MAPX;
+        MAPY_ = MAPY;
+        MapType = 1;
+        this.isPair = isPair?2:1;
+        map = new int[MAPX][MAPY];
+        map_T = new int[MAPY_][MAPX_];
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(mp[i], 0, map[i], 0, MAPY);
+        }
+        map_T = Tsp(map);
+        initNumMap();
+    }
 
     /// 自动生成地图
     public void initMap() {

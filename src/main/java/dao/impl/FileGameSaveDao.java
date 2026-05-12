@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import model.entity.MapSaveData;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,6 +38,8 @@ public class FileGameSaveDao implements GameSaveDao {
         }
     }
 
+
+    /// User Config Save & Load
     @Override
     public void saveConfig(Properties config){
         try{// 创建配置文件路径
@@ -49,13 +52,30 @@ public class FileGameSaveDao implements GameSaveDao {
             throw new RuntimeException("保存配置文件失败："+e.getMessage(),e);
         }
     }
+    @Override
+    public Properties loadConfig(){
+        Properties config = new Properties();
+        if(currentUser == null || saveRoot == null){
+            return config;
+        }
+        Path configPath = saveRoot.resolve("ConfigSave.properties");
+        if(Files.exists(configPath)){
+            try(InputStream in = Files.newInputStream(configPath)){
+                config.load(in);
+            }catch(IOException e){
+                throw new RuntimeException("加载配置文件失败: " + e.getMessage(), e);
+            }
+        }
+        return config;
+    }
+
 
     @Override
-    public void saveMap(MapSaveData mapData)throws IOException{
+    public void saveMap(MapSaveData mapData){
 
     }
     @Override
-    public MapSaveData loadMaps() throws IOException{
+    public MapSaveData loadMaps() {
         return new MapSaveData();
     }
 

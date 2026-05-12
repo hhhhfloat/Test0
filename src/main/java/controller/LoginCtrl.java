@@ -11,6 +11,7 @@ import view.scenes.LoginScene;
 import view.scenes.RegisterScene;
 
 import java.io.IOException;
+import java.util.Properties;
 
 public class LoginCtrl {
     private final UserDao userDao;
