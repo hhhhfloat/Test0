@@ -7,7 +7,7 @@ import view.boxes.LevelBox;
 
 public class LevelScene extends Scene{
     public LevelScene(GameCtrl gameCtrl) {
-        super(createRoot(gameCtrl), 800, 600);
+        super(createRoot(gameCtrl), 800, 800);
         getStylesheets().add(getClass().getResource("/css/levelSceneStyle.css").toExternalForm());
     }
 

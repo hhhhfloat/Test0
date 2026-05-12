@@ -13,6 +13,7 @@ public class AudioCtrl {
     public AudioCtrl() {
 
     }
+    private int volume;
     public void playBgMusic() {
         MediaPlayer mediaPlayer = new MediaPlayer(bgMusic);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);

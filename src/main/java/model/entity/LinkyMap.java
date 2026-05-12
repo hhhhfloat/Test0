@@ -43,14 +43,13 @@ public class LinkyMap {
     static final int[] nType = {6, 12};
     static final int[] nToPut = {32, 100};
 
-    private int MAPX_, MAPY_;
+    private int MAPX, MAPY;
     private int[][] map;
     private int[][] map_T;
     private int[][][][] NumMap;
     private int[][][][] NumMap_T;
     private int MapType = 0;
     private int[] Count;
-    private int ChangeCount = 0;
     int isPair; // 1 表示不是 pair, 2 表示是 pair
 
     /// VVVVVV
@@ -63,25 +62,37 @@ public class LinkyMap {
         return NumMap;
     }
 
-    public int getMAPX_() {
-        return MAPX_;
+    public int getMAPX() {
+        return MAPX;
     }
 
-    public int getMAPY_() {
-        return MAPY_;
+    public int getMAPY() {
+        return MAPY;
     }
 
-    public int getChangeCount() {
-        return ChangeCount;
+    public int getMapType() {
+        return MapType;
+    }
+
+    public int getIsPair() {
+        return isPair;
+    }
+
+    public int[][] copyMap(){
+        int[][] copy= new int[MAPX][MAPY];
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(map[i], 0, copy[i], 0, MAPY);
+        }
+        return copy;
     }
 
     /// 构造函数，会生成地图以及对应数表
     public LinkyMap(int MAPX, int MAPY, int mpType, boolean isPairMode) {
-        MAPX_ = MAPX;
-        MAPY_ = MAPY;
+        this.MAPX = MAPX;
+        this.MAPY = MAPY;
         MapType = mpType;
-        map = new int[MAPX_][MAPY_];
-        map_T = new int[MAPY_][MAPX_];
+        map = new int[this.MAPX][this.MAPY];
+        map_T = new int[this.MAPY][this.MAPX];
         isPair = isPairMode?2:1;
         //随机生成初始地图
         initMap();
@@ -91,12 +102,12 @@ public class LinkyMap {
 
     public LinkyMap(int MAPX, int MAPY, int[][]mp)
     {
-        MAPX_ = MAPX;
-        MAPY_ = MAPY;
+        this.MAPX = MAPX;
+        this.MAPY = MAPY;
         MapType = 1;
         isPair = 1;
         map = new int[MAPX][MAPY];
-        map_T = new int[MAPY_][MAPX_];
+        map_T = new int[this.MAPY][this.MAPX];
         for (int i = 0; i < MAPX; i++) {
             System.arraycopy(mp[i], 0, map[i], 0, MAPY);
         }
@@ -105,12 +116,12 @@ public class LinkyMap {
     }
     public LinkyMap(int MAPX, int MAPY, int[][]mp, boolean isPair)
     {
-        MAPX_ = MAPX;
-        MAPY_ = MAPY;
+        this.MAPX = MAPX;
+        this.MAPY = MAPY;
         MapType = 1;
         this.isPair = isPair?2:1;
         map = new int[MAPX][MAPY];
-        map_T = new int[MAPY_][MAPX_];
+        map_T = new int[this.MAPY][this.MAPX];
         for (int i = 0; i < MAPX; i++) {
             System.arraycopy(mp[i], 0, map[i], 0, MAPY);
         }
@@ -121,26 +132,26 @@ public class LinkyMap {
     /// 自动生成地图
     public void initMap() {
         Count = new int[nType[MapType]*isPair];
-        int[][] pos = new int[MAPX_][MAPY_];
-        int[][] buf_map = new int[MAPX_][MAPY_];
+        int[][] pos = new int[MAPX][MAPY];
+        int[][] buf_map = new int[MAPX][MAPY];
         /// 清空地图
-        for (int x = 0; x < MAPX_; x++) {
-            for (int y = 0; y < MAPY_; y++) {
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
                 map[x][y] = -1;
                 buf_map[x][y] = -1;
             }
         }
         /// 把需要的位置拿过来
-        for (int i = 0; i < MAPX_; i++) {
-            System.arraycopy(Pos[MapType][i], 0, pos[i], 0, MAPY_);
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(Pos[MapType][i], 0, pos[i], 0, MAPY);
         }
         do {
             sRandCount();
             sRandMap(pos, buf_map);
             initNumMap();
         } while (!canComplete());
-        for (int i = 0; i < MAPX_; i++) {
-            System.arraycopy(buf_map[i], 0, map[i], 0, MAPY_);
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(buf_map[i], 0, map[i], 0, MAPY);
         }
         map_T = Tsp(map);
     }
@@ -171,8 +182,8 @@ public class LinkyMap {
     public void sRandMap(int[][] pos, int[][] buf_map) {
         int n = nType[MapType]*isPair;
         Random rand = new Random();
-        for (int x = 0; x < MAPX_; x++) {
-            for (int y = 0; y < MAPY_; y++) {
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
                 if (pos[x][y] == 1) {
                     int r = rand.nextInt(n);
                     while (Count[r] == 0) r = rand.nextInt(n);
@@ -195,19 +206,19 @@ public class LinkyMap {
 
     /// 生成初始数表
     public void initNumMap() {
-        NumMap = new int[MAPX_][MAPY_][4][2];
+        NumMap = new int[MAPX][MAPY][4][2];
         // 扫描四元组
         // 按非零格枚举，直接四个方向都一起
         // 这次不扫直线
-        for (int x = 0; x < MAPX_; x++) {
-            for (int y = 0; y < MAPY_; y++) {
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
                 if (map[x][y] != -1) // 仅枚举非零格
                 {
                     int val = map[x][y];
                     for (int i = 0; i < 4; i++) {// 枚举四个方向
                         int t0 = 1;
                         int dx = dir[i][0], dy = dir[i][1];
-                        while ((x + t0 * dx != MAPX_ && x + t0 * dx != -1) && (y + t0 * dy != MAPY_ && y + t0 * dy != -1)) {// 判断下标不在地图外
+                        while ((x + t0 * dx != MAPX && x + t0 * dx != -1) && (y + t0 * dy != MAPY && y + t0 * dy != -1)) {// 判断下标不在地图外
                             NumMap[x + t0 * dx][y + t0 * dy][(i + 2) % 4][0] = val;
                             NumMap[x + t0 * dx][y + t0 * dy][(i + 2) % 4][1] = t0;
                             // 走到终点
@@ -222,11 +233,11 @@ public class LinkyMap {
         }
         // 理论上此时我们有一个完整的数据地图NumMap[][][4][2]，外周尚未给与特殊照顾
         // 需要从边缘上的空格向内扫出一些不可用的值 (用-1标记，但长度仍要记！！！)
-        for (int i = 0; i < MAPY_; i++) {
+        for (int i = 0; i < MAPY; i++) {
             // 顶行
 
             int t0 = 0;
-            while (t0 != MAPX_) {// 判断下标不在地图外
+            while (t0 != MAPX) {// 判断下标不在地图外
                 NumMap[t0][i][0][0] = -1;
                 NumMap[t0][i][0][1] = t0 + 1;
                 // 走到终点
@@ -236,19 +247,19 @@ public class LinkyMap {
             }
             // 底行
 
-            int t1 = MAPX_ - 1;
+            int t1 = MAPX - 1;
             while (t1 != -1) {
                 NumMap[t1][i][2][0] = -1;
-                NumMap[t1][i][2][1] = MAPX_ - t1;
+                NumMap[t1][i][2][1] = MAPX - t1;
                 if (map[t1][i] != -1) break;
                 t1--;
             }
         }
-        for (int i = 0; i < MAPX_; i++) {
+        for (int i = 0; i < MAPX; i++) {
             // 左列
 
             int t2 = 0;
-            while (t2 != MAPY_) {// 判断下标不在地图外
+            while (t2 != MAPY) {// 判断下标不在地图外
                 NumMap[i][t2][3][0] = -1;
                 NumMap[i][t2][3][1] = t2 + 1;
                 // 走到终点
@@ -256,10 +267,10 @@ public class LinkyMap {
                 t2++;
             }
             // 右列
-            int t3 = MAPY_ - 1;
+            int t3 = MAPY - 1;
             while (t3 != -1) {
                 NumMap[i][t3][1][0] = -1;
-                NumMap[i][t3][1][1] = MAPY_ - t3;
+                NumMap[i][t3][1][1] = MAPY - t3;
                 if (map[i][t3] != -1) break;
                 t3--;
             }
@@ -278,7 +289,7 @@ public class LinkyMap {
         if(x1==x2 && y1 == y2) {
             return false; // 同一点
         }
-        else if(x1<0||x1>=MAPX_||x2<0||x2>=MAPX_||y1<0||y2<0||y1>=MAPY_||y2>=MAPY_) {
+        else if(x1<0||x1>= MAPX ||x2<0||x2>= MAPX ||y1<0||y2<0||y1>= MAPY ||y2>= MAPY) {
             return false; // 超范围
         }
         else if(map[x1][y1] < 0 || map[x2][y2] < 0) {
@@ -305,7 +316,7 @@ public class LinkyMap {
                 int val = NumMap[x][y][ii][0]; // 覆写要用到的两个值
                 int dis = NumMap[x][y][ii][1];
 
-                if (px < 0 || px >= MAPX_ || py < 0 || py >= MAPY_) continue; // 如果再走一步就出去了，没有东西需要改
+                if (px < 0 || px >= MAPX || py < 0 || py >= MAPY) continue; // 如果再走一步就出去了，没有东西需要改
                 if (
                         val == NumMap[px][py][ii][0] // 数字相同
                                 && dis == NumMap[px][py][ii][1] - 1 // 步数加一
@@ -314,7 +325,7 @@ public class LinkyMap {
                 }
 
                 // 开始覆写
-                while (x + t0 * dx < MAPX_ && x + t0 * dx >= 0 && y + t0 * dy < MAPY_ && y + t0 * dy >= 0) {// 在地图内，向方向 i 行进，检测 (i+2)%4 方向的点
+                while (x + t0 * dx < MAPX && x + t0 * dx >= 0 && y + t0 * dy < MAPY && y + t0 * dy >= 0) {// 在地图内，向方向 i 行进，检测 (i+2)%4 方向的点
                     px = x + t0 * dx;
                     py = y + t0 * dy; // 临时点坐标
                     // 走到这里了就先改了
@@ -345,8 +356,8 @@ public class LinkyMap {
     public ArrayList<Crd> pathAutoFind() {
         if (isComplete()) return new ArrayList<>();
         // 全部一次性枚举！
-        for (int x = 0; x < MAPX_; x++) {
-            for (int y = 0; y < MAPY_; y++) {
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
                 if (map[x][y] >= 0)    // 非空格，找直线
                 {
                     for (int i = 0; i < 4; i++) {
@@ -463,9 +474,9 @@ public class LinkyMap {
 
     /// NumMap用的转置函数
     public int[][][][] Tsp(int[][][][] Nm) {
-        int[][][][] nt = new int[MAPY_][MAPX_][4][2];
-        for (int i = 0; i < MAPX_; i++) {
-            for (int j = 0; j < MAPY_; j++) {
+        int[][][][] nt = new int[MAPY][MAPX][4][2];
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
                 for (int k = 0; k < 4; k++) {
                     nt[j][i][3 - k][0] = Nm[i][j][k][0];
                     nt[j][i][3 - k][1] = Nm[i][j][k][1];
@@ -477,9 +488,9 @@ public class LinkyMap {
 
     /// map用的转置函数
     public int[][] Tsp(int[][] mp) {
-        int[][] map_T = new int[MAPY_][MAPX_];
-        for (int i = 0; i < MAPY_; i++) {
-            for (int j = 0; j < MAPX_; j++) {
+        int[][] map_T = new int[MAPY][MAPX];
+        for (int i = 0; i < MAPY; i++) {
+            for (int j = 0; j < MAPX; j++) {
                 map_T[i][j] = mp[j][i];
             }
         }
@@ -497,8 +508,8 @@ public class LinkyMap {
 
     /// 检测map完成的函数（无参默认检查自己的地图）
     public boolean isComplete() {
-        for (int i = 0; i < MAPX_; i++) {
-            for (int j = 0; j < MAPY_; j++) {
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
                 if (map[i][j] >= 0) return false;
             }
         }
@@ -506,8 +517,8 @@ public class LinkyMap {
     }
 
     public boolean isComplete(int[][] map_) {
-        for (int i = 0; i < MAPX_; i++) {
-            for (int j = 0; j < MAPY_; j++) {
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
                 if (map_[i][j] >= 0) return false;
             }
         }
@@ -580,7 +591,7 @@ public class LinkyMap {
                 path.add(new Crd(x2, y2));
                 return path;
             } else {
-                int min = MAPY_*2;
+                int min = MAPY *2;
                 int rec = 0;
                 for (int t : possible) {
                     int s = Math.abs(t-y1)+ Math.abs(t-y2);
@@ -606,7 +617,7 @@ public class LinkyMap {
             }
         }
         if(possible.isEmpty())return path;
-        int min = MAPX_*2;
+        int min = MAPX *2;
         int rec = 0;
         for (int t : possible) {
             int s = Math.abs(t-y1)+ Math.abs(t-x2);
@@ -642,8 +653,8 @@ public class LinkyMap {
 
     // 测试用函数
     public void PrintMap(int[][] map_) {
-        for (int i = 0; i < MAPX_; i++) {
-            for (int j = 0; j < MAPY_; j++) {
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
                 int t = map_[i][j];
                 if (t == -1) System.out.print("    ");
                 else if (t == '#') System.out.print(" ## ");
