@@ -42,7 +42,6 @@ public class GameCtrl {
     private ScoreLabelInterface scoreLabel;
     private ProgressLabelInterface progressLabel;
 
-    private Account account;
     private LinkyMap linkyMap;
     private GameScene gameScene;
     // 辅助
