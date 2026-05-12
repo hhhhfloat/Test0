@@ -18,9 +18,9 @@ public class MainApp extends Application {
         GameSaveDao gameSaveDao = new FileGameSaveDao();
         // controller初始化
         SceneCtrl sceneCtrl = new SceneCtrl(stage);
-        GameCtrl gameCtrl = new GameCtrl(userDao, sceneCtrl, gameSaveDao);
+        AudioCtrl audioCtrl = new AudioCtrl();
+        GameCtrl gameCtrl = new GameCtrl(userDao, sceneCtrl, audioCtrl, gameSaveDao);
         LoginCtrl loginCtrl = new LoginCtrl(userDao, sceneCtrl, gameCtrl);
-        AudioCtrl audioCtrl = new AudioCtrl("src/main/resources/Audio/bgmusic.mp3");
         // 行动
         audioCtrl.playBgMusic();
         loginCtrl.showInitialScene();

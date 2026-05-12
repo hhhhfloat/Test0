@@ -35,7 +35,7 @@ public class GameCtrl {
     private GameSaveDao gameSaveDao;
     // controller 连接部分
     private final SceneCtrl sceneCtrl;
-
+    private final AudioCtrl audioCtrl;
     // 持有view与model引用
     private BoardInterface board;
     private TimeLabelInterface timeLabel;
@@ -49,9 +49,10 @@ public class GameCtrl {
     private int mode;
     private int combo = 0;
 
-    public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl, GameSaveDao gameSaveDao) {
+    public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl, AudioCtrl audioCtrl, GameSaveDao gameSaveDao) {
         this.userDao = userDao;
         this.sceneCtrl = sceneCtrl;
+        this.audioCtrl = audioCtrl;
         this.gameSaveDao = gameSaveDao;
         selectedCell = null;
     }
@@ -139,6 +140,7 @@ public class GameCtrl {
     public void showLoadScene() { sceneCtrl.setScene(new LoadScene(this)); }
 
     public void handleCellClick(CellNode cellNode) {
+        audioCtrl.playClickSound();
         if(linkyMap.getMap()[cellNode.getCrd().x()][cellNode.getCrd().y()]!=-1) {
             if (selectedCell == null) {
                 selectedCell = cellNode;
@@ -159,6 +161,7 @@ public class GameCtrl {
                     selectedCell = null;
                     linkyMap.delNumMap(route);
                     gameScene.playInformation("Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
+                    audioCtrl.playEliminateSound();
                     scoreLabel.addScore(combo);
                 }
             }
