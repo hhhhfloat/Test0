@@ -1,12 +1,16 @@
 package dao;
 
-import model.state.GameSnapshot;
+import java.util.Properties;
+import model.entity.MapSaveData;
 
-import java.util.List;
+import java.io.IOException;
 
 public interface GameSaveDao {
-    void saveGame(String username, int slotIndex, GameSnapshot snapshot);
-    GameSnapshot loadGame(String username, int slotIndex);
-    boolean hasSave(String username, int slotIndex);
-    List<Integer> getAvailableSlots(String username);
+    // 初始化用的设置用户名
+    void setCurrentUser(String userName);
+
+    // 保存地图
+    void saveMap(MapSaveData mapData)throws IOException;
+    MapSaveData loadMaps() throws IOException;
+    void saveConfig(Properties config);
 }
