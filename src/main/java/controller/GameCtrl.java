@@ -158,7 +158,8 @@ public class GameCtrl {
                     board.eliminate(selectedCell, cellNode, route);
                     selectedCell = null;
                     linkyMap.delNumMap(route);
-                    scoreLabel.addScore(++combo);
+                    gameScene.playInformation("Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
+                    scoreLabel.addScore(combo);
                 }
             }
         }
@@ -205,6 +206,7 @@ public class GameCtrl {
         } else {
             timeLabel = new TimeLabel(300, this);
             setLinkyMap(12, 12, 1, false);
+            timeLabel.start();
         }
         scoreLabel = new ScoreLabel();
         progressLabel = new ProgressLabel();

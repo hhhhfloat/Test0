@@ -15,6 +15,7 @@ public class CellNode extends StackPane {
     private final static String[] outlook1 = {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"};
 
     public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl) {
+        setStyle("-fx-background-color: white;-fx-background-radius: 10px");
         crd = new Crd(row, col);
         this.type = type;
         setPrefSize(size, size);
@@ -52,7 +53,7 @@ public class CellNode extends StackPane {
 
     public void setHighlight(boolean highlight) {
         if (highlight) {
-            setStyle("-fx-border-color: gold; -fx-border-width: 3px; -fx-box-sizing: border-box; -fx-background-color: #ffffcc;");
+            setStyle("-fx-border-color: gold; -fx-border-width: 3px; -fx-background-radius: 10px");
         } else {
             setStyle("-fx-background-color: WHITE;");
         }

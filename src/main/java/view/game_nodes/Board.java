@@ -29,10 +29,12 @@ public class Board extends Pane implements BoardInterface {
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                CellNode cellNode = new CellNode(i, j, size, linkyMap.getMap()[i][j], gameCtrl);
-                cellNode.setLayoutX(i*(size+hgap));
-                cellNode.setLayoutY(j*(size+hgap));
-                getChildren().add(cellNode);
+                if(linkyMap.getMap()[i][j]!=-1) {
+                    CellNode cellNode = new CellNode(i, j, size, linkyMap.getMap()[i][j], gameCtrl);
+                    cellNode.setLayoutX(i*(size+hgap));
+                    cellNode.setLayoutY(j*(size+hgap));
+                    getChildren().add(cellNode);
+                }
 
             }
         }
