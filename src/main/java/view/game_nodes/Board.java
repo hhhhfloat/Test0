@@ -37,7 +37,7 @@ public class Board extends Pane implements BoardInterface {
                 cellNode.setLayoutX(i*(size+hgap));
                 cellNode.setLayoutY(j*(size+hgap));
                 getChildren().add(cellNode);
-
+                // me=sdfjkaslifd
             }
         }
 
