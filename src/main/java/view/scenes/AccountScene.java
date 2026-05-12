@@ -9,13 +9,13 @@ import view.boxes.AccountBox;
 public class AccountScene  extends Scene{
     public AccountScene(GameCtrl gameCtrl) {
         super(createRoot(gameCtrl), 800, 600);
-        getStylesheets().add(getClass().getResource("/css/accountSceneStyle.css").toExternalForm());
+        getStylesheets().add(getClass().getResource("/css/SceneStyle/accountSceneStyle.css").toExternalForm());
     }
 
 
     public AccountScene(Account account, GameCtrl gameCtrl) {
         super(createRoot(account, gameCtrl), 800, 600);
-        getStylesheets().add(getClass().getResource("/css/accountSceneStyle.css").toExternalForm());
+        getStylesheets().add(getClass().getResource("/css/SceneStyle/accountSceneStyle.css").toExternalForm());
     }
 
     private static StackPane createRoot(GameCtrl gameCtrl) {

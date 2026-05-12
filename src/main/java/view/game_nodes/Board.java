@@ -3,8 +3,6 @@ package view.game_nodes;
 import controller.GameCtrl;
 import javafx.animation.*;
 import javafx.scene.Group;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import model.entity.Crd;
@@ -17,14 +15,15 @@ import view.game_nodes.Interfaces.BoardInterface;
 
 
 public class Board extends Pane implements BoardInterface {
-    private Pane lineLayer;
+    private final Pane lineLayer;
     private final double size;
-    private final double hgap = 10;
-    private final double vgap = 10;
+    private final double gap = 10;
 
     public Board(int row, int col, double size, LinkyMap linkyMap, GameCtrl gameCtrl) {
         Random r = new Random();
         this.size = size;
+
+        getStylesheets().add(getClass().getResource("/css/board.css").toExternalForm());
 
         lineLayer = new Pane();
         lineLayer.setMouseTransparent(true);
@@ -34,8 +33,8 @@ public class Board extends Pane implements BoardInterface {
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 CellNode cellNode = new CellNode(i, j, size, linkyMap.getMap()[i][j], gameCtrl,imgSet);
-                cellNode.setLayoutX(i*(size+hgap));
-                cellNode.setLayoutY(j*(size+hgap));
+                cellNode.setLayoutX(i*(size+gap));
+                cellNode.setLayoutY(j*(size+gap));
                 getChildren().add(cellNode);
             }
         }
@@ -44,17 +43,12 @@ public class Board extends Pane implements BoardInterface {
     }
 
     private Line createLine(Crd from, Crd to) {
-        double startX = from.x() * (size + hgap) + size / 2;
-        double startY = from.y() * (size + vgap) + size / 2;
-        double endX = to.x() * (size + hgap) + size / 2;
-        double endY = to.y() * (size + vgap) + size / 2;
+        double startX = from.x() * (size + gap) + size / 2;
+        double startY = from.y() * (size + gap) + size / 2;
+        double endX = to.x() * (size + gap) + size / 2;
+        double endY = to.y() * (size + gap) + size / 2;
 
-        Line line = new Line(startX, startY, endX, endY);
-        line.setStroke(Color.YELLOW);
-        line.setStrokeWidth(10);
-        line.setEffect(new DropShadow(10, Color.YELLOW));
-
-        return line;
+        return new Line(startX, startY, endX, endY);
     }
 
     @Override
@@ -62,10 +56,6 @@ public class Board extends Pane implements BoardInterface {
         Group lineGroup = new Group();
         for (int i = 0; i < route.size() - 1; i++) {
             Line line = createLine(route.get(i), route.get(i + 1));
-            line.setStroke(Color.YELLOW);
-            line.setStrokeWidth(10);
-            line.setEffect(new DropShadow(10, Color.YELLOW));
-
             lineGroup.getChildren().add(line);
         }
         lineLayer.getChildren().add(lineGroup);

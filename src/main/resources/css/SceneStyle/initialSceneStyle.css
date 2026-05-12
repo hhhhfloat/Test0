@@ -3,7 +3,7 @@
     -fx-background-size: cover;
 }
 
-AccountBox {
+InitialBox {
     -fx-alignment: Center;
 }
 
@@ -18,24 +18,19 @@ AccountBox {
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
     -fx-font-size: 15px;
     -fx-font-style: italic;
-    -fx-underline: false;
-    -fx-letter-spacing: 10px;
 
     -fx-padding: 10px 20px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
-
-    -fx-cursor: hand;
-    -fx-transition: all 0.3s ease;
 }
 
 .button:hover {
-    -fx-background-color: rgba(50, 150, 215, 0.8);
+    -fx-background-color: rgba(50, 150, 240, 0.8);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
 }
 
 .button:pressed {
-    -fx-background-color: rgba(70, 170, 220, 0.8);
+    -fx-background-color: rgba(70, 170, 250, 0.8);
     -fx-scale-x: 0.97;
     -fx-scale-y: 0.97;
     -fx-translate-y: 1px;

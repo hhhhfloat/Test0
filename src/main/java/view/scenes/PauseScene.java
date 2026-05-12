@@ -8,7 +8,7 @@ import view.boxes.PauseBox;
 public class PauseScene extends Scene{
     public PauseScene(GameCtrl gameCtrl) {
         super(createRoot(gameCtrl), 800, 600);
-        getStylesheets().add(getClass().getResource("/css/pauseSceneStyle.css").toExternalForm());
+        getStylesheets().add(getClass().getResource("/css/SceneStyle/pauseSceneStyle.css").toExternalForm());
     }
 
     public static BorderPane createRoot(GameCtrl gameCtrl) {

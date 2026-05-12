@@ -8,7 +8,7 @@ import view.boxes.LoadBox;
 public class LoadScene extends Scene{
     public LoadScene(GameCtrl gameCtrl) {
         super(createRoot(gameCtrl), 800, 600);
-        getStylesheets().add(getClass().getResource("/css/loadSceneStyle.css").toExternalForm());
+        getStylesheets().add(getClass().getResource("/css/SceneStyle/loadSceneStyle.css").toExternalForm());
     }
     public static BorderPane createRoot(GameCtrl gameCtrl) {
         return new BorderPane(new LoadBox(gameCtrl));

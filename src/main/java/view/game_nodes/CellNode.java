@@ -16,19 +16,21 @@ public class CellNode extends StackPane {
     private final Crd crd;
     private int type;
     private int imgSet;
-
     private final ImageView image;
-
     private static HashMap<Integer, String> imgSets = new HashMap<>();
 
     private final static String[][] images = {
             {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"},
             {"Enchanted Book","Fishing Rod","Leather Boots","Name Tag","Nautilus Shell","Pufferfish","Raw Cod","Raw Salmon","Shaddle","Suspicious Stew","Tropical Fish","Water Bottle"}};
+
     public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl,int imgSet) {
-        crd = new Crd(row, col);
         initHashSet();
+
+        crd = new Crd(row, col);
         this.type = type;
         this.imgSet = imgSet;
+
+        getStylesheets().add(getClass().getResource("/css/cellNode.css").toExternalForm());
         setPrefSize(size, size);
         setOnMouseClicked(event -> gameCtrl.handleCellClick(this));
         image = new ImageView();
@@ -69,9 +71,9 @@ public class CellNode extends StackPane {
 
     public void setHighlight(boolean highlight) {
         if (highlight) {
-            setStyle("-fx-border-color: gold; -fx-border-width: 3px; -fx-box-sizing: border-box; -fx-background-color: #ffffcc;");
+            getStyleClass().add("highlight");
         } else {
-            setStyle("-fx-background-color: WHITE;");
+            getStyleClass().remove("highlight");
         }
     }
 

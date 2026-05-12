@@ -1,0 +1,10 @@
+.root {
+    -fx-background-color:white;
+    -fx-background-radius:5px;
+}
+
+.highlight {
+    -fx-border-color: gold;
+    -fx-border-width: 3px;
+    -fx-box-sizing: border-box;
+}

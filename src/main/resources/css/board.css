@@ -1,0 +1,5 @@
+.line {
+    -fx-stroke-color: Yellow;
+    -fx-stroke-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(100,0,100,0.3), 10, 0, 0, 2);
+}
