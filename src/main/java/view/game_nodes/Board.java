@@ -10,6 +10,7 @@ import javafx.util.Duration;
 import model.entity.Crd;
 import model.entity.LinkyMap;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javafx.scene.layout.*;
 import view.game_nodes.Interfaces.BoardInterface;
@@ -22,14 +23,17 @@ public class Board extends Pane implements BoardInterface {
     private final double vgap = 10;
 
     public Board(int row, int col, double size, LinkyMap linkyMap, GameCtrl gameCtrl) {
+        Random r = new Random();
         this.size = size;
 
         lineLayer = new Pane();
         lineLayer.setMouseTransparent(true);
 
+        int imgSet = r.nextInt(0,2);
+
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                CellNode cellNode = new CellNode(i, j, size, linkyMap.getMap()[i][j], gameCtrl);
+                CellNode cellNode = new CellNode(i, j, size, linkyMap.getMap()[i][j], gameCtrl,imgSet);
                 cellNode.setLayoutX(i*(size+hgap));
                 cellNode.setLayoutY(j*(size+hgap));
                 getChildren().add(cellNode);

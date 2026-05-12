@@ -6,25 +6,41 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import model.entity.Crd;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+
 public class CellNode extends StackPane {
     private final Crd crd;
     private int type;
+    private int imgSet;
 
     private final ImageView image;
 
-    private final static String[] outlook1 = {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"};
+    private static HashMap<Integer, String> imgSets = new HashMap<>();
 
-    public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl) {
+    private final static String[][] images = {
+            {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"},
+            {"Enchanted Book","Fishing Rod","Leather Boots","Name Tag","Nautilus Shell","Pufferfish","Raw Cod","Raw Salmon","Shaddle","Suspicious Stew","Tropical Fish","Water Bottle"}};
+    public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl,int imgSet) {
         crd = new Crd(row, col);
+        initHashSet();
         this.type = type;
+        this.imgSet = imgSet;
         setPrefSize(size, size);
         setOnMouseClicked(event -> gameCtrl.handleCellClick(this));
-
         image = new ImageView();
         updateImage();
         image.setFitWidth(size);
         image.setFitHeight(size);
         getChildren().add(image);
+    }
+
+    public static void initHashSet(){
+        imgSets.put(0,"BrowSers");
+        imgSets.put(1,"MCFishing");
     }
 
     public Crd getCrd() {
@@ -39,13 +55,14 @@ public class CellNode extends StackPane {
     private void updateImage() {
         if (type == -1) {
             image.setImage(null);
-        } else if (type < outlook1.length) {
-            String path = "/Sprites/Block/Browsers/" + outlook1[type] + ".png";
-            try {
-                Image img = new Image(getClass().getResourceAsStream(path));
+        } else if (type < images[imgSet].length) {
+            Path directorpath = Paths.get("src","main","resources","Sprites","Block",imgSets.get(imgSet),images[imgSet][type]+".png");
+            //String path = "/Sprites/Block/Browsers/" + images[imgSet][type] + ".png";
+            try (InputStream is = Files.newInputStream(directorpath)){
+                Image img = new Image(is);
                 image.setImage(img);
             } catch (Exception e) {
-                System.err.println("加载图片失败: " + path);
+                System.err.println("加载图片失败: " + directorpath);
             }
         }
     }

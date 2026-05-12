@@ -71,11 +71,11 @@ public class FileGameSaveDao implements GameSaveDao {
 
 
     @Override
-    public void saveMap(MapSaveData mapData)throws IOException{
+    public void saveMap(MapSaveData mapData){
 
     }
     @Override
-    public MapSaveData loadMaps() throws IOException{
+    public MapSaveData loadMaps() {
         return new MapSaveData();
     }
 
