@@ -7,7 +7,7 @@ import view.boxes.PauseBox;
 
 public class PauseScene extends Scene{
     public PauseScene(GameCtrl gameCtrl) {
-        super(createRoot(gameCtrl), 800, 600);
+        super(createRoot(gameCtrl), 800, 800);
         getStylesheets().add(getClass().getResource("/css/pauseSceneStyle.css").toExternalForm());
     }
 

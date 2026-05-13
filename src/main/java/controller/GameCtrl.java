@@ -3,6 +3,7 @@ package controller;
 import dao.GameSaveDao;
 import dao.UserDao;
 import javafx.application.Platform;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -27,7 +28,7 @@ import view.scenes.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public class GameCtrl {
+public class GameCtrl extends Parent {
     // 用户使用部分
     private Account account;
     private final UserDao userDao;
@@ -185,8 +186,16 @@ public class GameCtrl {
         timeLabel.pauseTime();
     }
 
-    /// 找不到了
+    /// 存档
     public void handleSave() {
+        // 游客模式特殊处理
+        if(loadNumber == 0){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Reminding");
+            alert.setHeaderText("You can't save in visitor mode!");
+            alert.showAndWait();
+            return;
+        }
         // save map
         MapSaveData data = new MapSaveData(loadNumber);
         data.setMap(mode,linkyMap.getMap());
@@ -217,7 +226,7 @@ public class GameCtrl {
     }
 
     public void timeUp() {
-
+        sceneCtrl.setScene(new GameoverScene(this));
     }
 
     public void showLoginScene() { sceneCtrl.setScene(new LoginScene(new LoginCtrl(userDao, sceneCtrl, this))); }

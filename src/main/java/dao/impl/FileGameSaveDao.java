@@ -47,7 +47,7 @@ public class FileGameSaveDao implements GameSaveDao {
                 config.store(out, "Game Config for " + currentUser);
             }
         }catch(Exception e) {
-            throw new RuntimeException("保存配置文件失败："+e.getMessage(),e);
+
         }
     }
 
