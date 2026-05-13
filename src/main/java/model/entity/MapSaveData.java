@@ -18,13 +18,16 @@ public class MapSaveData {
         map.add(new int[0][0]);
     }
 
-    public MapSaveData(int[][] easyMap, int[][] hardMap, boolean isPair, int easyScore, int hardScore, int loadNumber)
+    public MapSaveData(int[][] easyMap, int[][] hardMap, boolean isPair, int easyScore, int hardScore, int loadNumber, int easyTime, int hardTime)
     {
+        map = new ArrayList<>();
         map.add(easyMap);
         map.add(hardMap);
         this.isPair = isPair;
         score[0] = easyScore;
         score[1] = hardScore;
+        remainTime[0] = easyTime;
+        remainTime[1] = hardTime;
         this.loadNumber = loadNumber;
     }
     public int[][] getMap(int mode){
