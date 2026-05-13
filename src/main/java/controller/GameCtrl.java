@@ -245,6 +245,9 @@ public class GameCtrl extends Parent {
                     gameScene.playInformation("Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
                     audioCtrl.playEliminateSound();
                     scoreLabel.addScore(combo);
+                    if(linkyMap.isComplete()){
+                        showWinScene();
+                    }
                 }
             }
         }
@@ -255,6 +258,9 @@ public class GameCtrl extends Parent {
 
     public void timeUp() {
         sceneCtrl.setScene(new GameoverScene(this));
+    }
+    public void showWinScene(){
+        sceneCtrl.setScene(new WinScene(this));
     }
 
 
