@@ -50,6 +50,7 @@ public class FileGameSaveDao implements GameSaveDao {
             throw new RuntimeException("保存配置文件失败："+e.getMessage(),e);
         }
     }
+
     @Override
     public Properties loadConfig(){
         Properties config = new Properties();
@@ -66,7 +67,6 @@ public class FileGameSaveDao implements GameSaveDao {
         }
         return config;
     }
-
 
     @Override
     public void saveMap(MapSaveData mapData,int loadNumber){

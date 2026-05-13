@@ -1,54 +1,52 @@
 package model.entity;
 
+import java.util.ArrayList;
+
 public class MapSaveData {
-    private int[][] easyMap;
-    private int[][] hardMap;
+    private ArrayList<int[][]> map;
     private boolean isPair;
-    private int easyScore, hardScore;
+    private int[] score = new int[2];
+    private int[] remainTime = {180,300};
     private int loadNumber;
 
     public MapSaveData(){}
 
     public MapSaveData(int loadNumber){
         this.loadNumber = loadNumber;
+        map = new ArrayList<>();
+        map.add(new int[0][0]);
+        map.add(new int[0][0]);
     }
 
     public MapSaveData(int[][] easyMap, int[][] hardMap, boolean isPair, int easyScore, int hardScore, int loadNumber)
     {
-        this.easyMap = easyMap;
-        this.hardMap = hardMap;
+        map.add(easyMap);
+        map.add(hardMap);
         this.isPair = isPair;
-        this.easyScore = easyScore;
-        this.hardScore = hardScore;
+        score[0] = easyScore;
+        score[1] = hardScore;
         this.loadNumber = loadNumber;
     }
-    public int[][] getEasyMap(){return easyMap;}
-    public void setEasyMap(int[][] easyMap) {
-        this.easyMap = easyMap;
+    public int[][] getMap(int mode){
+        return map.get(mode);
     }
-    public int[][] getHardMap() {
-        return hardMap;
+    public void setMap(int mode, int[][] mp){
+        map.set(mode,mp);
     }
-    public void setHardMap(int[][] hardMap) {
-        this.hardMap = hardMap;
-    }
-    public int getEasyScore() {
-        return easyScore;
-    }
-    public int getHardScore() {
-        return hardScore;
+    public int getScore(int mode) {
+        return score[mode];
     }
     public boolean getIsPair() {
         return isPair;
     }
-    public void setEasyScore(int easyScore) {
-        this.easyScore = easyScore;
-    }
-    public void setHardScore(int hardScore) {
-        this.hardScore = hardScore;
+    public void setScore(int mode, int score) {
+        this.score[mode] = score;
     }
     public void setIsPair(boolean isPair) {
         this.isPair = isPair;
     }
-
+    public void setRemainTime(int mode, int remainTime){
+        this.remainTime[mode] = remainTime;
+    }
+    public int getRemainTime(int mode){return remainTime[mode];}
 }

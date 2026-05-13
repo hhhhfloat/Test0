@@ -2,7 +2,6 @@ package controller;
 
 import dao.GameSaveDao;
 import dao.UserDao;
-import dao.impl.FileUserDao;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -25,7 +24,6 @@ import view.game_nodes.Labels.ScoreLabel;
 import view.game_nodes.Labels.TimeLabel;
 import view.scenes.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -113,12 +111,10 @@ public class GameCtrl {
         loadNumber = 1;
         showLevelScene();
     }
-
     public void handleLoad2() {
         loadNumber = 2;
         showLevelScene();
     }
-
     public void handleLoad3() {
         loadNumber = 3;
         showLevelScene();
@@ -132,7 +128,6 @@ public class GameCtrl {
         mode = 0;
         showNewGameScene();
     }
-
     public void handleDifficult() {
         mode = 1;
         showNewGameScene();
@@ -176,20 +171,17 @@ public class GameCtrl {
 
     /// 找不到了
     public void handleSave() {
+        // save map
         MapSaveData data = new MapSaveData(loadNumber);
-        if(linkyMap.getMapType()==1){
-            data.setHardMap(linkyMap.getMap());
-            data.setIsPair(linkyMap.getIsPair()==2);
-        }
-        else {
-            data.setIsPair(linkyMap.getIsPair()==2);
-            data.setEasyMap(linkyMap.copyMap());
-        }
+        data.setMap(mode,linkyMap.getMap());
+        data.setScore(mode, scoreLabel.getScore());
+        data.setRemainTime(mode,timeLabel.getRemainingTime());
         gameSaveDao.saveMap(data,loadNumber);
-
+        // 设置config
         Properties config = new Properties();
-        config.setProperty("volumn",String.valueOf(123));
+        config.setProperty("volumn",String.valueOf(audioCtrl.getVolume()));
         gameSaveDao.saveConfig(config);
+
         System.out.println("Game Saved!");
     }
 
@@ -212,38 +204,43 @@ public class GameCtrl {
 
     public void showLevelScene() { sceneCtrl.setScene(new LevelScene(this)); }
 
-    private void setLinkyMap(int row, int col, int mode, boolean isPair) {
-        MapSaveData maps = gameSaveDao.loadMaps(loadNumber);
-        if(maps == null){
-            linkyMap = new LinkyMap(row, col, mode, isPair);
-            System.out.println("Default map applied");
-        }
-        else if(mode == 1 && maps.getHardMap()!=null){
+    private void setLinkyMap(MapSaveData maps) {
+        int row = 12,col = 12;
+        boolean isPair = false;
+        if(maps.getMap(mode).length==row&&maps.getMap(mode)[0].length==col){
             System.out.println("Map save loaded");
-            linkyMap = new LinkyMap(row, col, maps.getHardMap());
+            linkyMap = new LinkyMap(row, col, maps.getMap(mode));
         }
-        else if (mode == 0 && maps.getEasyMap()!=null) {
-            linkyMap = new LinkyMap(row, col, maps.getEasyMap());
-            System.out.println("Map save loaded");
-        }else {
+        else {
             System.out.println("Default map applied for this mode");
             linkyMap = new LinkyMap(row, col, mode, isPair);
         }
-
-        board = new Board(row, col, 50, linkyMap, this);
     }
 
     public void showNewGameScene() {
-        if(mode == 0){
-            timeLabel = new TimeLabel(180, this);
-            setLinkyMap(12, 12, 0, false);
+        int row = 12,col = 12;
+        boolean isPair = false;
+        MapSaveData maps = gameSaveDao.loadMaps(loadNumber);
+        Properties config = gameSaveDao.loadConfig();
+        // load or reset info
+        if(maps != null && config != null)
+        {
+            setLinkyMap(maps);
+            System.out.println("map loaded");
+            timeLabel = new TimeLabel(maps.getRemainTime(mode), this);
+            audioCtrl.setVolume(50.0);
             timeLabel.start();
-        } else {
-            timeLabel = new TimeLabel(300, this);
-            setLinkyMap(12, 12, 1, false);
+            scoreLabel = new ScoreLabel(maps.getScore(mode));
+        }
+        else{
+            linkyMap = new LinkyMap(row, col, mode, isPair);
+            System.out.println("Default map applied");
+            audioCtrl.setVolume(50.0);
+            timeLabel = new TimeLabel((mode == 0) ? 180 : 300, this);
+            scoreLabel = new ScoreLabel();
             timeLabel.start();
         }
-        scoreLabel = new ScoreLabel();
+        board = new Board(row, col, 50, linkyMap, this);
         progressLabel = new ProgressLabel();
         gameScene = new GameScene(board, timeLabel, scoreLabel, progressLabel,this);
         sceneCtrl.setScene(gameScene);

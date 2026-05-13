@@ -4,4 +4,5 @@ public interface TimeLabelInterface {
     void start();
     void pauseTime();
     void continueTime();
+    int getRemainingTime();
 }

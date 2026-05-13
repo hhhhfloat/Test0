@@ -10,6 +10,15 @@ public class ScoreLabel extends Label implements ScoreLabelInterface {
         super();
         setText("Score: " + score);
     }
+    public ScoreLabel(int score){
+        super();
+        this.score = score;
+        setText("Score: "+score);
+    }
+    public void setScore(int score){
+        this.score = score;
+        setText("Score: " + score);
+    }
 
     @Override
     public void addScore(int combo) {

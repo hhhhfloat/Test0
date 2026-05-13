@@ -18,6 +18,10 @@ public class TimeLabel extends Label implements TimeLabelInterface {
         setTime(remainingTime);
     }
 
+    public int getRemainingTime() {
+        return remainingTime;
+    }
+
     @Override
     public void start() {
         timeline = new Timeline(

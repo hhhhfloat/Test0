@@ -10,10 +10,19 @@ public class AudioCtrl {
     private Media clickSound = new Media(getPath("src/main/resources/Audio/click.mp3"));
     private Media eliminateSound = new Media(getPath("src/main/resources/Audio/eliminate.mp3"));
 
-    public AudioCtrl() {
+    private double volume;
 
+    public AudioCtrl(){
+        volume = 50.0;
     }
-    private int volume;
+    public AudioCtrl(double volumn) {
+        this.volume = volumn;
+    }
+
+    public double getVolume() {
+        return volume;
+    }
+
     public void playBgMusic() {
         MediaPlayer mediaPlayer = new MediaPlayer(bgMusic);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
