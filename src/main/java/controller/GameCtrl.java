@@ -47,7 +47,7 @@ public class GameCtrl {
     private CellNode selectedCell;
     private int mode;
     private int combo = 0;
-    private int loadNumber;
+    private int loadNumber = 0;
 
     public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl, AudioCtrl audioCtrl, GameSaveDao gameSaveDao) {
         this.userDao = userDao;
@@ -65,13 +65,24 @@ public class GameCtrl {
         }
     }
 
-    public void handleStart() { showLoadScene(); }
+    public void handleStart() {
+        if(account!=null)
+        {
+            showLoadScene();
+        }
+        else{
+            loadNumber = 0;
+            handleLoad0();
+        }
+    }
 
     public void handleLogout() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
         alert.setHeaderText("Are you sure you want to logout?");
         alert.showAndWait();
+        account = null;
+        loadNumber = 0;
         showLoginScene();
     }
 
@@ -105,6 +116,11 @@ public class GameCtrl {
                 Platform.exit();
             }
         });
+    }
+
+    public void handleLoad0(){
+        loadNumber = 0;
+        showLevelScene();
     }
 
     public void handleLoad1() {
@@ -185,7 +201,11 @@ public class GameCtrl {
         System.out.println("Game Saved!");
     }
 
-    public void handleExitToMenu() { showLoginScene(); }
+    public void handleExitToMenu() {
+        account = null;
+        loadNumber = 0;
+        showLoginScene();
+    }
 
     public void handleRestart() {
         //

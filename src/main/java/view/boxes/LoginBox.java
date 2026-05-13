@@ -31,7 +31,7 @@ public class LoginBox extends VBox {
         HBox hBox = new HBox(80, cancelBtn, confirmBtn);
 
         Label messageLabel;
-        messageLabel = new Label("Login Your Account");
+        messageLabel = new Label("Login");
 
         getChildren().addAll(messageLabel, usernameField, passwordField, hBox, registerBtn);
     }

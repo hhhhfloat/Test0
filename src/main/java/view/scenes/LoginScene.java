@@ -7,7 +7,7 @@ import view.boxes.LoginBox;
 
 public class LoginScene extends Scene {
     public LoginScene(LoginCtrl loginCtrl) {
-        super(createRoot(loginCtrl), 800, 600);
+        super(createRoot(loginCtrl), 800, 800);
         getStylesheets().add(getClass().getResource("/css/loginSceneStyle.css").toExternalForm());
     }
 

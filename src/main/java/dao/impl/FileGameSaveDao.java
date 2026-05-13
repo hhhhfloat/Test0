@@ -70,8 +70,8 @@ public class FileGameSaveDao implements GameSaveDao {
 
     @Override
     public void saveMap(MapSaveData mapData,int loadNumber){
-        if(currentUser == null || saveRoot == null){
-            throw new IllegalStateException("Undefined user");
+        if(currentUser == null || saveRoot == null || loadNumber==0){
+            return;
         }
         Path mapPath = saveRoot.resolve("MapSave"+loadNumber+".json");
         try(FileWriter writer = new FileWriter(mapPath.toFile())){
@@ -82,7 +82,7 @@ public class FileGameSaveDao implements GameSaveDao {
     }
     @Override
     public MapSaveData loadMaps(int loadNumber) {
-        if(currentUser == null || saveRoot == null){
+        if(currentUser == null || saveRoot == null || loadNumber == 0){
             return null;
         }
         Path mapPath = saveRoot.resolve("MapSave"+loadNumber+ ".json");

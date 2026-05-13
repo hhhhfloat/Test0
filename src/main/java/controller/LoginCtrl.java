@@ -78,7 +78,13 @@ public class LoginCtrl {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("Username's already used!");
             alert.showAndWait();
-        } else {
+        }
+        else if(username.length() > 1000){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("Please use a shorter name!\n***Shorten your name with \n&❂*…←…鳼№茡洟丗▦©∭");
+            alert.showAndWait();
+        }
+        else {
             userDao.createUser(username, password);
             Account account = userDao.findByUsername(username);
             showAccountScene(account);
