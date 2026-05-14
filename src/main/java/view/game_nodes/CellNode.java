@@ -18,12 +18,13 @@ public class CellNode extends StackPane {
     private int imgSet;
     private final ImageView image;
     private static HashMap<Integer, String> imgSets = new HashMap<>();
+    private boolean isBomb = false;
 
     private final static String[][] images = {
             {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"},
-            {"Enchanted Book","Fishing Rod","Leather Boots","Name Tag","Nautilus Shell","Pufferfish","Raw Cod","Raw Salmon","Shaddle","Suspicious Stew","Tropical Fish","Water Bottle"}};
+            {"Enchanted Book", "Fishing Rod", "Leather Boots", "Name Tag", "Nautilus Shell", "Pufferfish", "Raw Cod", "Raw Salmon", "Shaddle", "Suspicious Stew", "Tropical Fish", "Water Bottle"}};
 
-    public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl,int imgSet) {
+    public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl, int imgSet) {
         initHashSet();
 
         crd = new Crd(row, col);
@@ -40,27 +41,35 @@ public class CellNode extends StackPane {
         getChildren().add(image);
     }
 
-    public static void initHashSet(){
-        imgSets.put(0,"BrowSers");
-        imgSets.put(1,"MCFishing");
+    public static void initHashSet() {
+        imgSets.put(0, "Browsers");
+        imgSets.put(1, "MCFishing");
     }
 
     public Crd getCrd() {
         return crd;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public int getType() { return type; }
+
+    public void setBomb(boolean bomb) {
+        isBomb = bomb;
+        setHighlight(bomb);
         updateImage();
     }
 
     private void updateImage() {
+        Path directorpath;
         if (type == -1) {
             image.setImage(null);
         } else if (type < images[imgSet].length) {
-            Path directorpath = Paths.get("src","main","resources","Sprites","Block",imgSets.get(imgSet),images[imgSet][type]+".png");
-            //String path = "/Sprites/Block/Browsers/" + images[imgSet][type] + ".png";
-            try (InputStream is = Files.newInputStream(directorpath)){
+            if(isBomb) {
+                directorpath = Paths.get("src", "main", "resources", "Sprites", "Block", "TNT" + ".png");
+            } else {
+                directorpath = Paths.get("src", "main", "resources", "Sprites", "Block", imgSets.get(imgSet), images[imgSet][type] + ".png");
+            }
+
+            try (InputStream is = Files.newInputStream(directorpath)) {
                 Image img = new Image(is);
                 image.setImage(img);
             } catch (Exception e) {
@@ -68,6 +77,7 @@ public class CellNode extends StackPane {
             }
         }
     }
+
 
     public void setHighlight(boolean highlight) {
         if (highlight) {

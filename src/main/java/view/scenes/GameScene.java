@@ -27,10 +27,14 @@ public class GameScene extends Scene{
 
         StackPane root = new StackPane();
         BorderPane underPane = new BorderPane((Node) board);
+        Label bombs = new Label();
         Button pauseButton = new Button("Pause");
+        Button bombButton = new Button("Bomb");
         pauseButton.setOnMouseClicked(event -> gameCtrl.handlePause());
+        bombButton.setOnMouseClicked(event -> gameCtrl.handleBombMode());
         HBox hBox = new HBox(10, (Node)timeLabel, (Node)scoreLabel);
         underPane.setLeft(pauseButton);
+        underPane.setRight(bombButton);
         underPane.setTop(hBox);
 
         overlayPane = new StackPane();

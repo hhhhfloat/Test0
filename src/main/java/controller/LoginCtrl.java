@@ -15,20 +15,30 @@ import java.util.Properties;
 
 public class LoginCtrl {
     private final UserDao userDao;
+
+    private final AudioCtrl audioCtrl;
     private final GameCtrl gameCtrl;
     private final SceneCtrl sceneCtrl;
 
-    public LoginCtrl(UserDao userDao, SceneCtrl sceneCtrl, GameCtrl gameCtrl) {
+    public LoginCtrl(UserDao userDao, AudioCtrl audioCtrl, SceneCtrl sceneCtrl, GameCtrl gameCtrl) {
         this.userDao = userDao;
+        this.audioCtrl = audioCtrl;
         this.sceneCtrl = sceneCtrl;
         this.gameCtrl = gameCtrl;
     }
 
-    public void handleLogin() { showLoginScene(); }
+    public void handleLogin() {
+        showLoginScene();
+        audioCtrl.playButtonSound();
+    }
 
-    public void handleLoginCancel() { showInitialScene(); }
+    public void handleLoginCancel() {
+        showInitialScene();
+        audioCtrl.playButtonSound();
+    }
 
     public void handleLoginConfirm(String username, String password) {
+        audioCtrl.playButtonSound();
         if (username.trim().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
@@ -55,9 +65,13 @@ public class LoginCtrl {
         }
     }
 
-    public void handleTouristMode() { showAccountScene(); }
+    public void handleTouristMode() {
+        audioCtrl.playButtonSound();
+        showAccountScene();
+    }
 
     public void handleExit() {
+        audioCtrl.playButtonSound();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
         alert.setHeaderText("Are you sure you want to exit?");
@@ -69,11 +83,18 @@ public class LoginCtrl {
         });
     }
 
-    public void handleRegister() { showRegisterScene(); }
+    public void handleRegister() {
+        audioCtrl.playButtonSound();
+        showRegisterScene();
+    }
 
-    public void handleRegisterCancel() { sceneCtrl.setScene(new LoginScene(this)); }
+    public void handleRegisterCancel() {
+        audioCtrl.playButtonSound();
+        sceneCtrl.setScene(new LoginScene(this));
+    }
 
     public void handleRegisterConfirm(String username, String password) {
+        audioCtrl.playButtonSound();
         if(userDao.exist(username)) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("Username's already used!");

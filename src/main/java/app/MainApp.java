@@ -20,7 +20,7 @@ public class MainApp extends Application {
         SceneCtrl sceneCtrl = new SceneCtrl(stage);
         AudioCtrl audioCtrl = new AudioCtrl();
         GameCtrl gameCtrl = new GameCtrl(userDao, sceneCtrl, audioCtrl, gameSaveDao);
-        LoginCtrl loginCtrl = new LoginCtrl(userDao, sceneCtrl, gameCtrl);
+        LoginCtrl loginCtrl = new LoginCtrl(userDao, audioCtrl, sceneCtrl, gameCtrl);
         // 行动
         audioCtrl.playBgMusic();
         loginCtrl.showInitialScene();
