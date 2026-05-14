@@ -12,8 +12,8 @@ public class AudioCtrl {
     public AudioCtrl(){
         volume = 50.0;
     }
-    public AudioCtrl(double volumn) {
-        this.volume = volumn;
+    public AudioCtrl(double volume) {
+        this.volume = volume;
     }
 
     public double getVolume() {

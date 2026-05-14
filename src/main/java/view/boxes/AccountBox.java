@@ -20,7 +20,7 @@ public class AccountBox extends VBox {
         getChildren().addAll(welcomeLabel, startBtn, logoutBtn, leaderboardBtn, exitBtn);
     }
 
-    public AccountBox(Account account, GameCtrl gameCtrl) {
+    public AccountBox(GameCtrl gameCtrl, Account account) {
         super(15);
         welcomeLabel.setText("Welcome, " + account.getUserName());
         setAction(gameCtrl);

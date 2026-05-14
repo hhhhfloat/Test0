@@ -150,7 +150,7 @@ public class GameCtrl extends Parent {
 
     public void handleBack() {
         audioCtrl.playButtonSound();
-        sceneCtrl.setScene(new AccountScene(account, this));
+        showAccountScene();
     }
 
     public void handleEasy() {
@@ -309,6 +309,9 @@ public class GameCtrl extends Parent {
         sceneCtrl.setScene(new WinScene(this));
     }
 
+    public void showAccountScene() {
+        sceneCtrl.setScene(new AccountScene(account, this));
+    }
 
     private void setLinkyMap(MapSaveData maps) {
         int row = 12,col = 12;

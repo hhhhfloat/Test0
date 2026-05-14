@@ -5,10 +5,15 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import view.boxes.PauseBox;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class PauseScene extends Scene{
     public PauseScene(GameCtrl gameCtrl) {
         super(createRoot(gameCtrl), 800, 800);
-        getStylesheets().add(getClass().getResource("/css/pauseSceneStyle.css").toExternalForm());
+        Path cssPath = Paths.get("src", "main", "resources", "css", "SceneStyle", "pauseSceneStyle.css");
+        String cssUri = cssPath.toUri().toString();
+        getStylesheets().add(cssUri);
     }
 
     public static BorderPane createRoot(GameCtrl gameCtrl) {

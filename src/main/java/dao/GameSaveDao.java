@@ -9,10 +9,10 @@ public interface GameSaveDao {
     // 初始化用的设置用户名
     void setCurrentUser(String userName);
 
-
     // 保存地图
     void saveMap(MapSaveData mapData,int loadNumber);
     MapSaveData loadMaps(int loadNumber);
+
     // 保存Config
     Properties loadConfig();
     void saveConfig(Properties config);

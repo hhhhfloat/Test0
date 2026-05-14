@@ -118,7 +118,7 @@ public class LoginCtrl {
 
     public void showRegisterScene() { sceneCtrl.setScene(new RegisterScene(this)); }
 
-    public void showAccountScene() { sceneCtrl.setScene(new AccountScene(gameCtrl)); }
+    public void showAccountScene() { gameCtrl.showAccountScene(); }
 
     public void showAccountScene(Account account) {
         gameCtrl.setAccount(account);
