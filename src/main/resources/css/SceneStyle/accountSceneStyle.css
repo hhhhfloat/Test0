@@ -11,12 +11,17 @@ AccountBox {
     -fx-pref-width: 200px;
     -fx-pref-height: 40px;
 
-    -fx-background-radius: 4px;
+    /* 圆角与边框统一 */
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: transparent;
+    -fx-border-width: 4px;
+
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
-    -fx-font-size: 15px;
+    -fx-font-size: 20px;
     -fx-font-style: italic;
     -fx-underline: false;
     -fx-letter-spacing: 10px;
@@ -25,17 +30,20 @@ AccountBox {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 
     -fx-cursor: hand;
-    -fx-transition: all 0.3s ease;
 }
 
 .button:hover {
-    -fx-background-color: rgba(50, 150, 240, 0.8);
+    -fx-background-color: rgba(50, 215, 193, 0.8);
+    -fx-border-color: rgba(30, 160, 140, 0.95);
+    -fx-border-width: 4.5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
 }
 
 .button:pressed {
-    -fx-background-color: rgba(70, 170, 250, 0.8);
+    -fx-background-color: rgba(70, 170, 220, 0.8);
+    -fx-border-color: rgba(30, 100, 140, 0.9);
     -fx-scale-x: 0.97;
     -fx-scale-y: 0.97;
     -fx-translate-y: 1px;

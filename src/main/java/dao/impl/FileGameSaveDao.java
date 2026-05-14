@@ -47,9 +47,10 @@ public class FileGameSaveDao implements GameSaveDao {
                 config.store(out, "Game Config for " + currentUser);
             }
         }catch(Exception e) {
-            throw new RuntimeException("保存配置文件失败："+e.getMessage(),e);
+
         }
     }
+
     @Override
     public Properties loadConfig(){
         Properties config = new Properties();
@@ -67,11 +68,10 @@ public class FileGameSaveDao implements GameSaveDao {
         return config;
     }
 
-
     @Override
     public void saveMap(MapSaveData mapData,int loadNumber){
-        if(currentUser == null || saveRoot == null){
-            throw new IllegalStateException("Undefined user");
+        if(currentUser == null || saveRoot == null || loadNumber==0){
+            return;
         }
         Path mapPath = saveRoot.resolve("MapSave"+loadNumber+".json");
         try(FileWriter writer = new FileWriter(mapPath.toFile())){
@@ -82,7 +82,7 @@ public class FileGameSaveDao implements GameSaveDao {
     }
     @Override
     public MapSaveData loadMaps(int loadNumber) {
-        if(currentUser == null || saveRoot == null){
+        if(currentUser == null || saveRoot == null || loadNumber == 0){
             return null;
         }
         Path mapPath = saveRoot.resolve("MapSave"+loadNumber+ ".json");

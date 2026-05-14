@@ -7,8 +7,8 @@ import view.boxes.RegisterBox;
 
 public class RegisterScene extends Scene{
     public RegisterScene(LoginCtrl loginCtrl) {
-        super(createRoot(loginCtrl), 800, 600);
-        getStylesheets().add(getClass().getResource("/css/SceneStyle/registerSceneStyle.css").toExternalForm());
+        super(createRoot(loginCtrl), 800, 800);
+        getStylesheets().add(getClass().getResource("/css/registerSceneStyle.css").toExternalForm());
     }
     public static BorderPane createRoot(LoginCtrl loginCtrl) {
         RegisterBox registerBox = new RegisterBox(loginCtrl);

@@ -30,7 +30,7 @@ public class RegisterBox extends VBox{
         HBox hBox = new HBox(80, cancelBtn, confirmBtn);
 
         Label messageLabel;
-        messageLabel = new Label("Register Your Account");
+        messageLabel = new Label("Register");
 
         getChildren().addAll(messageLabel, usernameField, passwordField, hBox);
     }

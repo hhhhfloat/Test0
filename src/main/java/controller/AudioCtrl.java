@@ -6,16 +6,25 @@ import javafx.scene.media.MediaPlayer;
 import java.nio.file.Paths;
 
 public class AudioCtrl {
+
+    private double volume;
+
+    public AudioCtrl(){
+        volume = 50.0;
+    }
+    public AudioCtrl(double volumn) {
+        this.volume = volumn;
+    }
+
+    public double getVolume() {
+        return volume;
+    }
+
     private Media bgMusic = getMedia("bgMusic");
     private Media buttonSound = getMedia("button");
     private Media clickSound = getMedia("click");
     private Media eliminateSound = getMedia("eliminate");
     private Media bombSound = getMedia("TNT");
-    private int volume;
-
-    public AudioCtrl() {
-
-    }
 
     public void playBgMusic() {
         MediaPlayer mediaPlayer = new MediaPlayer(bgMusic);
