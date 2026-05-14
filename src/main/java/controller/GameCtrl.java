@@ -246,7 +246,7 @@ public class GameCtrl extends Parent {
                 selectedCell = null;
             } else {
                 ArrayList<Crd> route = linkyMap.pathFindByPoint(selectedCell.getCrd(), cellNode.getCrd());
-                if (route.isEmpty()) {
+                if (!bombMode && route.isEmpty()) {
                     selectedCell.setHighlight(false);
                     cellNode.setHighlight(true);
                     selectedCell = cellNode;
