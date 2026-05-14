@@ -22,7 +22,7 @@ public class AccountBox extends VBox {
 
     public AccountBox(GameCtrl gameCtrl, Account account) {
         super(15);
-        welcomeLabel.setText("Welcome, " + account.getUserName());
+        welcomeLabel.setText(account == null?"Welcome":("Welcome, " + account.getUserName()));
         setAction(gameCtrl);
         getChildren().addAll(welcomeLabel, startBtn, logoutBtn, leaderboardBtn, exitBtn);
     }
