@@ -290,7 +290,7 @@ public class GameCtrl extends Parent {
     public void handleBombMode() {
         audioCtrl.playButtonSound();
         if(selectedCell != null) {
-            selectedCell.setHighlight(false);
+            selectedCell.setBomb(false);
             selectedCell = null;
         }
         bombMode = true;
