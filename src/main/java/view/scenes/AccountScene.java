@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 public class AccountScene  extends Scene{
     public AccountScene(Account account, GameCtrl gameCtrl) {
         super(createRoot(account, gameCtrl), 800, 800);
-        Path cssPath = Paths.get("src", "main", "resources", "css", "SceneStyle", "initialSceneStyle.css");
+        Path cssPath = Paths.get("src", "main", "resources", "css", "SceneStyle", "accountSceneStyle.css");
         String cssUri = cssPath.toUri().toString();
         getStylesheets().add(cssUri);
     }
