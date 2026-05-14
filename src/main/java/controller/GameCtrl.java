@@ -164,11 +164,7 @@ public class GameCtrl extends Parent {
         mode = 1;
         showNewGameScene();
     }
-    public void handlePause() {
-        sceneCtrl.setScene(new PauseScene(this));
-        timeLabel.pauseTime();
-    }
-    /// 游戏内暂停按钮功能
+
     public void handleSave() {
         // 游客模式特殊处理
         if(loadNumber == 0){
@@ -206,7 +202,7 @@ public class GameCtrl extends Parent {
 
     /// Scene转换
     public void showLoadScene() { sceneCtrl.setScene(new LoadScene(this)); }
-    public void showLoginScene() { sceneCtrl.setScene(new LoginScene(new LoginCtrl(userDao, sceneCtrl, this))); }
+    public void showLoginScene() { sceneCtrl.setScene(new LoginScene(new LoginCtrl(userDao, audioCtrl, sceneCtrl, this))); }
     public void showLevelScene() { sceneCtrl.setScene(new LevelScene(this)); }
     public void showNewGameScene() {
         int row = 12,col = 12;
@@ -306,23 +302,6 @@ public class GameCtrl extends Parent {
         timeLabel.pauseTime();
     }
 
-    public void handleSave() {
-        MapSaveData data = new MapSaveData(loadNumber);
-        if (linkyMap.getMapType() == 1) {
-            data.setHardMap(linkyMap.getMap());
-            data.setIsPair(linkyMap.getIsPair() == 2);
-        } else {
-            data.setIsPair(linkyMap.getIsPair() == 2);
-            data.setEasyMap(linkyMap.copyMap());
-        }
-        gameSaveDao.saveMap(data, loadNumber);
-
-        Properties config = new Properties();
-        config.setProperty("volumn", String.valueOf(123));
-        gameSaveDao.saveConfig(config);
-        System.out.println("Game Saved!");
-    }
-
     public void timeUp() {
         sceneCtrl.setScene(new GameoverScene(this));
     }
@@ -342,21 +321,5 @@ public class GameCtrl extends Parent {
             System.out.println("Default map applied for this mode");
             linkyMap = new LinkyMap(row, col, mode, isPair);
         }
-    }
-
-    public void showNewGameScene() {
-        if(mode == 0){
-            timeLabel = new TimeLabel(180, this);
-            setLinkyMap(12, 12, 0, false);
-            timeLabel.start();
-        } else {
-            timeLabel = new TimeLabel(300, this);
-            setLinkyMap(12, 12, 1, false);
-            timeLabel.start();
-        }
-        scoreLabel = new ScoreLabel();
-        progressLabel = new ProgressLabel();
-        gameScene = new GameScene(board, timeLabel, scoreLabel, progressLabel,this);
-        sceneCtrl.setScene(gameScene);
     }
 }
