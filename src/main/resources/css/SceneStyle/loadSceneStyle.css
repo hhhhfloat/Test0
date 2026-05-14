@@ -11,7 +11,12 @@ LoadBox {
     -fx-pref-width: 300px;
     -fx-pref-height: 60px;
 
-    -fx-background-radius: 5px;
+    /* 圆角与边框统一 */
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: transparent;
+    -fx-border-width: 4px;
+
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
@@ -19,11 +24,6 @@ LoadBox {
     -fx-font-size: 20px;
     -fx-font-style: italic;
 
-    /* 圆角匹配修复 */
-    -fx-background-radius: 10px;   /* 新增，与边框圆角一致 */
-    -fx-border-radius: 10px;
-    -fx-border-color: transparent;
-    -fx-border-width: 4px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
 }
 
