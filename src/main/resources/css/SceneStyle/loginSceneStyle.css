@@ -11,7 +11,7 @@ HBox {
     -fx-alignment: Center;
 }
 
-HBox Button {
+HBox > Button {
     -fx-pref-width: 100px;
     -fx-pref-height: 20px;
     -fx-background-color: rgba(50, 150, 200, 0.8);

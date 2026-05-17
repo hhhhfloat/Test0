@@ -50,8 +50,6 @@ public class CellNode extends StackPane {
         return crd;
     }
 
-    public int getType() { return type; }
-
     public void setBomb(boolean bomb) {
         isBomb = bomb;
         setHighlight(bomb);
@@ -78,7 +76,6 @@ public class CellNode extends StackPane {
         }
     }
 
-
     public void setHighlight(boolean highlight) {
         if (highlight) {
             getStyleClass().add("highlight");
@@ -94,5 +91,9 @@ public class CellNode extends StackPane {
         st.setToY(0);
         st.setOnFinished(e -> setVisible(false));
         st.play();
+    }
+
+    public String getType() {
+        return images[imgSet][type];
     }
 }

@@ -4,7 +4,7 @@
 }
 
 .highlight {
-    -fx-border-color: gold;
-    -fx-border-width: 3px;
+    -fx-border-color: grey;
+    -fx-border-width: 2px;
     -fx-box-sizing: border-box;
 }

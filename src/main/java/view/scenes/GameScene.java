@@ -12,33 +12,59 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import view.game_nodes.Board;
 import view.game_nodes.Interfaces.BoardInterface;
 import view.game_nodes.Interfaces.ProgressLabelInterface;
 import view.game_nodes.Interfaces.ScoreLabelInterface;
 import view.game_nodes.Interfaces.TimeLabelInterface;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class GameScene extends Scene{
     public static StackPane overlayPane;
     public GameScene(BoardInterface board, TimeLabelInterface timeLabel, ScoreLabelInterface scoreLabel, ProgressLabelInterface progressLabel, GameCtrl gameCtrl) {
         super(new BorderPane(createRoot(board, timeLabel, scoreLabel, progressLabel, gameCtrl)),800,800);
+        Path cssPath = Paths.get("src", "main", "resources", "css", "SceneStyle", "gameSceneStyle.css");
+        String cssUri = cssPath.toUri().toString();
+        getStylesheets().add(cssUri);
     }
 
-    private static Pane createRoot(BoardInterface board, TimeLabelInterface timeLabel, ScoreLabelInterface scoreLabel, ProgressLabelInterface progressLabel, GameCtrl gameCtrl) {
+    private static StackPane createRoot(BoardInterface board, TimeLabelInterface timeLabel, ScoreLabelInterface scoreLabel, ProgressLabelInterface progressLabel, GameCtrl gameCtrl) {
 
         StackPane root = new StackPane();
-        BorderPane underPane = new BorderPane((Node) board);
+        Pane underPane = new Pane();
+        underPane.getChildren().add((Node) board);
+        Board gameBoard = (Board) board;
+        gameBoard.setLayoutX(190);
+        gameBoard.setLayoutY(216);
+
         Label bombs = new Label();
-        Button pauseButton = new Button("Pause");
+        Button pauseButton = new Button();
+        pauseButton.getStyleClass().add("pausebutton");
         Button bombButton = new Button("Bomb");
         pauseButton.setOnMouseClicked(event -> gameCtrl.handlePause());
         bombButton.setOnMouseClicked(event -> gameCtrl.handleBombMode());
-        HBox hBox = new HBox(10, (Node)timeLabel, (Node)scoreLabel);
-        underPane.setLeft(pauseButton);
-        underPane.setRight(bombButton);
-        underPane.setTop(hBox);
+
+        Label timeLabelNode =  (Label) timeLabel;
+        Label scoreLabelNode = (Label) scoreLabel;
+        HBox hBox = new HBox(10,timeLabelNode,scoreLabelNode);
+        timeLabelNode.getStyleClass().add("game-label");
+        scoreLabelNode.getStyleClass().add("game-label");
+        underPane.getChildren().addAll(hBox, bombButton, pauseButton);
+
+        pauseButton.setLayoutX(10);
+        pauseButton.setLayoutY(10);
+
+        bombButton.setLayoutX(700);
+        bombButton.setLayoutY(150);
+
+        hBox.setLayoutX(200);
+        hBox.setLayoutY(20);
 
         overlayPane = new StackPane();
         overlayPane.setAlignment(Pos.CENTER);
+        overlayPane.setLayoutY(400);
         overlayPane.setMouseTransparent(true);
         root.getChildren().addAll(underPane, overlayPane);
 

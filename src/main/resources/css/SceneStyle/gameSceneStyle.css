@@ -1,0 +1,32 @@
+.root {
+    -fx-background-image: url('/Sprites/gamebg.png');
+    -fx-background-size: cover;
+}
+
+.game-label {
+    -fx-background-image: url('/Sprites/label-bg.jpg');
+    -fx-font-size: 40px;
+}
+
+.pausebutton {
+    -fx-background-image: url('/Sprites/pause.png');
+    -fx-background-size: cover;
+    -fx-background-color: rgba(0, 0, 0, 0);
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+}
+
+.pausebutton:hover {
+    -fx-cursor: hand;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 1px;
+}
+
+.pausebutton:pressed {
+    -fx-background-color: rgba(70, 170, 220, 0.8);
+    -fx-border-color: rgba(30, 100, 140, 0.9);
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 1px;
+}

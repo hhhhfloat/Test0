@@ -17,7 +17,7 @@ import view.game_nodes.Interfaces.BoardInterface;
 public class Board extends Pane implements BoardInterface {
     private final Pane lineLayer;
     private final double size;
-    private final double gap = 10;
+    private final double gap = 7;
 
     public Board(int row, int col, double size, LinkyMap linkyMap, GameCtrl gameCtrl) {
         Random r = new Random();

@@ -81,6 +81,7 @@ public class GameCtrl extends Parent {
             handleLoad0();
         }
     }
+
     public void handleLogout() {
         audioCtrl.playButtonSound();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -227,7 +228,7 @@ public class GameCtrl extends Parent {
             scoreLabel = new ScoreLabel();
             timeLabel.start();
         }
-        board = new Board(row, col, 50, linkyMap, this);
+        board = new Board(row, col, 30, linkyMap, this);
         progressLabel = new ProgressLabel();
         gameScene = new GameScene(board, timeLabel, scoreLabel, progressLabel,this);
         sceneCtrl.setScene(gameScene);
@@ -278,9 +279,9 @@ public class GameCtrl extends Parent {
             board.eliminate(cellNode1, cellNode2, route);
             audioCtrl.playEliminateSound();
         }
-        selectedCell = null;
         linkyMap.delNumMap(route);
-        gameScene.playInformation("Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
+        gameScene.playInformation("Eliminated:"+ selectedCell.getType()+"x2!\n"+"Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
+        selectedCell = null;
         scoreLabel.addScore(combo);
         if(linkyMap.isComplete()){
             showWinScene();
@@ -305,6 +306,7 @@ public class GameCtrl extends Parent {
     public void timeUp() {
         sceneCtrl.setScene(new GameoverScene(this));
     }
+
     public void showWinScene(){
         sceneCtrl.setScene(new WinScene(this));
     }
