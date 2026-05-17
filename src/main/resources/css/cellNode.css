@@ -4,7 +4,7 @@
 }
 
 .highlight {
-    -fx-border-color: grey;
+    -fx-border-color: yellow;
     -fx-border-width: 2px;
     -fx-box-sizing: border-box;
 }
