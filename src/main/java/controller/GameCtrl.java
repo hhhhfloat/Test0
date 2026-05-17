@@ -20,7 +20,7 @@ import view.game_nodes.Interfaces.BoardInterface;
 import view.game_nodes.Interfaces.ProgressLabelInterface;
 import view.game_nodes.Interfaces.ScoreLabelInterface;
 import view.game_nodes.Interfaces.TimeLabelInterface;
-import view.game_nodes.Labels.ProgressLabel;
+//import view.game_nodes.Labels.ProgressLabel;
 import view.game_nodes.Labels.ScoreLabel;
 import view.game_nodes.Labels.TimeLabel;
 import view.scenes.*;
@@ -229,7 +229,7 @@ public class GameCtrl extends Parent {
             timeLabel.start();
         }
         board = new Board(row, col, 30, linkyMap, this);
-        progressLabel = new ProgressLabel();
+        //progressLabel = new ProgressLabel();
         gameScene = new GameScene(board, timeLabel, scoreLabel, progressLabel,this);
         sceneCtrl.setScene(gameScene);
     }
@@ -308,7 +308,7 @@ public class GameCtrl extends Parent {
     }
 
     public void showWinScene(){
-        sceneCtrl.setScene(new WinScene(this));
+        sceneCtrl.setScene(new WinScene(this, scoreLabel, timeLabel));
     }
 
     public void showAccountScene() {

@@ -11,15 +11,21 @@ public class TimeLabel extends Label implements TimeLabelInterface {
     private Timeline timeline;
     private int remainingTime;
     private final GameCtrl gameCtrl;
+    private final int totalTime;
     public TimeLabel(int time, GameCtrl gameCtrl) {
         super();
         remainingTime = time;
+        totalTime = time;
         this.gameCtrl = gameCtrl;
         setTime(remainingTime);
     }
 
     public int getRemainingTime() {
         return remainingTime;
+    }
+
+    public int getTime() {
+        return totalTime - remainingTime;
     }
 
     @Override
