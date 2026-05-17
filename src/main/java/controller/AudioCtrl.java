@@ -20,7 +20,7 @@ public class AudioCtrl {
         return volume;
     }
 
-    private Media bgMusic = getMedia("bgMusic");
+    private Media bgMusic = getMedia("bgmusic_Cello");
     private Media buttonSound = getMedia("button");
     private Media clickSound = getMedia("click");
     private Media eliminateSound = getMedia("eliminate");
