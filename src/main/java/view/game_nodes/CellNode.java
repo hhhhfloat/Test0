@@ -22,7 +22,13 @@ public class CellNode extends StackPane {
 
     private final static String[][] images = {
             {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"},
-            {"Enchanted Book", "Fishing Rod", "Leather Boots", "Name Tag", "Nautilus Shell", "Pufferfish", "Raw Cod", "Raw Salmon", "Shaddle", "Suspicious Stew", "Tropical Fish", "Water Bottle"}};
+            {"Enchanted Book", "Fishing Rod", "Leather Boots", "Name Tag", "Nautilus Shell", "Pufferfish", "Raw Cod", "Raw Salmon", "Shaddle", "Suspicious Stew", "Tropical Fish", "Water Bottle"}
+    };
+    public static void initHashSet() {
+        imgSets.put(0, "Browsers");
+        imgSets.put(1, "MCFishing");
+    }
+
 
     public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl, int imgSet) {
         initHashSet();
@@ -32,6 +38,8 @@ public class CellNode extends StackPane {
         this.imgSet = imgSet;
 
         getStylesheets().add(getClass().getResource("/css/cellNode.css").toExternalForm());
+
+
         setPrefSize(size, size);
         setOnMouseClicked(event -> gameCtrl.handleCellClick(this));
         image = new ImageView();
@@ -41,10 +49,6 @@ public class CellNode extends StackPane {
         getChildren().add(image);
     }
 
-    public static void initHashSet() {
-        imgSets.put(0, "Browsers");
-        imgSets.put(1, "MCFishing");
-    }
 
     public Crd getCrd() {
         return crd;

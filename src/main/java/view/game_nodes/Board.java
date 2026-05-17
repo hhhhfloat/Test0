@@ -7,6 +7,9 @@ import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import model.entity.Crd;
 import model.entity.LinkyMap;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,13 +20,15 @@ import view.game_nodes.Interfaces.BoardInterface;
 public class Board extends Pane implements BoardInterface {
     private final Pane lineLayer;
     private final double size;
-    private final double gap = 7;
+    private final double gap = 7.7;
 
     public Board(int row, int col, double size, LinkyMap linkyMap, GameCtrl gameCtrl) {
         Random r = new Random();
         this.size = size;
 
-        getStylesheets().add(getClass().getResource("/css/board.css").toExternalForm());
+        Path cssPath = Paths.get("src", "main", "resources", "css", "board.css");
+        String cssUri = cssPath.toUri().toString();
+        getStylesheets().add(cssUri);
 
         lineLayer = new Pane();
         lineLayer.setMouseTransparent(true);

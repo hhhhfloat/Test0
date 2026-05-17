@@ -6,6 +6,7 @@
 .game-label {
     -fx-background-image: url('/Sprites/label-bg.jpg');
     -fx-font-size: 40px;
+    -fx-padding: 0 10px 0 10px;
 }
 
 .pausebutton {

@@ -36,8 +36,8 @@ public class GameScene extends Scene{
         Pane underPane = new Pane();
         underPane.getChildren().add((Node) board);
         Board gameBoard = (Board) board;
-        gameBoard.setLayoutX(190);
-        gameBoard.setLayoutY(216);
+        gameBoard.setLayoutX(136);
+        gameBoard.setLayoutY(150);
 
         Label bombs = new Label();
         Button pauseButton = new Button();

@@ -228,7 +228,7 @@ public class GameCtrl extends Parent {
             scoreLabel = new ScoreLabel();
             timeLabel.start();
         }
-        board = new Board(row, col, 30, linkyMap, this);
+        board = new Board(row, col, 38, linkyMap, this);
         progressLabel = new ProgressLabel();
         gameScene = new GameScene(board, timeLabel, scoreLabel, progressLabel,this);
         sceneCtrl.setScene(gameScene);
