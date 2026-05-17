@@ -8,6 +8,7 @@ VBox {
 }
 
 .state {
+    -fx-padding:10px;
     -fx-text-fill: Black;
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
     -fx-font-size: 100px;
@@ -23,7 +24,7 @@ VBox {
 }
 
 .button {
-    -fx-pref-width: 100px;
+    -fx-pref-width: 120px;
     -fx-pref-height: 20px;
 
     -fx-background-color: rgba(50, 150, 200, 0.8);

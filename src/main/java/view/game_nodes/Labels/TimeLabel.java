@@ -56,6 +56,6 @@ public class TimeLabel extends Label implements TimeLabelInterface {
     }
 
     private void setTime(int time) {
-        setText(String.format("%d : %02d",time/60, time%60));
+        setText(String.format("Time remaining: %d : %02d",time/60, time%60));
     }
 }

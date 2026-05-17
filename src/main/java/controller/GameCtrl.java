@@ -20,7 +20,7 @@ import view.game_nodes.Interfaces.BoardInterface;
 import view.game_nodes.Interfaces.ProgressLabelInterface;
 import view.game_nodes.Interfaces.ScoreLabelInterface;
 import view.game_nodes.Interfaces.TimeLabelInterface;
-//import view.game_nodes.Labels.ProgressLabel;
+import view.game_nodes.Labels.ProgressLabel;
 import view.game_nodes.Labels.ScoreLabel;
 import view.game_nodes.Labels.TimeLabel;
 import view.scenes.*;
@@ -67,10 +67,6 @@ public class GameCtrl extends Parent {
         }
     }
 
-
-    /// 按钮功能
-
-    /// 登录后界面
     public void handleStart() {
         if(account!=null)
         {
@@ -87,10 +83,13 @@ public class GameCtrl extends Parent {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
         alert.setHeaderText("Are you sure you want to logout?");
-        alert.showAndWait();
-        account = null;
-        loadNumber = 0;
-        showLoginScene();
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                account = null;
+                loadNumber = 0;
+                showLoginScene();
+            }
+        });
     }
 
     public void handleLeaderboard() {
@@ -219,6 +218,7 @@ public class GameCtrl extends Parent {
             audioCtrl.setVolume(50.0);
             timeLabel.start();
             scoreLabel = new ScoreLabel(maps.getScore(mode));
+            progressLabel = new ProgressLabel(maps.getEliminated(mode), maps.getTotal(mode));
         }
         else{
             linkyMap = new LinkyMap(row, col, mode, isPair);
@@ -226,10 +226,10 @@ public class GameCtrl extends Parent {
             audioCtrl.setVolume(50.0);
             timeLabel = new TimeLabel((mode == 0) ? 180 : 300, this);
             scoreLabel = new ScoreLabel();
+            progressLabel = new ProgressLabel(0, MapSaveData.getTotal(mode));
             timeLabel.start();
         }
-        board = new Board(row, col, 30, linkyMap, this);
-        //progressLabel = new ProgressLabel();
+        board = new Board(row, col, 36, linkyMap, this);
         gameScene = new GameScene(board, timeLabel, scoreLabel, progressLabel,this);
         sceneCtrl.setScene(gameScene);
     }
@@ -267,6 +267,7 @@ public class GameCtrl extends Parent {
     public void eliminate(CellNode cellNode1, CellNode cellNode2, ArrayList route) {
         cellNode1.setHighlight(true);
         cellNode2.setHighlight(true);
+        progressLabel.eliminate();
         if(bombMode) {
             cellNode1.setBomb(true);
             cellNode2.setBomb(true);
@@ -304,11 +305,12 @@ public class GameCtrl extends Parent {
     }
 
     public void timeUp() {
-        sceneCtrl.setScene(new GameoverScene(this));
+        sceneCtrl.setScene(new LoseScene(this, progressLabel, scoreLabel,timeLabel));
     }
 
     public void showWinScene(){
-        sceneCtrl.setScene(new WinScene(this, scoreLabel, timeLabel));
+        sceneCtrl.setScene(new LoseScene(this, progressLabel, scoreLabel,timeLabel));
+        //sceneCtrl.setScene(new WinScene(this, scoreLabel, timeLabel));
     }
 
     public void showAccountScene() {
