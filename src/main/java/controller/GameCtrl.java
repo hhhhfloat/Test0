@@ -136,16 +136,28 @@ public class GameCtrl extends Parent {
         showLevelScene();
     }
 
+    public void handleDelete1() {
+
+    }
+
     public void handleLoad2() {
         audioCtrl.playButtonSound();
         loadNumber = 2;
         showLevelScene();
     }
 
+    public void handleDelete2() {
+
+    }
+
     public void handleLoad3() {
         audioCtrl.playButtonSound();
         loadNumber = 3;
         showLevelScene();
+    }
+
+    public void handleDelete3() {
+
     }
 
     public void handleBack() {
