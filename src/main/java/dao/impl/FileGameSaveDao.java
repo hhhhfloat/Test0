@@ -21,47 +21,48 @@ public class FileGameSaveDao implements GameSaveDao {
     /// add the gson thing
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public FileGameSaveDao(){}
+    public FileGameSaveDao() {
+    }
 
     /// SET USER
     @Override
     public void setCurrentUser(String userName) {
         currentUser = userName;
         // set saving path
-        saveRoot = Paths.get("Data","Saves","User_"+currentUser);
-        try{
+        saveRoot = Paths.get("Data", "Saves", "User_" + currentUser);
+        try {
             Files.createDirectories(saveRoot);
-        }catch(IOException e){
-            throw new RuntimeException("创建用户目录失败："+saveRoot,e);
+        } catch (IOException e) {
+            throw new RuntimeException("创建用户目录失败：" + saveRoot, e);
         }
     }
 
-
     /// User Config Save & Load
     @Override
-    public void saveConfig(Properties config){
-        try{// 创建配置文件路径
+    public void saveConfig(Properties config) {
+        try {// 创建配置文件路径
             Path configPath = saveRoot.resolve("ConfigSave.properties");
             // 输出
-            try (OutputStream out = Files.newOutputStream(configPath)) {;
+            try (OutputStream out = Files.newOutputStream(configPath)) {
+                ;
                 config.store(out, "Game Config for " + currentUser);
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             return;
         }
     }
 
     @Override
-    public Properties loadConfig(){
+    public Properties loadConfig() {
         Properties config = new Properties();
-        if(currentUser == null || saveRoot == null){
+        if (currentUser == null || saveRoot == null) {
             return config;
         }
         Path configPath = saveRoot.resolve("ConfigSave.properties");
-        if(Files.exists(configPath)){
-            try(InputStream in = Files.newInputStream(configPath)){
+        if (Files.exists(configPath)) {
+            try (InputStream in = Files.newInputStream(configPath)) {
                 config.load(in);
-            }catch(IOException e){
+            } catch (IOException e) {
                 throw new RuntimeException("加载配置文件失败: " + e.getMessage(), e);
             }
         }
@@ -69,46 +70,47 @@ public class FileGameSaveDao implements GameSaveDao {
     }
 
     @Override
-    public void saveMap(MapSaveData mapData,int loadNumber){
-        if(currentUser == null || saveRoot == null || loadNumber==0){
+    public void saveMap(MapSaveData mapData, int loadNumber) {
+        if (currentUser == null || saveRoot == null || loadNumber == 0) {
             return;
         }
-        Path mapPath = saveRoot.resolve("MapSave"+loadNumber+".json");
-        try(FileWriter writer = new FileWriter(mapPath.toFile())){
-            gson.toJson(mapData,writer);
-        }catch(IOException e){
-            throw new RuntimeException("Failed map data saving: "+e.getMessage(),e);
-        }
-    }
-    @Override
-    public MapSaveData loadMaps(int loadNumber) {
-        if(currentUser == null || saveRoot == null || loadNumber == 0){
-            return null;
-        }
-        Path mapPath = saveRoot.resolve("MapSave"+loadNumber+ ".json");
-        if(!Files.exists(mapPath)){
-            return null;
-        }
-        try(FileReader reader = new FileReader(mapPath.toFile())){
-            return gson.fromJson(reader,MapSaveData.class);
-        }catch(IOException e){
-            throw new RuntimeException("Failed map loading: "+e.getMessage(),e);
+        Path mapPath = saveRoot.resolve("MapSave" + loadNumber + ".json");
+        try (FileWriter writer = new FileWriter(mapPath.toFile())) {
+            gson.toJson(mapData, writer);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed map data saving: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public void delSave(int loadNumber, int mode){
+    public MapSaveData loadMaps(int loadNumber) {
+        if (currentUser == null || saveRoot == null || loadNumber == 0) {
+            return null;
+        }
+        Path mapPath = saveRoot.resolve("MapSave" + loadNumber + ".json");
+        if (!Files.exists(mapPath)) {
+            return null;
+        }
+        try (FileReader reader = new FileReader(mapPath.toFile())) {
+            return gson.fromJson(reader, MapSaveData.class);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed map loading: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void delSave(int loadNumber, int mode) {
         // config  remains
         // map delete
-        if(currentUser == null || saveRoot == null || loadNumber ==0){
+        if (currentUser == null || saveRoot == null || loadNumber == 0) {
             return;
         }
-        Path mapPath = saveRoot.resolve("MapSave"+loadNumber+".json");
-        try{
+        Path mapPath = saveRoot.resolve("MapSave" + loadNumber + ".json");
+        try {
             if (Files.exists(mapPath)) {
                 Files.delete(mapPath);
             }
-        }catch(Exception e){return;}
+        } catch (Exception e) {return;}
     }
 
 }

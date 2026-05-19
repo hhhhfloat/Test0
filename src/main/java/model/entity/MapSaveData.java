@@ -9,6 +9,9 @@ public class MapSaveData {
     private int[] remainTime = {180,300};
     private int[] eliminated = new int[5];
     private int loadNumber;
+    private int bombCount = 3;
+    private int freezeCount = 3;
+    private int hintCount = 3;
 
     public MapSaveData(){}
 
@@ -64,5 +67,14 @@ public class MapSaveData {
     public int getEliminated(int mode) { return eliminated[mode]; }
     public static int getTotal(int mode) {
         return mode == 0 ? 50 : 16;
+    }
+    public void useBomb() {
+        bombCount--;
+    }
+    public void useFreeze() {
+        freezeCount--;
+    }
+    public void useHint() {
+        hintCount--;
     }
 }

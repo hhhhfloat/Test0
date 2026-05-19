@@ -37,7 +37,7 @@ public class GameCtrl extends Parent {
     private final SceneCtrl sceneCtrl;
     private final AudioCtrl audioCtrl;
     // 持有view与model引用
-    private BoardInterface board;
+    BoardInterface board;
     private TimeLabelInterface timeLabel;
     private ScoreLabelInterface scoreLabel;
     private ProgressLabelInterface progressLabel;
@@ -50,6 +50,22 @@ public class GameCtrl extends Parent {
     private int combo = 0;
     private int loadNumber = 0;
     private boolean bombMode = false;
+
+    public BoardInterface getBoard() {
+        return board;
+    }
+    public GameSaveDao getGameSaveDao() {
+        return gameSaveDao;
+    }
+    public ScoreLabelInterface getScoreLabel() {
+        return scoreLabel;
+    }
+    public TimeLabelInterface getTimeLabel() {
+        return timeLabel;
+    }
+    public ProgressLabelInterface getProgressLabel() {
+        return progressLabel;
+    }
 
     public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl, AudioCtrl audioCtrl, GameSaveDao gameSaveDao) {
         this.userDao = userDao;
@@ -304,7 +320,7 @@ public class GameCtrl extends Parent {
             timeLabel.start();
         }
         board = new Board(row, col, 36, linkyMap, this);
-        gameScene = new GameScene(board, timeLabel, scoreLabel, progressLabel, this);
+        gameScene = new GameScene(this);
         sceneCtrl.setScene(gameScene);
     }
 

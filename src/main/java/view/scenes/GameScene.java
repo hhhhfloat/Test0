@@ -1,6 +1,8 @@
 package view.scenes;
 
 import controller.GameCtrl;
+import dao.UserDao;
+import dao.impl.FileGameSaveDao;
 import javafx.animation.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,32 +22,30 @@ import java.nio.file.Paths;
 public class GameScene extends Scene {
     public static StackPane overlayPane;
 
-    public GameScene(BoardInterface board, TimeLabelInterface timeLabel, ScoreLabelInterface scoreLabel, ProgressLabelInterface progressLabel, GameCtrl gameCtrl){
-        super(new BorderPane(createRoot(board, timeLabel, scoreLabel, progressLabel, gameCtrl)), 800, 800);
+    public GameScene(GameCtrl gameCtrl){
+        super(new BorderPane(createRoot(gameCtrl)), 800, 800);
         Path cssPath = Paths.get("src", "main", "resources", "css", "SceneStyle", "gameSceneStyle.css");
         String cssUri = cssPath.toUri().toString();
         getStylesheets().add(cssUri);
 
     }
 
-    private static StackPane createRoot(BoardInterface board, TimeLabelInterface timeLabel, ScoreLabelInterface scoreLabel, ProgressLabelInterface progressLabel, GameCtrl gameCtrl) {
-        int bombCount = 3;
-        int freezeCount = 3;
-        int hintCount = 3;
-
+    private static StackPane createRoot(GameCtrl gameCtrl) {
         StackPane root = new StackPane();
         Pane underPane = new Pane();
 
-        Board gameBoard = (Board) board;
+        Board gameBoard = (Board) gameCtrl.getBoard();
         gameBoard.setLayoutX(134);
         gameBoard.setLayoutY(155);
         underPane.getChildren().add(gameBoard);
 
-        Label timeLabelNode = (Label) timeLabel;
-        Label scoreLabelNode = (Label) scoreLabel;
-        Label progressLabelNode = (Label) progressLabel;
+        Label timeLabelNode = (Label) gameCtrl.getTimeLabel();
+        Label scoreLabelNode = (Label) gameCtrl.getScoreLabel();
+        Label progressLabelNode = (Label) gameCtrl.getProgressLabel();
 
-        Button pauseButton = new Button(), bombButton = new Button("Bomb: x" + bombCount), freezeButton = new Button("Freeze :x" + freezeCount), hintButton = new Button("Hint: x" + hintCount);
+        FileGameSaveDao fileGameSaveDao = (FileGameSaveDao) gameCtrl.getGameSaveDao();
+
+        Button pauseButton = new Button(), bombButton = new Button("Bomb: x"), freezeButton = new Button("Freeze :x"), hintButton = new Button("Hint: x");
         pauseButton.getStyleClass().add("pausebutton");
         pauseButton.setLayoutX(15);
         pauseButton.setLayoutY(15);
