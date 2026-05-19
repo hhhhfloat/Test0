@@ -51,6 +51,18 @@ public class TimeLabel extends Label implements TimeLabelInterface {
     }
 
     @Override
+    public void pauseTime(int milliseconds){
+        pauseTime();
+        try {
+            wait(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        continueTime();
+    }
+
+    @Override
     public void continueTime() {
         timeline.play();
     }

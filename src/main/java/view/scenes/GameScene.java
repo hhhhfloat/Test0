@@ -3,14 +3,10 @@ package view.scenes;
 import controller.GameCtrl;
 import javafx.animation.*;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
 import view.game_nodes.Board;
 import view.game_nodes.Interfaces.BoardInterface;
@@ -24,53 +20,59 @@ import java.nio.file.Paths;
 public class GameScene extends Scene {
     public static StackPane overlayPane;
 
-    public GameScene(BoardInterface board, TimeLabelInterface timeLabel, ScoreLabelInterface scoreLabel, ProgressLabelInterface progressLabel, GameCtrl gameCtrl) {
+    public GameScene(BoardInterface board, TimeLabelInterface timeLabel, ScoreLabelInterface scoreLabel, ProgressLabelInterface progressLabel, GameCtrl gameCtrl){
         super(new BorderPane(createRoot(board, timeLabel, scoreLabel, progressLabel, gameCtrl)), 800, 800);
         Path cssPath = Paths.get("src", "main", "resources", "css", "SceneStyle", "gameSceneStyle.css");
         String cssUri = cssPath.toUri().toString();
         getStylesheets().add(cssUri);
+
     }
 
     private static StackPane createRoot(BoardInterface board, TimeLabelInterface timeLabel, ScoreLabelInterface scoreLabel, ProgressLabelInterface progressLabel, GameCtrl gameCtrl) {
+        int bombCount = 3;
+        int freezeCount = 3;
+        int hintCount = 3;
 
         StackPane root = new StackPane();
         Pane underPane = new Pane();
-        underPane.getChildren().add((Node) board);
+
         Board gameBoard = (Board) board;
         gameBoard.setLayoutX(134);
         gameBoard.setLayoutY(155);
-
-        Label bombs = new Label();
-        Button pauseButton = new Button();
-        pauseButton.getStyleClass().add("pausebutton");
-        Button bombButton = new Button("Bomb");
-        pauseButton.setOnMouseClicked(event -> gameCtrl.handlePause());
-        bombButton.setOnMouseClicked(event -> gameCtrl.handleBombMode());
+        underPane.getChildren().add(gameBoard);
 
         Label timeLabelNode = (Label) timeLabel;
         Label scoreLabelNode = (Label) scoreLabel;
         Label progressLabelNode = (Label) progressLabel;
-        HBox hBox = new HBox(10, timeLabelNode, scoreLabelNode, progressLabelNode);
-        timeLabelNode.getStyleClass().add("game-label");
-        scoreLabelNode.getStyleClass().add("game-label");
-        progressLabelNode.getStyleClass().add("game-label");
-        underPane.getChildren().addAll(hBox, bombButton, pauseButton);
 
-        pauseButton.setLayoutX(10);
-        pauseButton.setLayoutY(10);
+        Button pauseButton = new Button(), bombButton = new Button("Bomb: x" + bombCount), freezeButton = new Button("Freeze :x" + freezeCount), hintButton = new Button("Hint: x" + hintCount);
+        pauseButton.getStyleClass().add("pausebutton");
+        pauseButton.setLayoutX(15);
+        pauseButton.setLayoutY(15);
 
-        bombButton.setLayoutX(700);
-        bombButton.setLayoutY(150);
+        pauseButton.setOnMouseClicked(event -> gameCtrl.handlePause());
+        bombButton.setOnMouseClicked(event -> gameCtrl.handleBombMode());
+        freezeButton.setOnMouseClicked(event -> {
+            try {
+                gameCtrl.handleFreeze();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        hintButton.setOnMouseClicked(event -> gameCtrl.handleHint());
 
-        hBox.setLayoutX(200);
-        hBox.setLayoutY(20);
+        HBox stats = new HBox(10, timeLabelNode, scoreLabelNode, progressLabelNode);
+        VBox utils = new VBox(100, bombButton, freezeButton, hintButton);
+        stats.setLayoutX(180);
+        stats.setLayoutY(20);
+        utils.setLayoutX(702);
+        utils.setLayoutY(230);
+        underPane.getChildren().addAll(pauseButton, stats, utils);
 
         overlayPane = new StackPane();
-        overlayPane.setAlignment(Pos.CENTER);
-        overlayPane.setLayoutY(400);
         overlayPane.setMouseTransparent(true);
-        root.getChildren().addAll(underPane, overlayPane);
 
+        root.getChildren().addAll(underPane, overlayPane);
         return root;
     }
 

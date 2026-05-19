@@ -14,8 +14,8 @@ import java.util.HashMap;
 
 public class CellNode extends StackPane {
     private final Crd crd;
-    private int type;
-    private int imgSet;
+    private final int type;
+    private final int imgSet;
     private final ImageView image;
     private static HashMap<Integer, String> imgSets = new HashMap<>();
     private boolean isBomb = false;
@@ -24,11 +24,33 @@ public class CellNode extends StackPane {
             {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"},
             {"Enchanted Book", "Fishing Rod", "Leather Boots", "Name Tag", "Nautilus Shell", "Pufferfish", "Raw Cod", "Raw Salmon", "Shaddle", "Suspicious Stew", "Tropical Fish", "Water Bottle"}
     };
+
+    public int getType() {
+        return type;
+    }
+
+    public Crd getCrd() {
+        return crd;
+    }
+
+    public void setBomb(boolean bomb) {
+        isBomb = bomb;
+        setHighlight(bomb);
+        updateImage();
+    }
+
+    public void setHighlight(boolean highlight) {
+        if (highlight) {
+            getStyleClass().add("highlight");
+        } else {
+            getStyleClass().remove("highlight");
+        }
+    }
+
     public static void initHashSet() {
         imgSets.put(0, "Browsers");
         imgSets.put(1, "MCFishing");
     }
-
 
     public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl, int imgSet) {
         initHashSet();
@@ -39,7 +61,6 @@ public class CellNode extends StackPane {
 
         getStylesheets().add(getClass().getResource("/css/cellNode.css").toExternalForm());
 
-
         setPrefSize(size, size);
         setOnMouseClicked(event -> gameCtrl.handleCellClick(this));
         image = new ImageView();
@@ -47,17 +68,6 @@ public class CellNode extends StackPane {
         image.setFitWidth(size);
         image.setFitHeight(size);
         getChildren().add(image);
-    }
-
-
-    public Crd getCrd() {
-        return crd;
-    }
-
-    public void setBomb(boolean bomb) {
-        isBomb = bomb;
-        setHighlight(bomb);
-        updateImage();
     }
 
     private void updateImage() {
@@ -70,21 +80,12 @@ public class CellNode extends StackPane {
             } else {
                 directorpath = Paths.get("src", "main", "resources", "Sprites", "Block", imgSets.get(imgSet), images[imgSet][type] + ".png");
             }
-
             try (InputStream is = Files.newInputStream(directorpath)) {
                 Image img = new Image(is);
                 image.setImage(img);
             } catch (Exception e) {
                 System.err.println("加载图片失败: " + directorpath);
             }
-        }
-    }
-
-    public void setHighlight(boolean highlight) {
-        if (highlight) {
-            getStyleClass().add("highlight");
-        } else {
-            getStyleClass().remove("highlight");
         }
     }
 
@@ -95,9 +96,5 @@ public class CellNode extends StackPane {
         st.setToY(0);
         st.setOnFinished(e -> setVisible(false));
         st.play();
-    }
-
-    public String getType() {
-        return images[imgSet][type];
     }
 }

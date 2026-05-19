@@ -17,21 +17,17 @@ public class LoginBox extends VBox {
 
         usernameField = new TextField();
         usernameField.setPromptText("Please enter your username: ");
-
         passwordField = new PasswordField();
         passwordField.setPromptText("Please enter your password: ");
 
-        Button cancelBtn = new Button("Cancel");
+        Button cancelBtn = new Button("Cancel"), confirmBtn = new Button("Confirm"), registerBtn = new Button("Don't have an account yet? Click here to register");
         cancelBtn.setOnAction(event -> loginCtrl.handleLoginCancel());
-        Button confirmBtn = new Button("Confirm");
         confirmBtn.setOnAction(e -> loginCtrl.handleLoginConfirm(usernameField.getText(), passwordField.getText()));
-        Button registerBtn = new Button("Don't have an account yet? Click here to register");
         registerBtn.setOnAction(e -> loginCtrl.handleRegister());
 
         HBox hBox = new HBox(80, cancelBtn, confirmBtn);
 
-        Label messageLabel;
-        messageLabel = new Label("Login");
+        Label messageLabel = new Label("Login");
 
         getChildren().addAll(messageLabel, usernameField, passwordField, hBox, registerBtn);
     }

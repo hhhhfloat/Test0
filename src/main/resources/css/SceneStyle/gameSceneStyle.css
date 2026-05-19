@@ -3,7 +3,7 @@
     -fx-background-size: cover;
 }
 
-.game-label {
+.label {
     -fx-background-image: url('/Sprites/label-bg.jpg');
     -fx-font-size: 20px;
     -fx-padding: 0 10px 0 10px;
@@ -25,6 +25,35 @@
 }
 
 .pausebutton:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 1px;
+}
+
+VBox > Button {
+    -fx-pref-width: 96px;
+    -fx-pref-height: 30px;
+
+    -fx-background-radius: 2px;
+    -fx-background-color: rgba(50, 150, 200, 0.8);
+
+    -fx-text-fill: Black;
+    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-style: italic;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+VBox > Button:hover {
+    -fx-background-color: rgba(50, 215, 193, 0.8);
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+VBox > Button:pressed {
     -fx-background-color: rgba(70, 170, 220, 0.8);
     -fx-border-color: rgba(30, 100, 140, 0.9);
     -fx-scale-x: 0.97;

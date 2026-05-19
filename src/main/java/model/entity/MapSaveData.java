@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class MapSaveData {
     private ArrayList<int[][]> map;
     private boolean isPair;
-    private int[] score = new int[2];
+    private int[] score = new int[5];
     private int[] remainTime = {180,300};
-    private int[] eliminated = new int[2];
+    private int[] eliminated = new int[5];
     private int loadNumber;
 
     public MapSaveData(){}

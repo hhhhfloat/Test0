@@ -15,26 +15,29 @@ HBox Button {
     -fx-pref-width: 100px;
     -fx-pref-height: 20px;
 
+    -fx-background-radius: 10px;
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
-    -fx-font-size: 15px;
+    -fx-font-size: 20px;
     -fx-font-style: italic;
 
-    /* 圆角匹配修复 */
-    -fx-background-radius: 10px;
+    -fx-border-color: rgba(30, 100, 140, 0.9);
+    -fx-border-width: 4px;
     -fx-border-radius: 10px;
 
-    -fx-border-color: transparent;
-    -fx-border-width: 4px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
 HBox > Button:hover {
     -fx-background-color: rgba(50, 215, 193, 0.8);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+
     -fx-border-color: rgba(30, 160, 140, 0.95);
     -fx-border-width: 4.5px;
 }
@@ -50,18 +53,31 @@ HBox > Button:pressed {
 RegisterBox > Button {
     -fx-pref-width: 400px;
     -fx-pref-height: 20px;
-    -fx-background-color: rgba(0, 0, 0, 0.0);
-    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-background-color: rgba(50, 150, 200, 0.8);
+
+    -fx-text-fill: Black;
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
-    -fx-font-size: 15px;
+    -fx-font-size: 20px;
     -fx-font-style: italic;
-    -fx-underline: true;
+
+    -fx-border-color: rgba(30, 100, 140, 0.9);
+    -fx-border-width: 4px;
+    -fx-border-radius: 10px;
+
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
 RegisterBox > Button:hover {
-    -fx-background-color: rgba(50, 150, 215, 0.8);
-    -fx-text-fill: rgba(70, 170, 220, 0.8);
+    -fx-background-color: rgba(50, 215, 193, 0.8);
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+
+    -fx-border-color: rgba(30, 160, 140, 0.95);
+    -fx-border-width: 4.5px;
 }
 
 RegisterBox > Button:pressed {

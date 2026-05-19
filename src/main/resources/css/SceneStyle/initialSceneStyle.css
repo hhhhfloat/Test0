@@ -11,7 +11,7 @@ InitialBox {
     -fx-pref-width: 200px;
     -fx-pref-height: 40px;
 
-    -fx-background-radius: 11px;
+    -fx-background-radius: 10px;
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
@@ -19,13 +19,8 @@ InitialBox {
     -fx-font-size: 20px;
     -fx-font-style: italic;
 
-    /* 新增边框样式 */
-    -fx-border-color: rgba(30, 100, 140, 0.9);   /* 更深的蓝青色 */
-    -fx-border-width: 4px;                       /* 边框粗细 */
-    -fx-border-radius: 10px;
-    /* 增加透明边框，与悬浮时边框宽度相同 */
-    -fx-border-color: transparent;
-    -fx-border-width: 4px;          /* 与 hover 状态的边框宽度一致 */
+    -fx-border-color: rgba(30, 100, 140, 0.9);
+    -fx-border-width: 4px;
     -fx-border-radius: 10px;
 
     -fx-padding: 10px 20px;
@@ -36,6 +31,8 @@ InitialBox {
     -fx-background-color: rgba(50, 215, 193, 0.8);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 
     -fx-border-color: rgba(30, 160, 140, 0.95);
     -fx-border-width: 4.5px;

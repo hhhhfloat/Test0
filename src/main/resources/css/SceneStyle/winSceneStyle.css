@@ -26,20 +26,20 @@ VBox {
     -fx-pref-width: 100px;
     -fx-pref-height: 20px;
 
+    -fx-background-radius: 10px;
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
-    -fx-font-size: 15px;
+    -fx-font-size: 20px;
     -fx-font-style: italic;
 
-    /* 圆角匹配修复 */
-    -fx-background-radius: 10px;
+    -fx-border-color: rgba(30, 100, 140, 0.9);
+    -fx-border-width: 4px;
     -fx-border-radius: 10px;
 
-    -fx-border-color: transparent;
-    -fx-border-width: 4px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
 .button:hover {
