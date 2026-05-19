@@ -16,4 +16,7 @@ public interface GameSaveDao {
     // 保存Config
     Properties loadConfig();
     void saveConfig(Properties config);
+
+    // 删档
+    void delSave(int loadNumber, int mode);
 }

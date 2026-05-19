@@ -118,7 +118,10 @@ public class GameCtrl extends Parent {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
         alert.setHeaderText("Are you sure you want to exit?");
-        alert.setContentText("All the unsaved data will be lost!");
+        alert.setContentText("Game will be automatically saved.");
+        if(loadNumber != 0){
+            handleSave();
+        }
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 Platform.exit();
@@ -200,12 +203,30 @@ public class GameCtrl extends Parent {
         System.out.println("Game Saved!");
     }
     public void handleExitToMenu() {
+        audioCtrl.playButtonSound();
+        handleSave();
+        if(loadNumber != 0){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Save info");
+            alert.setContentText("Game automatically saved!");
+            alert.showAndWait();
+        }
         account = null;
         loadNumber = 0;
-        showLoginScene();
+        showAccountScene();
     }
     public void handleRestart() {
-        //
+        audioCtrl.playButtonSound();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm");
+        alert.setHeaderText("Are you sure you want to restart?");
+        alert.setContentText("All the unsaved data will be lost!");
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                gameSaveDao.delSave(loadNumber, mode);
+                showNewGameScene();
+            }
+        });
     }
     public void handleContinue() {
         sceneCtrl.setScene(gameScene);

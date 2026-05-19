@@ -75,6 +75,7 @@ LoginBox > Button:pressed {
     -fx-background-color: rgba(70, 170, 200, 0.4);
     -fx-background-radius: 5px;
 
+    -fx-padding: 10px;
     -fx-text-fill: white;
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
     -fx-font-size: 41px;

@@ -47,7 +47,7 @@ public class FileGameSaveDao implements GameSaveDao {
                 config.store(out, "Game Config for " + currentUser);
             }
         }catch(Exception e) {
-
+            return;
         }
     }
 
@@ -96,5 +96,19 @@ public class FileGameSaveDao implements GameSaveDao {
         }
     }
 
+    @Override
+    public void delSave(int loadNumber, int mode){
+        // config  remains
+        // map delete
+        if(currentUser == null || saveRoot == null || loadNumber ==0){
+            return;
+        }
+        Path mapPath = saveRoot.resolve("MapSave"+loadNumber+".json");
+        try{
+            if (Files.exists(mapPath)) {
+                Files.delete(mapPath);
+            }
+        }catch(Exception e){return;}
+    }
 
 }
