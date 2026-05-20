@@ -81,4 +81,9 @@ public class Board extends Pane implements BoardInterface {
         });
         delay.play();
     }
+
+    @Override
+    public void showHint(CellNode c1, CellNode c2){
+
+    }
 }

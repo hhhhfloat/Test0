@@ -21,7 +21,7 @@ public class MainApp extends Application {
         GameCtrl gameCtrl = new GameCtrl(userDao, sceneCtrl, audioCtrl, gameSaveDao);
         LoginCtrl loginCtrl = new LoginCtrl(userDao, audioCtrl, sceneCtrl, gameCtrl);
         // 行动
-        audioCtrl.playBgMusic();
+        // audioCtrl.playBgMusic();
         loginCtrl.showInitialScene();
         stage.show();
         // Platform.runLater(()->new SimpleFpsHUD(stage));

@@ -3,15 +3,16 @@ package model.entity;
 import java.util.ArrayList;
 
 public class MapSaveData {
+    static final int levelNumber = 5;
     private ArrayList<int[][]> map;
     private boolean isPair;
-    private int[] score = new int[5];
+    private int[] score = new int[levelNumber];
     private int[] remainTime = {180,300};
-    private int[] eliminated = new int[5];
+    private int[] eliminated = new int[levelNumber];
     private int loadNumber;
-    private int bombCount = 3;
-    private int freezeCount = 3;
-    private int hintCount = 3;
+    private int[] bombCount = new int[levelNumber];
+    private int[] freezeCount = new int[levelNumber];
+    private int[] hintCount = new int[levelNumber];
 
     public MapSaveData(){}
 
@@ -22,27 +23,8 @@ public class MapSaveData {
         map.add(new int[0][0]);
     }
 
-    public MapSaveData(int[][] easyMap, int[][] hardMap, boolean isPair, int easyScore, int hardScore, int loadNumber, int easyTime, int hardTime, int easyEliminated, int hardEliminated)
-    {
-        map = new ArrayList<>();
-        map.add(easyMap);
-        map.add(hardMap);
-        this.isPair = isPair;
-        score[0] = easyScore;
-        score[1] = hardScore;
-        remainTime[0] = easyTime;
-        remainTime[1] = hardTime;
-        eliminated[0] = easyEliminated;
-        eliminated[1] = hardEliminated;
-        this.loadNumber = loadNumber;
-    }
-
     public int[][] getMap(int mode){
         return map.get(mode);
-    }
-
-    public void setEliminated(int mode, int eliminated) {
-        this.eliminated[mode] = eliminated;
     }
 
     public void setMap(int mode, int[][] mp){
@@ -68,13 +50,24 @@ public class MapSaveData {
     public static int getTotal(int mode) {
         return mode == 0 ? 50 : 16;
     }
-    public void useBomb() {
-        bombCount--;
+
+    public void setBombCount(int mode, int bombCount) {
+        this.bombCount[mode] = bombCount;
     }
-    public void useFreeze() {
-        freezeCount--;
+    public void setEliminated(int mode, int eliminated) {
+        this.eliminated[mode] = eliminated;
     }
-    public void useHint() {
-        hintCount--;
+    public void setFreezeCount(int mode, int freezeCount) {
+        this.freezeCount[mode] = freezeCount;
+    }
+
+    public int getBombCount(int mode) {
+        return bombCount[mode];
+    }
+    public int getFreezeCount(int mode) {
+        return freezeCount[mode];
+    }
+    public int getHintCount(int mode) {
+        return hintCount[mode];
     }
 }

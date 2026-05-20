@@ -56,6 +56,7 @@ public class GameCtrl extends Parent {
     private int combo = 0;
     private int loadNumber = 0;
     private boolean bombMode = false;
+    ArrayList<Crd> hintPath;
 
     public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl, AudioCtrl audioCtrl, GameSaveDao gameSaveDao) {
         this.userDao = userDao;
@@ -281,14 +282,21 @@ public class GameCtrl extends Parent {
         }
         bombMode = true;
     }
-
-    public void handleFreeze() throws java.lang.InterruptedException {
+    public void handleFreeze() throws InterruptedException {
         timeLabel.pauseTime(10000);
         wait();
+        freezeCount--;
     }
 
     public void handleHint() {
-
+        if(hintPath.isEmpty()){
+            handleLose();
+        }
+        else{
+            Crd c1 = hintPath.getFirst();
+            Crd c2 = hintPath.getLast();
+            board.showHint(c1,c2);
+        }
     }
 
     public void handlePause() {
@@ -343,9 +351,13 @@ public class GameCtrl extends Parent {
         sceneCtrl.setScene(levelScene);
     }
 
+
+    // save related variables
+    MapSaveData maps;
+    int bombCount, hintCount, freezeCount, eliminatedCount;
+
     public void showNewGameScene() {
         int row = 12,col = 12;
-        MapSaveData maps;
         Properties config;
         boolean isPair = false;
         try{
@@ -365,6 +377,10 @@ public class GameCtrl extends Parent {
         // load or reset info
         if (maps != null && config != null) {
             setLinkyMap(maps);
+            bombCount = maps.getBombCount(mode);
+            eliminatedCount = maps.getEliminated(mode);
+            freezeCount = maps.getFreezeCount(mode);
+            hintCount = maps.getHintCount(mode);
             System.out.println("map loaded");
             timeLabel = new TimeLabel(maps.getRemainTime(mode), this);
             audioCtrl.setVolume(50.0);
@@ -430,11 +446,12 @@ public class GameCtrl extends Parent {
         }
     }
 
-    public void eliminate(CellNode cellNode1, CellNode cellNode2, ArrayList<Crd> route) {
+    public void eliminate(CellNode cellNode1, CellNode cellNode2, ArrayList<Crd> route)
+    {
         cellNode1.setHighlight(true);
         cellNode2.setHighlight(true);
         progressLabel.eliminate();
-        if (bombMode) {
+        if (bombMode && bombCount > 0) {
             cellNode1.setBomb(true);
             cellNode2.setBomb(true);
             cellNode1.eliminateCell();
@@ -444,7 +461,8 @@ public class GameCtrl extends Parent {
             del.add(cellNode2.getCrd());
             linkyMap.delNumMap(del);
             audioCtrl.playBombSound();
-            gameScene.bombLightOff();
+            GameScene.bombLightOff();
+            bombCount--;
             bombMode = false;
         } else {
             board.eliminate(cellNode1, cellNode2, route);
@@ -470,6 +488,11 @@ public class GameCtrl extends Parent {
                     break;
             }
             showWinScene();
+            return;
+        }
+        hintPath = linkyMap.pathAutoFind();
+        if(hintPath.isEmpty() && bombCount == 0){
+            handleLose();
         }
     }
 }
