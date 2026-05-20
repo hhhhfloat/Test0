@@ -104,6 +104,7 @@ public class GameCtrl extends Parent {
 
     //Account Scene
     public void handleStart() {
+        audioCtrl.playButtonSound();
         if (account != null) {
             showLoadScene();
         } else {
@@ -443,6 +444,7 @@ public class GameCtrl extends Parent {
             del.add(cellNode2.getCrd());
             linkyMap.delNumMap(del);
             audioCtrl.playBombSound();
+            gameScene.bombLightOff();
             bombMode = false;
         } else {
             board.eliminate(cellNode1, cellNode2, route);

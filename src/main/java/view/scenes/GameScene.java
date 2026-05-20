@@ -5,6 +5,8 @@ import dao.impl.FileGameSaveDao;
 import javafx.animation.*;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
 import view.boxes.InfoBox;
 import view.boxes.UtilBox;
@@ -33,6 +35,7 @@ public class GameScene extends Scene {
         pauseButton.getStyleClass().add("pausebutton");
         pauseButton.setLayoutX(15);
         pauseButton.setLayoutY(15);
+        ToggleButton bombButton = new ToggleButton("Bomb: x");
 
         Board gameBoard = (Board) gameCtrl.getBoard();
         gameBoard.setLayoutX(134);
