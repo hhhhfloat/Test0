@@ -15,23 +15,19 @@ public class RegisterBox extends VBox{
     public RegisterBox(LoginCtrl loginCtrl) {
         super(15);
 
+        Label messageLabel = new Label("Register");
+
         usernameField = new TextField();
         usernameField.setPromptText("Please enter your username: ");
-        usernameField.setMaxWidth(200);
-
         passwordField = new PasswordField();
         passwordField.setPromptText("Please enter your password: ");
-        passwordField.setMaxWidth(200);
 
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setOnAction(event -> loginCtrl.handleRegisterCancel());
         Button confirmBtn = new Button("Confirm");
         confirmBtn.setOnAction(event -> loginCtrl.handleRegisterConfirm(usernameField.getText(), passwordField.getText()));
-        HBox hBox = new HBox(80, cancelBtn, confirmBtn);
+        HBox choiceBox = new HBox(80, cancelBtn, confirmBtn);
 
-        Label messageLabel;
-        messageLabel = new Label("Register");
-
-        getChildren().addAll(messageLabel, usernameField, passwordField, hBox);
+        getChildren().addAll(messageLabel, usernameField, passwordField, choiceBox);
     }
 }

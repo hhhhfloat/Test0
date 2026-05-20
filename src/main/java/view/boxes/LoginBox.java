@@ -9,11 +9,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class LoginBox extends VBox {
-    private TextField usernameField;
-    private PasswordField passwordField;
+    private final TextField usernameField;
+    private final PasswordField passwordField;
 
     public LoginBox(LoginCtrl loginCtrl) {
         super(15);
+
+        Label messageLabel = new Label("Login");
 
         usernameField = new TextField();
         usernameField.setPromptText("Please enter your username: ");
@@ -25,10 +27,8 @@ public class LoginBox extends VBox {
         confirmBtn.setOnAction(e -> loginCtrl.handleLoginConfirm(usernameField.getText(), passwordField.getText()));
         registerBtn.setOnAction(e -> loginCtrl.handleRegister());
 
-        HBox hBox = new HBox(80, cancelBtn, confirmBtn);
+        HBox choiceBox = new HBox(80, cancelBtn, confirmBtn);
 
-        Label messageLabel = new Label("Login");
-
-        getChildren().addAll(messageLabel, usernameField, passwordField, hBox, registerBtn);
+        getChildren().addAll(messageLabel, usernameField, passwordField, choiceBox, registerBtn);
     }
 }

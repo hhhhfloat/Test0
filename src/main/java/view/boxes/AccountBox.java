@@ -11,17 +11,10 @@ public class AccountBox extends VBox {
     private final Button logoutBtn = new Button("Logout");
     private final Button leaderboardBtn = new Button("Leaderboard");
     private final Button exitBtn = new Button("Exit");
-    private final Label welcomeLabel = new Label();
-
-    public AccountBox(GameCtrl gameCtrl) {
-        super(15);
-        welcomeLabel.setText("Tourist Mode");
-        setAction(gameCtrl);
-        getChildren().addAll(welcomeLabel, startBtn, logoutBtn, leaderboardBtn, exitBtn);
-    }
 
     public AccountBox(GameCtrl gameCtrl, Account account) {
         super(15);
+        Label welcomeLabel = new Label();
         welcomeLabel.setText(account == null?"Welcome":("Welcome, " + account.getUserName()));
         setAction(gameCtrl);
         getChildren().addAll(welcomeLabel, startBtn, logoutBtn, leaderboardBtn, exitBtn);

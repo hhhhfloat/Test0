@@ -1,7 +1,6 @@
 package view.scenes;
 
 import controller.GameCtrl;
-import dao.impl.FileGameSaveDao;
 import javafx.animation.*;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -25,8 +24,6 @@ public class GameScene extends Scene {
 
     private static StackPane createRoot(GameCtrl gameCtrl) {
         Pane underPane = new Pane();
-
-        FileGameSaveDao fileGameSaveDao = (FileGameSaveDao) gameCtrl.getGameSaveDao();
 
         Button pauseButton = new Button();
         pauseButton.setOnMouseClicked(event -> gameCtrl.handlePause());

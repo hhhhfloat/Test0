@@ -2,6 +2,7 @@ package view.game_nodes.Labels;
 
 import controller.GameCtrl;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
@@ -51,15 +52,10 @@ public class TimeLabel extends Label implements TimeLabelInterface {
     }
 
     @Override
-    public void pauseTime(int milliseconds){
+    public void pauseTime(int seconds){
         pauseTime();
-        try {
-            wait(milliseconds);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        continueTime();
+        PauseTransition pause = new PauseTransition(Duration.seconds(30));
+        pause.setOnFinished(e -> continueTime());
     }
 
     @Override

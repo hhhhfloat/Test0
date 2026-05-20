@@ -1,29 +1,26 @@
 package view;
 
 import javafx.animation.*;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-public class InformationUtil {
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class InformationUtil{
     public static void playInformation(Pane root, String info) {
+        Path cssPath = Paths.get("src", "main", "resources", "css", "infoStyle.css");
+        String cssUri = cssPath.toUri().toString();
+        root.getStylesheets().add(cssUri);
+
         StackPane overlayPane = new StackPane();
         overlayPane.setMouseTransparent(true);
         root.getChildren().add(overlayPane);
 
         Label information = new Label(info);
-        information.setStyle(
-                "-fx-text-fill: Red; " +
-                        "-fx-font-size: 20px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-padding: 15px 30px; "
-        );
-        information.setAlignment(Pos.CENTER);
         overlayPane.getChildren().add(information);
-        StackPane.setAlignment(information, Pos.CENTER);
 
         FadeTransition fadeInTransition = new FadeTransition(Duration.millis(80), information);
         fadeInTransition.setFromValue(0);

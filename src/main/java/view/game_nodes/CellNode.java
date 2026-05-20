@@ -7,17 +7,19 @@ import javafx.scene.layout.StackPane;
 import model.entity.Crd;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class CellNode extends StackPane {
     private final Crd crd;
     private final int type;
     private final int imgSet;
     private final ImageView image;
-    private static HashMap<Integer, String> imgSets = new HashMap<>();
+    private static final HashMap<Integer, String> imgSets = new HashMap<>();
     private boolean isBomb = false;
 
     private final static String[][] images = {
@@ -59,7 +61,9 @@ public class CellNode extends StackPane {
         this.type = type;
         this.imgSet = imgSet;
 
-        getStylesheets().add(getClass().getResource("/css/cellNode.css").toExternalForm());
+        Optional.ofNullable(getClass().getResource("/css/cellNode.css"))
+                .map(URL::toExternalForm)
+                .ifPresent(url -> getStylesheets().add(url));
 
         setPrefSize(size, size);
         setOnMouseClicked(event -> gameCtrl.handleCellClick(this));

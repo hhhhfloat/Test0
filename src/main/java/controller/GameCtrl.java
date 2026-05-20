@@ -26,10 +26,7 @@ import view.game_nodes.Labels.ProgressLabel;
 import view.game_nodes.Labels.ScoreLabel;
 import view.game_nodes.Labels.TimeLabel;
 import view.scenes.*;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Properties;
 
 public class GameCtrl extends Parent {
@@ -68,9 +65,6 @@ public class GameCtrl extends Parent {
 
     public BoardInterface getBoard() {
         return board;
-    }
-    public GameSaveDao getGameSaveDao() {
-        return gameSaveDao;
     }
     public ScoreLabelInterface getScoreLabel() {
         return scoreLabel;
@@ -281,9 +275,8 @@ public class GameCtrl extends Parent {
         bombMode = true;
     }
 
-    public void handleFreeze() throws java.lang.InterruptedException {
-        timeLabel.pauseTime(10000);
-        wait();
+   public void handleFreeze() {
+        timeLabel.pauseTime(30);
     }
 
     public void handleHint() {
@@ -386,7 +379,7 @@ public class GameCtrl extends Parent {
 
     public void timeUp() {
         gameSaveDao.delMapSave(loadNumber, mode);
-        sceneCtrl.setScene(new LoseScene(this, progressLabel, scoreLabel,timeLabel));
+        sceneCtrl.setScene(new LoseScene(this));
     }
 
     public void showAccountScene() {
@@ -395,8 +388,7 @@ public class GameCtrl extends Parent {
 
     public void showWinScene(){
         gameSaveDao.delMapSave(loadNumber, mode);
-        sceneCtrl.setScene(new WinScene(this, scoreLabel,timeLabel));
-        //sceneCtrl.setScene(new WinScene(this, scoreLabel, timeLabel));
+        sceneCtrl.setScene(new WinScene(this));
     }
 
     public void handleCellClick(CellNode cellNode) {

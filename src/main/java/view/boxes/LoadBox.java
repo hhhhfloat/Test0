@@ -22,8 +22,7 @@ public class LoadBox extends VBox{
         delete2.getStyleClass().add("cross");
         delete3.getStyleClass().add("cross");
         back.setOnAction(event -> gameCtrl.handleBack());
-        HBox load1 = new HBox(20, save1, delete1), load2 = new HBox(20, save2, delete2), load3 = new HBox(20, save3, delete3);;
-        VBox vBox = new VBox(20, load1, load2, load3, back);
-        getChildren().addAll(vBox);
+        HBox load1 = new HBox(20, save1, delete1), load2 = new HBox(20, save2, delete2), load3 = new HBox(20, save3, delete3);
+        getChildren().addAll(load1, load2, load3, back);
     }
 }
