@@ -9,12 +9,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.entity.Account;
 import model.entity.Crd;
 import model.entity.LinkyMap;
 import model.entity.MapSaveData;
+import view.InformationUtil;
 import view.game_nodes.*;
 import view.game_nodes.Interfaces.BoardInterface;
 import view.game_nodes.Interfaces.ProgressLabelInterface;
@@ -370,7 +372,7 @@ public class GameCtrl extends Parent {
             audioCtrl.playEliminateSound();
         }
         linkyMap.delNumMap(route);
-        GameScene.playInformation("Eliminated:" + selectedCell.getType() + "x2!\n" + "Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
+        InformationUtil.playInformation((Pane) gameScene.getRoot(), "Eliminated:" + selectedCell.getType() + "x2!\n" + "Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
         selectedCell = null;
         scoreLabel.addScore(combo);
         if (linkyMap.isComplete()) {

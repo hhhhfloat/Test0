@@ -30,7 +30,7 @@
     -fx-translate-y: 1px;
 }
 
-VBox > Button {
+Button {
     -fx-pref-width: 96px;
     -fx-pref-height: 30px;
 
@@ -45,7 +45,7 @@ VBox > Button {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
-VBox > Button:hover {
+Button:hover {
     -fx-background-color: rgba(50, 215, 193, 0.8);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
@@ -53,7 +53,7 @@ VBox > Button:hover {
     -fx-scale-y: 1.03;
 }
 
-VBox > Button:pressed {
+Button:pressed {
     -fx-background-color: rgba(70, 170, 220, 0.8);
     -fx-border-color: rgba(30, 100, 140, 0.9);
     -fx-scale-x: 0.97;
