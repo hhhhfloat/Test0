@@ -12,4 +12,8 @@ public class SceneCtrl {
     public void setScene(Scene scene) {
         primaryStage.setScene(scene);
     }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
 }

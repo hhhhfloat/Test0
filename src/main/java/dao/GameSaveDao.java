@@ -3,8 +3,6 @@ package dao;
 import java.util.Properties;
 import model.entity.MapSaveData;
 
-import java.io.IOException;
-
 public interface GameSaveDao {
     // 初始化用的设置用户名
     void setCurrentUser(String userName);
@@ -18,5 +16,7 @@ public interface GameSaveDao {
     void saveConfig(Properties config);
 
     // 删档
-    void delSave(int loadNumber, int mode);
+    void delMapSave(int loadNumber, int mode);
+    // delete config
+    void delConfigSave();
 }
