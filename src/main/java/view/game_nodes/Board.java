@@ -3,6 +3,7 @@ package view.game_nodes;
 import controller.GameCtrl;
 import javafx.animation.*;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import model.entity.Crd;
@@ -83,7 +84,7 @@ public class Board extends Pane implements BoardInterface {
     }
 
     @Override
-    public void showHint(CellNode c1, CellNode c2){
+    public void showHint(Crd c1, Crd c2){
 
     }
 }
