@@ -39,7 +39,7 @@ public class GameCtrl extends Parent {
     private final SceneCtrl sceneCtrl;
     private final AudioCtrl audioCtrl;
     // 持有view与model引用
-    BoardInterface board;
+    private BoardInterface board;
     private TimeLabelInterface timeLabel;
     private ScoreLabelInterface scoreLabel;
     private ProgressLabelInterface progressLabel;
@@ -164,8 +164,8 @@ public class GameCtrl extends Parent {
         alert.setContentText("All the data will be lost!");
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                gameSaveDao.delSave(loadNumber, 0);
-                gameSaveDao.delSave(loadNumber, 1);
+                gameSaveDao.delMapSave(loadNumber, 0);
+                gameSaveDao.delMapSave(loadNumber, 1);
             }
         });
     }
@@ -274,7 +274,7 @@ public class GameCtrl extends Parent {
         alert.setContentText("All the unsaved data will be lost!");
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                gameSaveDao.delSave(loadNumber, mode);
+                gameSaveDao.delMapSave(loadNumber, mode);
                 showNewGameScene();
             }
         });
@@ -299,10 +299,24 @@ public class GameCtrl extends Parent {
     }
 
     public void showNewGameScene() {
-        int row = 12, col = 12;
+        int row = 12,col = 12;
+        MapSaveData maps;
+        Properties config;
         boolean isPair = false;
-        MapSaveData maps = gameSaveDao.loadMaps(loadNumber);
-        Properties config = gameSaveDao.loadConfig();
+        try{
+            maps = gameSaveDao.loadMaps(loadNumber);
+            config = gameSaveDao.loadConfig();
+        }catch(Exception e){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Invalid Save Data");
+            alert.setContentText("The game will create a new save");
+            gameSaveDao.delMapSave(loadNumber,mode);
+            gameSaveDao.delConfigSave();
+            alert.showAndWait();
+            return;
+        }
+
         // load or reset info
         if (maps != null && config != null) {
             setLinkyMap(maps);
@@ -404,12 +418,14 @@ public class GameCtrl extends Parent {
     }
 
     public void timeUp() {
-        sceneCtrl.setScene(new LoseScene(this, progressLabel, scoreLabel, timeLabel));
+        gameSaveDao.delMapSave(loadNumber, mode);
+        sceneCtrl.setScene(new LoseScene(this, progressLabel, scoreLabel,timeLabel));
     }
 
-    public void showWinScene() {
-        //sceneCtrl.setScene(new LoseScene(this, progressLabel, scoreLabel,timeLabel));
-        sceneCtrl.setScene(new WinScene(this, scoreLabel, timeLabel));
+    public void showWinScene(){
+        gameSaveDao.delMapSave(loadNumber, mode);
+        sceneCtrl.setScene(new WinScene(this, scoreLabel,timeLabel));
+        //sceneCtrl.setScene(new WinScene(this, scoreLabel, timeLabel));
     }
 
     public void showAccountScene() {

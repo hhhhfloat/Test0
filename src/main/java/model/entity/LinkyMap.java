@@ -21,7 +21,7 @@ public class LinkyMap {
                             {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0},
                             {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
                     },
@@ -186,6 +186,7 @@ public class LinkyMap {
         for (int i = 0; i < MAPX; i++) {
             System.arraycopy(Pos[MapType][i], 0, pos[i], 0, MAPY);
         }
+        int count_ = 0;
         do {
             sRandCount();
             sRandMap(pos, buf_map);
@@ -226,7 +227,10 @@ public class LinkyMap {
             for (int y = 0; y < MAPY; y++) {
                 if (pos[x][y] == 1) {
                     int r = rand.nextInt(n);
-                    while (Count[r] == 0) r = rand.nextInt(n);
+                    while (Count[r] == 0) {
+                        r = rand.nextInt(n);
+                    }
+                    System.out.println();
                     map[x][y] = r;
                     buf_map[x][y] = r;
                     Count[r]--;

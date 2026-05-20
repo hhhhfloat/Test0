@@ -16,6 +16,7 @@ VBox {
 }
 
 .stat {
+    -fx-padding:10px;
     -fx-background-image: url('/Sprites/label-bg.jpg');
     -fx-text-fill: Black;
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;

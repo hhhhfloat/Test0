@@ -29,8 +29,8 @@ public class FileGameSaveDao implements GameSaveDao {
     public void setCurrentUser(String userName) {
         currentUser = userName;
         // set saving path
-        saveRoot = Paths.get("Data", "Saves", "User_" + currentUser);
-        try {
+        saveRoot = Paths.get("Data","Saves","User_"+currentUser);
+        try{
             Files.createDirectories(saveRoot);
         } catch (IOException e) {
             throw new RuntimeException("创建用户目录失败：" + saveRoot, e);
@@ -43,8 +43,7 @@ public class FileGameSaveDao implements GameSaveDao {
         try {// 创建配置文件路径
             Path configPath = saveRoot.resolve("ConfigSave.properties");
             // 输出
-            try (OutputStream out = Files.newOutputStream(configPath)) {
-                ;
+            try (OutputStream out = Files.newOutputStream(configPath)) {;
                 config.store(out, "Game Config for " + currentUser);
             }
         } catch (Exception e) {
@@ -99,8 +98,7 @@ public class FileGameSaveDao implements GameSaveDao {
     }
 
     @Override
-    public void delSave(int loadNumber, int mode) {
-        // config  remains
+    public void delMapSave(int loadNumber, int mode){
         // map delete
         if (currentUser == null || saveRoot == null || loadNumber == 0) {
             return;
@@ -111,6 +109,16 @@ public class FileGameSaveDao implements GameSaveDao {
                 Files.delete(mapPath);
             }
         } catch (Exception e) {return;}
+    }
+    @Override
+    public void delConfigSave(){
+        if(currentUser == null || saveRoot == null){
+            return;
+        }
+        Path configPath = saveRoot.resolve("ConfigSave.properties");
+        try{
+            if(Files.exists(configPath))Files.delete(configPath);
+        }catch(Exception e){return;}
     }
 
 }
