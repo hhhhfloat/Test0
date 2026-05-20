@@ -38,7 +38,6 @@ public class GameScene extends Scene {
         pauseButton.getStyleClass().add("pausebutton");
         pauseButton.setLayoutX(15);
         pauseButton.setLayoutY(15);
-        ToggleButton bombButton = new ToggleButton("Bomb: x");
 
         Board gameBoard = (Board) gameCtrl.getBoard();
         gameBoard.setLayoutX(134);

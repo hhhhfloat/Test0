@@ -276,11 +276,17 @@ public class GameCtrl extends Parent {
     //Game Scene
     public void handleBombMode() {
         audioCtrl.playButtonSound();
-        if (selectedCell != null) {
-            selectedCell.setBomb(false);
-            selectedCell = null;
+        if(bombCount>0){
+            if (selectedCell != null) {
+                selectedCell.setBomb(false);
+                selectedCell = null;
+            }
+            bombMode = true;
         }
-        bombMode = true;
+        else{
+            bombMode = false;
+            GameScene.bombLightOff();
+        }
     }
     public void handleFreeze() throws InterruptedException {
         timeLabel.pauseTime(10000);
@@ -290,7 +296,7 @@ public class GameCtrl extends Parent {
 
     public void handleHint() {
         if(hintPath.isEmpty()){
-            handleLose();
+            // handleLose();
         }
         else{
             Crd c1 = hintPath.getFirst();
@@ -328,6 +334,7 @@ public class GameCtrl extends Parent {
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 gameSaveDao.delMapSave(loadNumber, mode);
+
                 showNewGameScene();
             }
         });
@@ -389,6 +396,9 @@ public class GameCtrl extends Parent {
             progressLabel = new ProgressLabel(maps.getEliminated(mode), MapSaveData.getTotal(mode));
         } else {
             linkyMap = new LinkyMap(row, col, mode, isPair);
+            bombCount = 3;
+            hintCount = 3;
+            freezeCount = 3;
             System.out.println("Default map applied");
             audioCtrl.setVolume(50.0);
             timeLabel = new TimeLabel((mode == 0) ? 180 : 300, this);
@@ -396,6 +406,7 @@ public class GameCtrl extends Parent {
             progressLabel = new ProgressLabel(0, MapSaveData.getTotal(mode));
             timeLabel.start();
         }
+        hintPath = linkyMap.pathAutoFind();
         board = new Board(row, col, 36, linkyMap, this);
         gameScene = new GameScene(this);
         sceneCtrl.setScene(gameScene);
@@ -492,7 +503,7 @@ public class GameCtrl extends Parent {
         }
         hintPath = linkyMap.pathAutoFind();
         if(hintPath.isEmpty() && bombCount == 0){
-            handleLose();
+            // handleLose();
         }
     }
 }
