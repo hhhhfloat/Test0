@@ -28,6 +28,8 @@ import view.game_nodes.Labels.TimeLabel;
 import view.scenes.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Properties;
 
 public class GameCtrl extends Parent {
@@ -45,6 +47,8 @@ public class GameCtrl extends Parent {
     private ProgressLabelInterface progressLabel;
 
     private LinkyMap linkyMap;
+
+    private final LevelScene levelScene;
     private GameScene gameScene;
     // 辅助
     private CellNode selectedCell;
@@ -52,6 +56,15 @@ public class GameCtrl extends Parent {
     private int combo = 0;
     private int loadNumber = 0;
     private boolean bombMode = false;
+
+    public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl, AudioCtrl audioCtrl, GameSaveDao gameSaveDao) {
+        this.userDao = userDao;
+        this.sceneCtrl = sceneCtrl;
+        this.audioCtrl = audioCtrl;
+        this.gameSaveDao = gameSaveDao;
+        levelScene = new LevelScene(this);
+        selectedCell = null;
+    }
 
     public BoardInterface getBoard() {
         return board;
@@ -69,14 +82,6 @@ public class GameCtrl extends Parent {
         return progressLabel;
     }
 
-    public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl, AudioCtrl audioCtrl, GameSaveDao gameSaveDao) {
-        this.userDao = userDao;
-        this.sceneCtrl = sceneCtrl;
-        this.audioCtrl = audioCtrl;
-        this.gameSaveDao = gameSaveDao;
-        selectedCell = null;
-    }
-
     public void setAccount(Account account) {
         this.account = account;
         // 将当前User送到SaveDao
@@ -85,6 +90,19 @@ public class GameCtrl extends Parent {
         }
     }
 
+    private void setLinkyMap(MapSaveData maps) {
+        int row = 12, col = 12;
+        boolean isPair = false;
+        if (maps.getMap(mode).length == row && maps.getMap(mode)[0].length == col) {
+            System.out.println("Map save loaded");
+            linkyMap = new LinkyMap(row, col, maps.getMap(mode));
+        } else {
+            System.out.println("Default map applied for this mode");
+            linkyMap = new LinkyMap(row, col, mode, isPair);
+        }
+    }
+
+    //Account Scene
     public void handleStart() {
         if (account != null) {
             showLoadScene();
@@ -145,16 +163,32 @@ public class GameCtrl extends Parent {
         });
     }
 
-    /// 读档界面（游客跳过）
+    //Load Scene
     public void handleLoad0() {
         loadNumber = 0;
         showLevelScene();
     }
 
-    public void handleLoad1() {
-        audioCtrl.playButtonSound();
-        loadNumber = 1;
-        showLevelScene();
+    public void handleSave() {
+        if (loadNumber == 0) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Reminding");
+            alert.setHeaderText("You can't save in visitor mode!");
+            alert.showAndWait();
+            return;
+        }
+        // save map
+        MapSaveData data = new MapSaveData(loadNumber);
+        data.setMap(mode, linkyMap.getMap());
+        data.setScore(mode, scoreLabel.getScore());
+        data.setRemainTime(mode, timeLabel.getRemainingTime());
+        gameSaveDao.saveMap(data, loadNumber);
+        // 设置config
+        Properties config = new Properties();
+        config.setProperty("volume", String.valueOf(audioCtrl.getVolume()));
+        gameSaveDao.saveConfig(config);
+
+        System.out.println("Game Saved!");
     }
 
     public void deleteLoad(int loadNumber) {
@@ -168,6 +202,12 @@ public class GameCtrl extends Parent {
                 gameSaveDao.delMapSave(loadNumber, 1);
             }
         });
+    }
+
+    public void handleLoad1() {
+        audioCtrl.playButtonSound();
+        loadNumber = 1;
+        showLevelScene();
     }
 
     public void handleDelete1() {
@@ -199,6 +239,7 @@ public class GameCtrl extends Parent {
         showAccountScene();
     }
 
+    //Level Scene
     public void handleLevel1() {
         audioCtrl.playButtonSound();
         mode = 0;
@@ -229,29 +270,32 @@ public class GameCtrl extends Parent {
         showNewGameScene();
     }
 
-    public void handleSave() {
-        // 游客模式特殊处理
-        if (loadNumber == 0) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Reminding");
-            alert.setHeaderText("You can't save in visitor mode!");
-            alert.showAndWait();
-            return;
-        }
-        // save map
-        MapSaveData data = new MapSaveData(loadNumber);
-        data.setMap(mode, linkyMap.getMap());
-        data.setScore(mode, scoreLabel.getScore());
-        data.setRemainTime(mode, timeLabel.getRemainingTime());
-        gameSaveDao.saveMap(data, loadNumber);
-        // 设置config
-        Properties config = new Properties();
-        config.setProperty("volume", String.valueOf(audioCtrl.getVolume()));
-        gameSaveDao.saveConfig(config);
 
-        System.out.println("Game Saved!");
+    //Game Scene
+    public void handleBombMode() {
+        audioCtrl.playButtonSound();
+        if (selectedCell != null) {
+            selectedCell.setBomb(false);
+            selectedCell = null;
+        }
+        bombMode = true;
     }
 
+    public void handleFreeze() throws java.lang.InterruptedException {
+        timeLabel.pauseTime(10000);
+        wait();
+    }
+
+    public void handleHint() {
+
+    }
+
+    public void handlePause() {
+        sceneCtrl.setScene(new PauseScene(this));
+        timeLabel.pauseTime();
+    }
+
+    //Pause Scene
     public void handleExitToMenu() {
         audioCtrl.playButtonSound();
         handleSave();
@@ -285,7 +329,6 @@ public class GameCtrl extends Parent {
         timeLabel.continueTime();
     }
 
-    /// Scene转换
     public void showLoadScene() {
         sceneCtrl.setScene(new LoadScene(this));
     }
@@ -295,7 +338,8 @@ public class GameCtrl extends Parent {
     }
 
     public void showLevelScene() {
-        sceneCtrl.setScene(new LevelScene(this));
+        levelScene.playInfo();
+        sceneCtrl.setScene(levelScene);
     }
 
     public void showNewGameScene() {
@@ -340,6 +384,21 @@ public class GameCtrl extends Parent {
         sceneCtrl.setScene(gameScene);
     }
 
+    public void timeUp() {
+        gameSaveDao.delMapSave(loadNumber, mode);
+        sceneCtrl.setScene(new LoseScene(this, progressLabel, scoreLabel,timeLabel));
+    }
+
+    public void showAccountScene() {
+        sceneCtrl.setScene(new AccountScene(account, this));
+    }
+
+    public void showWinScene(){
+        gameSaveDao.delMapSave(loadNumber, mode);
+        sceneCtrl.setScene(new WinScene(this, scoreLabel,timeLabel));
+        //sceneCtrl.setScene(new WinScene(this, scoreLabel, timeLabel));
+    }
+
     public void handleCellClick(CellNode cellNode) {
         audioCtrl.playClickSound();
         if (linkyMap.getMap()[cellNode.getCrd().x()][cellNode.getCrd().y()] != -1) {
@@ -379,6 +438,10 @@ public class GameCtrl extends Parent {
             cellNode2.setBomb(true);
             cellNode1.eliminateCell();
             cellNode2.eliminateCell();
+            ArrayList<Crd> del = new ArrayList<>();
+            del.add(cellNode1.getCrd());
+            del.add(cellNode2.getCrd());
+            linkyMap.delNumMap(del);
             audioCtrl.playBombSound();
             bombMode = false;
         } else {
@@ -390,57 +453,21 @@ public class GameCtrl extends Parent {
         selectedCell = null;
         scoreLabel.addScore(combo);
         if (linkyMap.isComplete()) {
+            switch (mode) {
+                case 0:
+                    levelScene.unlock2();
+                    break;
+                case 1:
+                    levelScene.unlock3();
+                    break;
+                case 2:
+                    levelScene.unlock4();
+                    break;
+                case 3:
+                    levelScene.unlock5();
+                    break;
+            }
             showWinScene();
-        }
-    }
-
-    public void handleBombMode() {
-        audioCtrl.playButtonSound();
-        if (selectedCell != null) {
-            selectedCell.setBomb(false);
-            selectedCell = null;
-        }
-        bombMode = true;
-    }
-
-    public void handleFreeze() throws java.lang.InterruptedException {
-        timeLabel.pauseTime(10000);
-        wait();
-    }
-
-    public void handleHint() {
-
-    }
-
-    public void handlePause() {
-        sceneCtrl.setScene(new PauseScene(this));
-        timeLabel.pauseTime();
-    }
-
-    public void timeUp() {
-        gameSaveDao.delMapSave(loadNumber, mode);
-        sceneCtrl.setScene(new LoseScene(this, progressLabel, scoreLabel,timeLabel));
-    }
-
-    public void showWinScene(){
-        gameSaveDao.delMapSave(loadNumber, mode);
-        sceneCtrl.setScene(new WinScene(this, scoreLabel,timeLabel));
-        //sceneCtrl.setScene(new WinScene(this, scoreLabel, timeLabel));
-    }
-
-    public void showAccountScene() {
-        sceneCtrl.setScene(new AccountScene(account, this));
-    }
-
-    private void setLinkyMap(MapSaveData maps) {
-        int row = 12, col = 12;
-        boolean isPair = false;
-        if (maps.getMap(mode).length == row && maps.getMap(mode)[0].length == col) {
-            System.out.println("Map save loaded");
-            linkyMap = new LinkyMap(row, col, maps.getMap(mode));
-        } else {
-            System.out.println("Default map applied for this mode");
-            linkyMap = new LinkyMap(row, col, mode, isPair);
         }
     }
 }

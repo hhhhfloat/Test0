@@ -16,12 +16,10 @@ public class InformationUtil {
 
         Label information = new Label(info);
         information.setStyle(
-                "-fx-text-fill: white; " +
-                        "-fx-background-color: rgba(0,0,0,0.6); " +
+                "-fx-text-fill: Red; " +
                         "-fx-font-size: 20px; " +
                         "-fx-font-weight: bold; " +
-                        "-fx-padding: 15px 30px; " +
-                        "-fx-background-radius: 10px;"
+                        "-fx-padding: 15px 30px; "
         );
         information.setAlignment(Pos.CENTER);
         overlayPane.getChildren().add(information);
