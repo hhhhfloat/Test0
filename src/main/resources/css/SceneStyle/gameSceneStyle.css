@@ -45,7 +45,40 @@ Button {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
-Button:hover {
+.toggle-button:hover{
+    -fx-background-color: rgba(50, 215, 193, 0.8);
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.toggle-button:selected{
+    -fx-background-color: rgba(50, 215, 193, 0.8);
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.toggle-button{
+    -fx-pref-width: 96px;
+    -fx-pref-height: 30px;
+
+    -fx-background-radius: 2px;
+    -fx-background-color: rgba(50, 150, 200, 0.8);
+
+    -fx-text-fill: Black;
+    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-style: italic;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+
+
+VBox > Button:hover {
     -fx-background-color: rgba(50, 215, 193, 0.8);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);

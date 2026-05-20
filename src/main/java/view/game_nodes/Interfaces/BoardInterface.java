@@ -7,4 +7,5 @@ import java.util.ArrayList;
 
 public interface BoardInterface {
     void eliminate(CellNode cellNode1, CellNode cellNode2, ArrayList<Crd> route);
+    void showHint(CellNode c1, CellNode c2);
 }
