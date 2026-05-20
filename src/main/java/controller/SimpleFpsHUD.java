@@ -41,7 +41,7 @@ public class SimpleFpsHUD {
                 if (hudHeight <= 0) {
                     hudHeight = 30; // 预估默认高度
                 }
-                hudStage.setX(owner.getX() + 10);
+                hudStage.setX(owner.getX() + 30);
                 hudStage.setY(owner.getY() + owner.getHeight() - hudHeight - 10);
             }
         };

@@ -24,6 +24,6 @@ public class MainApp extends Application {
         audioCtrl.playBgMusic();
         loginCtrl.showInitialScene();
         stage.show();
-        Platform.runLater(()->new SimpleFpsHUD(stage));
+        // Platform.runLater(()->new SimpleFpsHUD(stage));
     }
 }

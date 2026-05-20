@@ -4,6 +4,9 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 
+    -fx-pref-width: 80px;
+    -fx-pref-height: 30px;
+
     -fx-text-fill: white;
     -fx-font-family: monospace;
     -fx-font-size: 12px;
