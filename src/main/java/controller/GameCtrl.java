@@ -5,9 +5,14 @@ import dao.UserDao;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.entity.Account;
 import model.entity.Crd;
 import model.entity.LinkyMap;
@@ -128,27 +133,6 @@ public class GameCtrl extends Parent {
                 showLoginScene();
             }
         });
-    }
-
-    public void handleLeaderboard() {
-        audioCtrl.playButtonSound();
-        VBox list = new VBox(10);
-        for (int i = 1; i <= 30; i++) {
-            Label menuItem = new Label("No." + i);
-            menuItem.setMaxWidth(Double.MAX_VALUE);
-            menuItem.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
-            list.getChildren().add(menuItem);
-        }
-
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(list);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPrefSize(300, 300);
-
-        Scene scene = new Scene(scrollPane, 350, 500);
-        Stage leaderboardStage = new Stage();
-        leaderboardStage.setScene(scene);
-        leaderboardStage.show();
     }
 
     public void handleExit() {
@@ -487,7 +471,8 @@ public class GameCtrl extends Parent {
             audioCtrl.playEliminateSound();
         }
         linkyMap.delNumMap(route);
-        InformationUtil.playInformation(sceneCtrl.getRoot(), "Eliminated:" + selectedCell.getType() + "x2!\n" + "Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
+        gameScene.playInfo(++combo, selectedCell.getType());
+        // InformationUtil.playInformation(gameScene.getRoot(), "Eliminated:" + selectedCell.getType() + "x2!\n" + "Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
         selectedCell = null;
         scoreLabel.addScore(combo);
         if (linkyMap.isComplete()) {

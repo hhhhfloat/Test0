@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
 import model.entity.Crd;
+import view.InformationUtil;
 import view.boxes.InfoBox;
 import view.boxes.UtilBox;
 import view.game_nodes.Board;
@@ -16,9 +17,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class GameScene extends Scene {
-    static StackPane root;
-    static UtilBox utilBox;
-    static InfoBox infoBox;
+    private static StackPane root;
+    private static UtilBox utilBox;
+    private static InfoBox infoBox;
 
     static Board gameBoard;
 
@@ -55,6 +56,11 @@ public class GameScene extends Scene {
 
         root.getChildren().add(underPane);
         return root;
+    }
+
+    public static void playInfo(int combo, int type){
+        String s = "Eliminated:" + type + "x2!\n" + "Combo " + combo + "!\n Score " + (10 + 5 * (combo - 1));
+        InformationUtil.playInformation(root, s);
     }
 
     public static void bombLightOff(){
