@@ -17,9 +17,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class GameScene extends Scene {
-    static StackPane root = new StackPane();
+    static StackPane root;
     static UtilBox utilBox;
     static InfoBox infoBox;
+
+    static Board gameBoard;
+
     public GameScene(GameCtrl gameCtrl) {
         super(new BorderPane(createRoot(gameCtrl)), 800, 800);
         Path cssPath = Paths.get("src", "main", "resources", "css", "SceneStyle", "gameSceneStyle.css");
@@ -29,6 +32,7 @@ public class GameScene extends Scene {
 
     private static StackPane createRoot(GameCtrl gameCtrl) {
         Pane underPane = new Pane();
+        root = new StackPane();
 
         FileGameSaveDao fileGameSaveDao = (FileGameSaveDao) gameCtrl.getGameSaveDao();
 
@@ -38,7 +42,8 @@ public class GameScene extends Scene {
         pauseButton.setLayoutX(15);
         pauseButton.setLayoutY(15);
 
-        Board gameBoard = (Board) gameCtrl.getBoard();
+
+        gameBoard = (Board) gameCtrl.getBoard();
         gameBoard.setLayoutX(134);
         gameBoard.setLayoutY(155);
 

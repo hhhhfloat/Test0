@@ -50,11 +50,11 @@ public class GameCtrl extends Parent {
     private GameScene gameScene;
     // 辅助
     private CellNode selectedCell;
-    private int mode;
+    private int currentLevel;
     private int combo = 0;
     private int loadNumber = 0;
     private boolean bombMode = false;
-    ArrayList<Crd> hintPath;
+    private ArrayList<Crd> hintPath;
 
     public GameCtrl(UserDao userDao, SceneCtrl sceneCtrl, AudioCtrl audioCtrl, GameSaveDao gameSaveDao) {
         this.userDao = userDao;
@@ -92,12 +92,12 @@ public class GameCtrl extends Parent {
     private void setLinkyMap(MapSaveData maps) {
         int row = 12, col = 12;
         boolean isPair = false;
-        if (maps.getMap(mode).length == row && maps.getMap(mode)[0].length == col) {
+        if (maps.getMap(currentLevel).length == row && maps.getMap(currentLevel)[0].length == col) {
             System.out.println("Map save loaded");
-            linkyMap = new LinkyMap(row, col, maps.getMap(mode));
+            linkyMap = new LinkyMap(row, col, maps.getMap(currentLevel));
         } else {
             System.out.println("Default map applied for this mode");
-            linkyMap = new LinkyMap(row, col, mode, isPair);
+            linkyMap = new LinkyMap(row, col, currentLevel, isPair);
         }
     }
 
@@ -179,9 +179,9 @@ public class GameCtrl extends Parent {
         }
         // save map
         MapSaveData data = new MapSaveData(loadNumber);
-        data.setMap(mode, linkyMap.getMap());
-        data.setScore(mode, scoreLabel.getScore());
-        data.setRemainTime(mode, timeLabel.getRemainingTime());
+        data.setMap(currentLevel, linkyMap.getMap());
+        data.setScore(currentLevel, scoreLabel.getScore());
+        data.setRemainTime(currentLevel, timeLabel.getRemainingTime());
         gameSaveDao.saveMap(data, loadNumber);
         // 设置config
         Properties config = new Properties();
@@ -240,35 +240,40 @@ public class GameCtrl extends Parent {
     }
 
     //Level Scene
-    public void handleLevel1() {
+    public void handleLevel(int ind) {
         audioCtrl.playButtonSound();
-        mode = 0;
+        currentLevel = --ind;
         showNewGameScene();
     }
-
-    public void handleLevel2() {
-        audioCtrl.playButtonSound();
-        mode = 1;
-        showNewGameScene();
-    }
-
-    public void handleLevel3() {
-        audioCtrl.playButtonSound();
-        mode = 2;
-        showNewGameScene();
-    }
-
-    public void handleLevel4() {
-        audioCtrl.playButtonSound();
-        mode = 3;
-        showNewGameScene();
-    }
-
-    public void handleLevel5() {
-        audioCtrl.playButtonSound();
-        mode = 4;
-        showNewGameScene();
-    }
+//    public void handleLevel1() {
+//        audioCtrl.playButtonSound();
+//        currentLevel = 0;
+//        showNewGameScene();
+//    }
+//
+//    public void handleLevel2() {
+//        audioCtrl.playButtonSound();
+//        currentLevel = 1;
+//        showNewGameScene();
+//    }
+//
+//    public void handleLevel3() {
+//        audioCtrl.playButtonSound();
+//        currentLevel = 2;
+//        showNewGameScene();
+//    }
+//
+//    public void handleLevel4() {
+//        audioCtrl.playButtonSound();
+//        currentLevel = 3;
+//        showNewGameScene();
+//    }
+//
+//    public void handleLevel5() {
+//        audioCtrl.playButtonSound();
+//        currentLevel = 4;
+//        showNewGameScene();
+//    }
 
 
     //Game Scene
@@ -329,7 +334,7 @@ public class GameCtrl extends Parent {
         alert.setContentText("All the unsaved data will be lost!");
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                gameSaveDao.delMapSave(loadNumber, mode);
+                gameSaveDao.delMapSave(loadNumber, currentLevel);
                 showNewGameScene();
             }
         });
@@ -349,7 +354,7 @@ public class GameCtrl extends Parent {
     }
 
     public void showLevelScene() {
-        levelScene.playInfo();
+        levelScene.playInfo(loadNumber);
         sceneCtrl.setScene(levelScene);
     }
 
@@ -370,7 +375,7 @@ public class GameCtrl extends Parent {
             alert.setTitle("Warning");
             alert.setHeaderText("Invalid Save Data");
             alert.setContentText("The game will create a new save");
-            gameSaveDao.delMapSave(loadNumber,mode);
+            gameSaveDao.delMapSave(loadNumber, currentLevel);
             gameSaveDao.delConfigSave();
             alert.showAndWait();
             return;
@@ -379,26 +384,26 @@ public class GameCtrl extends Parent {
         // load or reset info
         if (maps != null && config != null) {
             setLinkyMap(maps);
-            bombCount = maps.getBombCount(mode);
-            eliminatedCount = maps.getEliminated(mode);
-            freezeCount = maps.getFreezeCount(mode);
-            hintCount = maps.getHintCount(mode);
+            bombCount = maps.getBombCount(currentLevel);
+            eliminatedCount = maps.getEliminated(currentLevel);
+            freezeCount = maps.getFreezeCount(currentLevel);
+            hintCount = maps.getHintCount(currentLevel);
             System.out.println("map loaded");
-            timeLabel = new TimeLabel(maps.getRemainTime(mode), this);
+            timeLabel = new TimeLabel(maps.getRemainTime(currentLevel), this);
             audioCtrl.setVolume(50.0);
             timeLabel.start();
-            scoreLabel = new ScoreLabel(maps.getScore(mode));
-            progressLabel = new ProgressLabel(maps.getEliminated(mode), MapSaveData.getTotal(mode));
+            scoreLabel = new ScoreLabel(maps.getScore(currentLevel));
+            progressLabel = new ProgressLabel(maps.getEliminated(currentLevel), MapSaveData.getTotal(currentLevel));
         } else {
-            linkyMap = new LinkyMap(row, col, mode, isPair);
+            linkyMap = new LinkyMap(row, col, currentLevel, isPair);
             bombCount = 3;
             hintCount = 3;
             freezeCount = 3;
             System.out.println("Default map applied");
             audioCtrl.setVolume(50.0);
-            timeLabel = new TimeLabel((mode == 0) ? 180 : 300, this);
+            timeLabel = new TimeLabel((currentLevel == 0) ? 180 : 300, this);
             scoreLabel = new ScoreLabel();
-            progressLabel = new ProgressLabel(0, MapSaveData.getTotal(mode));
+            progressLabel = new ProgressLabel(0, MapSaveData.getTotal(currentLevel));
             timeLabel.start();
         }
         hintPath = linkyMap.pathAutoFind();
@@ -408,7 +413,7 @@ public class GameCtrl extends Parent {
     }
 
     public void timeUp() {
-        gameSaveDao.delMapSave(loadNumber, mode);
+        gameSaveDao.delMapSave(loadNumber, currentLevel);
         sceneCtrl.setScene(new LoseScene(this, progressLabel, scoreLabel,timeLabel));
     }
 
@@ -417,9 +422,8 @@ public class GameCtrl extends Parent {
     }
 
     public void showWinScene(){
-        gameSaveDao.delMapSave(loadNumber, mode);
+        gameSaveDao.delMapSave(loadNumber, currentLevel);
         sceneCtrl.setScene(new WinScene(this, scoreLabel,timeLabel));
-        //sceneCtrl.setScene(new WinScene(this, scoreLabel, timeLabel));
     }
 
     public void handleCellClick(CellNode cellNode) {
@@ -479,22 +483,22 @@ public class GameCtrl extends Parent {
         selectedCell = null;
         scoreLabel.addScore(combo);
         if (linkyMap.isComplete()) {
-            switch (mode) {
-                case 0:
-                    levelScene.unlock2();
-                    break;
-                case 1:
-                    levelScene.unlock3();
-                    break;
-                case 2:
-                    levelScene.unlock4();
-                    break;
-                case 3:
-                    levelScene.unlock5();
-                    break;
-            }
+            levelScene.unlock(currentLevel, loadNumber);
             showWinScene();
             return;
+//            switch (mode) {
+//                case 0:
+//                    levelScene.unlock2(loadNumber);
+//                    break;
+//                case 1:
+//                    levelScene.unlock3(loadNumber);
+//                    break;
+//                case 2:
+//                    levelScene.unlock4(loadNumber);
+//                    break;
+//                case 3:
+//                    levelScene.unlock5(loadNumber);
+//                    break;
         }
         hintPath = linkyMap.pathAutoFind();
         if(hintPath.isEmpty() && bombCount == 0){

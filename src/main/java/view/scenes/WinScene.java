@@ -27,7 +27,7 @@ public class WinScene extends Scene {
         Label timeLabel = new Label("Time used: " + timeLabelInterface.getTime());
         timeLabel.getStyleClass().add("stat");
         Button confirm = new Button("Hooray!!!");
-        confirm.setOnMouseClicked(event -> gameCtrl.showAccountScene());
+        confirm.setOnMouseClicked(event -> gameCtrl.showLevelScene());
         VBox vBox = new VBox(40,state, scoreLabel, timeLabel,confirm);
         StackPane root = new StackPane();
         root.getChildren().addAll(vBox);
