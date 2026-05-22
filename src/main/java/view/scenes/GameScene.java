@@ -60,5 +60,8 @@ public class GameScene extends Scene {
     public static void bombLightOff(){
         utilBox.bombLightOff();
     }
+    public static void updateBombBtn(int count){
+        utilBox.setBombCount(count);
+    }
 
 }

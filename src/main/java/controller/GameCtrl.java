@@ -105,6 +105,52 @@ public class GameCtrl extends Parent {
         }
     }
 
+    //Account Scene
+    public void handleStart() {
+        audioCtrl.playButtonSound();
+        if (account != null) {
+            showLoadScene();
+        } else {
+            loadNumber = 0;
+            handleLoad0();
+        }
+    }
+
+    public void handleLogout() {
+        audioCtrl.playButtonSound();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm");
+        alert.setHeaderText("Are you sure you want to logout?");
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                account = null;
+                loadNumber = 0;
+                showLoginScene();
+            }
+        });
+    }
+
+    public void handleLeaderboard() {
+        audioCtrl.playButtonSound();
+        VBox list = new VBox(10);
+        for (int i = 1; i <= 30; i++) {
+            Label menuItem = new Label("No." + i);
+            menuItem.setMaxWidth(Double.MAX_VALUE);
+            menuItem.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
+            list.getChildren().add(menuItem);
+        }
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(list);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefSize(300, 300);
+
+        Scene scene = new Scene(scrollPane, 350, 500);
+        Stage leaderboardStage = new Stage();
+        leaderboardStage.setScene(scene);
+        leaderboardStage.show();
+    }
+
     public void handleExit() {
         audioCtrl.playButtonSound();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -112,7 +158,7 @@ public class GameCtrl extends Parent {
         alert.setHeaderText("Are you sure you want to exit?");
         alert.setContentText("Game will be automatically saved.");
         if (loadNumber != 0) {
-            handleSave();
+            handleSave(false);
         }
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -127,8 +173,8 @@ public class GameCtrl extends Parent {
         showLevelScene();
     }
 
-    public void handleSave() {
-        if (loadNumber == 0) {
+    public void handleSave(boolean isShowed) {
+        if (loadNumber == 0 && isShowed) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Reminding");
             alert.setHeaderText("You can't save in visitor mode!");
@@ -146,7 +192,12 @@ public class GameCtrl extends Parent {
         config.setProperty("volume", String.valueOf(audioCtrl.getVolume()));
         gameSaveDao.saveConfig(config);
 
-        System.out.println("Game Saved!");
+        if(isShowed){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Reminding");
+            alert.setHeaderText("Game saved!");
+            alert.showAndWait();
+        }
     }
 
     public void deleteLoad(int loadNumber) {
@@ -203,50 +254,32 @@ public class GameCtrl extends Parent {
         currentLevel = --ind;
         showNewGameScene();
     }
-//    public void handleLevel1() {
-//        audioCtrl.playButtonSound();
-//        currentLevel = 0;
-//        showNewGameScene();
-//    }
-//
-//    public void handleLevel2() {
-//        audioCtrl.playButtonSound();
-//        currentLevel = 1;
-//        showNewGameScene();
-//    }
-//
-//    public void handleLevel3() {
-//        audioCtrl.playButtonSound();
-//        currentLevel = 2;
-//        showNewGameScene();
-//    }
-//
-//    public void handleLevel4() {
-//        audioCtrl.playButtonSound();
-//        currentLevel = 3;
-//        showNewGameScene();
-//    }
-//
-//    public void handleLevel5() {
-//        audioCtrl.playButtonSound();
-//        currentLevel = 4;
-//        showNewGameScene();
-//    }
 
 
     //Game Scene
     public void handleBombMode() {
         audioCtrl.playButtonSound();
-        if(bombCount>0){
-            if (selectedCell != null) {
+        if(bombMode){
+            if(selectedCell!=null){
                 selectedCell.setBomb(false);
+                selectedCell.setHighlight(false);
                 selectedCell = null;
             }
-            bombMode = true;
-        }
-        else{
             bombMode = false;
             GameScene.bombLightOff();
+        }
+        else{
+            if(bombCount>0){
+                if(selectedCell != null){
+                    selectedCell.setBomb(false);
+                    selectedCell.setHighlight(false);
+                    selectedCell = null;
+                }
+                bombMode = true;
+            }
+            else{
+                GameScene.bombLightOff();
+            }
         }
     }
 
@@ -274,8 +307,8 @@ public class GameCtrl extends Parent {
     // Pause Scene
     public void handleExitToLevelSelect() {
         audioCtrl.playButtonSound();
+        handleSave(true);
         if (loadNumber != 0) {
-            handleSave();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Save info");
             alert.setContentText("Game automatically saved!");
@@ -327,28 +360,36 @@ public class GameCtrl extends Parent {
 
     // save related variables
     private MapSaveData maps;
-    private Properties config;
     private int bombCount, hintCount, freezeCount, eliminatedCount;
+
+    public int getBombCount() {
+        return bombCount;
+    }
+
+    public int getHintCount() {
+        return hintCount;
+    }
+
+    public int getFreezeCount() {
+        return freezeCount;
+    }
 
     public void showNewGameScene() {
         int row = 12,col = 12;
         boolean isPair = false;
         try{
             maps = gameSaveDao.loadMaps(loadNumber);
-            config = gameSaveDao.loadConfig();
         }catch(Exception e){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Warning");
             alert.setHeaderText("Invalid Save Data");
             alert.setContentText("The game will create a new save");
             gameSaveDao.delMapSave(loadNumber, currentLevel);
-            gameSaveDao.delConfigSave();
             alert.showAndWait();
             return;
         }
-
         // load or reset info
-        if (maps != null && config != null) {
+        if (maps != null) {
             setLinkyMap(maps);
             bombCount = maps.getBombCount(currentLevel);
             eliminatedCount = maps.getEliminated(currentLevel);
@@ -371,6 +412,10 @@ public class GameCtrl extends Parent {
             scoreLabel = new ScoreLabel();
             progressLabel = new ProgressLabel(0, MapSaveData.getTotal(currentLevel));
             timeLabel.start();
+            if(loadNumber != 0){
+                handleSave(false);
+                maps = gameSaveDao.loadMaps(loadNumber);
+            }
         }
         hintPath = linkyMap.pathAutoFind();
         board = new Board(row, col, 36, linkyMap, this);
@@ -435,6 +480,7 @@ public class GameCtrl extends Parent {
             audioCtrl.playBombSound();
             GameScene.bombLightOff();
             bombCount--;
+            GameScene.updateBombBtn(bombCount);
             bombMode = false;
         } else {
             board.eliminate(cellNode1, cellNode2, route);
@@ -445,22 +491,12 @@ public class GameCtrl extends Parent {
         selectedCell = null;
         scoreLabel.addScore(combo);
         if (linkyMap.isComplete()) {
+            if(loadNumber != 0 && scoreLabel.getScore()>maps.getMaxScore(loadNumber, currentLevel)){
+                maps.setMaxScore(loadNumber,currentLevel, scoreLabel.getScore());
+            }
             levelScene.unlock(currentLevel, loadNumber);
             showWinScene();
             return;
-//            switch (mode) {
-//                case 0:
-//                    levelScene.unlock2(loadNumber);
-//                    break;
-//                case 1:
-//                    levelScene.unlock3(loadNumber);
-//                    break;
-//                case 2:
-//                    levelScene.unlock4(loadNumber);
-//                    break;
-//                case 3:
-//                    levelScene.unlock5(loadNumber);
-//                    break;
         }
         hintPath = linkyMap.pathAutoFind();
         if(hintPath.isEmpty() && bombCount == 0){

@@ -9,6 +9,9 @@ public class LoadBox extends VBox{
     public LoadBox(GameCtrl gameCtrl) {
         super(20);
         Button save1 = new Button("Load 1"), save2 = new Button("Load 2"), save3 = new Button("Load 3"), delete1 = new Button(), delete2 = new Button(), delete3 = new Button(), back = new Button("Back");
+
+
+
         save1.setOnAction(event -> gameCtrl.handleLoad1());
         save2.setOnAction(event -> gameCtrl.handleLoad2());
         save3.setOnAction(event -> gameCtrl.handleLoad3());
