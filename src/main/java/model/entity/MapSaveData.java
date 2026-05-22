@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class MapSaveData {
     static final int levelNumber = 5;
+    static final int loadNumberTot = 3;
     private ArrayList<int[][]> map;
     private boolean isPair;
     private int[] score = new int[levelNumber];
@@ -13,6 +14,7 @@ public class MapSaveData {
     private int[] bombCount = new int[levelNumber];
     private int[] freezeCount = new int[levelNumber];
     private int[] hintCount = new int[levelNumber];
+    private int[][] maxHistoryScore = new int[loadNumberTot][levelNumber];
 
     public MapSaveData(){}
 
@@ -69,5 +71,17 @@ public class MapSaveData {
     }
     public int getHintCount(int mode) {
         return hintCount[mode];
+    }
+
+    public int getMaxScore(int loadNumber,int index) {
+        return maxHistoryScore[loadNumber][index];
+    }
+
+    public void setMaxScore(int loadNumber, int index, int maxScore) {
+        this.maxHistoryScore[loadNumber][index] = maxScore;
+    }
+
+    public int[][] getMaxHistoryScore() {
+        return maxHistoryScore;
     }
 }
