@@ -12,7 +12,7 @@ public class UtilBox extends VBox{
         Button freezeButton = new Button("Freeze :x"), hintButton = new Button("Hint: x");
         bombButton = new ToggleButton("Bomb: x");
         bombButton.setOnMouseClicked(event -> gameCtrl.handleBombMode());
-        freezeButton.setOnMouseClicked(event -> {gameCtrl.handleFreeze();});
+        freezeButton.setOnMouseClicked(event -> gameCtrl.handleFreeze());
         hintButton.setOnMouseClicked(event -> gameCtrl.handleHint());
 
         getChildren().addAll(bombButton, freezeButton, hintButton);

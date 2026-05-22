@@ -22,9 +22,8 @@ public class RegisterBox extends VBox{
         passwordField = new PasswordField();
         passwordField.setPromptText("Please enter your password: ");
 
-        Button cancelBtn = new Button("Cancel");
+        Button cancelBtn = new Button("Cancel"), confirmBtn = new Button("Confirm");
         cancelBtn.setOnAction(event -> loginCtrl.handleRegisterCancel());
-        Button confirmBtn = new Button("Confirm");
         confirmBtn.setOnAction(event -> loginCtrl.handleRegisterConfirm(usernameField.getText(), passwordField.getText()));
         HBox choiceBox = new HBox(80, cancelBtn, confirmBtn);
 

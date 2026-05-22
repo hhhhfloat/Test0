@@ -4,14 +4,9 @@ import dao.GameSaveDao;
 import dao.UserDao;
 import javafx.application.Platform;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import model.entity.Account;
 import model.entity.Crd;
 import model.entity.LinkyMap;
@@ -37,6 +32,7 @@ public class GameCtrl extends Parent {
     // controller 连接部分
     private final SceneCtrl sceneCtrl;
     private final AudioCtrl audioCtrl;
+    private LoginCtrl loginCtrl;
     // 持有view与model引用
     private BoardInterface board;
     private TimeLabelInterface timeLabel;
@@ -88,6 +84,14 @@ public class GameCtrl extends Parent {
         }
     }
 
+    public void setLoadNumber(int num) {
+        loadNumber = num;
+    }
+
+    public void setLoginCtrl(LoginCtrl loginCtrl) {
+        this.loginCtrl = loginCtrl;
+    }
+
     private void setLinkyMap(MapSaveData maps) {
         int row = 12, col = 12;
         boolean isPair = false;
@@ -98,52 +102,6 @@ public class GameCtrl extends Parent {
             System.out.println("Default map applied for this mode");
             linkyMap = new LinkyMap(row, col, currentLevel, isPair);
         }
-    }
-
-    //Account Scene
-    public void handleStart() {
-        audioCtrl.playButtonSound();
-        if (account != null) {
-            showLoadScene();
-        } else {
-            loadNumber = 0;
-            handleLoad0();
-        }
-    }
-
-    public void handleLogout() {
-        audioCtrl.playButtonSound();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm");
-        alert.setHeaderText("Are you sure you want to logout?");
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                account = null;
-                loadNumber = 0;
-                showLoginScene();
-            }
-        });
-    }
-
-    public void handleLeaderboard() {
-        audioCtrl.playButtonSound();
-        VBox list = new VBox(10);
-        for (int i = 1; i <= 30; i++) {
-            Label menuItem = new Label("No." + i);
-            menuItem.setMaxWidth(Double.MAX_VALUE);
-            menuItem.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
-            list.getChildren().add(menuItem);
-        }
-
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(list);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPrefSize(300, 300);
-
-        Scene scene = new Scene(scrollPane, 350, 500);
-        Stage leaderboardStage = new Stage();
-        leaderboardStage.setScene(scene);
-        leaderboardStage.show();
     }
 
     public void handleExit() {
@@ -235,7 +193,7 @@ public class GameCtrl extends Parent {
 
     public void handleBack() {
         audioCtrl.playButtonSound();
-        showAccountScene();
+        loginCtrl.showAccountScene();
     }
 
     //Level Scene
@@ -315,8 +273,8 @@ public class GameCtrl extends Parent {
     // Pause Scene
     public void handleExitToLevelSelect() {
         audioCtrl.playButtonSound();
-        handleSave();
         if (loadNumber != 0) {
+            handleSave();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Save info");
             alert.setContentText("Game automatically saved!");
@@ -345,7 +303,11 @@ public class GameCtrl extends Parent {
     }
 
     public void showLoadScene() {
-        sceneCtrl.setScene(new LoadScene(this));
+        if(account == null) {
+            loginCtrl.showAccountScene();
+        } else{
+            sceneCtrl.setScene(new LoadScene(this));
+        }
     }
 
     public void showLoginScene() {
@@ -416,13 +378,9 @@ public class GameCtrl extends Parent {
         sceneCtrl.setScene(new LoseScene(this));
     }
 
-    public void showAccountScene() {
-        sceneCtrl.setScene(new AccountScene(account, this));
-    }
-
     public void showWinScene(){
         gameSaveDao.delMapSave(loadNumber, currentLevel);
-        sceneCtrl.setScene(new WinScene(this, scoreLabel,timeLabel));
+        sceneCtrl.setScene(new WinScene(this));
     }
 
     public void handleCellClick(CellNode cellNode) {

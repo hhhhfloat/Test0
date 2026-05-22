@@ -2,29 +2,36 @@ package controller;
 
 import dao.UserDao;
 import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.entity.Account;
 import view.scenes.AccountScene;
 import view.scenes.InitialScene;
 import view.scenes.LoginScene;
 import view.scenes.RegisterScene;
 
-import java.io.IOException;
-import java.util.Properties;
-
 public class LoginCtrl {
     private final UserDao userDao;
-
     private final AudioCtrl audioCtrl;
     private final GameCtrl gameCtrl;
     private final SceneCtrl sceneCtrl;
+    private Account account;
 
     public LoginCtrl(UserDao userDao, AudioCtrl audioCtrl, SceneCtrl sceneCtrl, GameCtrl gameCtrl) {
         this.userDao = userDao;
         this.audioCtrl = audioCtrl;
         this.sceneCtrl = sceneCtrl;
         this.gameCtrl = gameCtrl;
+        gameCtrl.setLoginCtrl(this);
+    }
+
+    public Account getAccount() {
+        return account;
     }
 
     public void handleLogin() {
@@ -54,7 +61,7 @@ public class LoginCtrl {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText("Login succeeded!");
                 alert.showAndWait();
-                Account account = userDao.findByUsername(username);
+                account = userDao.findByUsername(username);
                 showAccountScene(account);
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -112,16 +119,65 @@ public class LoginCtrl {
         }
     }
 
-    public void showInitialScene() { sceneCtrl.setScene(new InitialScene(this)); }
+    public void handleStart() {
+        audioCtrl.playButtonSound();
+        if (account != null) {
+            gameCtrl.showLoadScene();
+        } else {
+            gameCtrl.setLoadNumber(0);
+            gameCtrl.handleLoad0();
+        }
+    }
 
-    public void showLoginScene() { sceneCtrl.setScene(new LoginScene(this)); }
+    public void handleLogout() {
+        audioCtrl.playButtonSound();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm");
+        alert.setHeaderText("Are you sure you want to logout?");
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                account = null;
+                gameCtrl.setLoadNumber(0);
+                showInitialScene();
+            }
+        });
+    }
 
-    public void showRegisterScene() { sceneCtrl.setScene(new RegisterScene(this)); }
+    public void handleLeaderboard() {
+        audioCtrl.playButtonSound();
+        VBox list = new VBox(10);
+        for (int i = 1; i <= 30; i++) {
+            Label menuItem = new Label("No." + i);
+            menuItem.setMaxWidth(Double.MAX_VALUE);
+            menuItem.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
+            list.getChildren().add(menuItem);
+        }
 
-    public void showAccountScene() { gameCtrl.showAccountScene(); }
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(list);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefSize(300, 300);
 
+        Scene scene = new Scene(scrollPane, 350, 500);
+        Stage leaderboardStage = new Stage();
+        leaderboardStage.setScene(scene);
+        leaderboardStage.show();
+    }
+
+    public void showInitialScene() {
+        sceneCtrl.setScene(new InitialScene(this));
+    }
+    public void showLoginScene() {
+        sceneCtrl.setScene(new LoginScene(this));
+    }
+    public void showRegisterScene() {
+        sceneCtrl.setScene(new RegisterScene(this));
+    }
+    public void showAccountScene() {
+        sceneCtrl.setScene(new AccountScene(this));
+    }
     public void showAccountScene(Account account) {
         gameCtrl.setAccount(account);
-        sceneCtrl.setScene(new AccountScene(account, gameCtrl));
+        sceneCtrl.setScene(new AccountScene(this));
     }
 }

@@ -3,13 +3,11 @@ package view.boxes;
 import controller.GameCtrl;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class LevelBox extends VBox{
-    private List<Button> level = Arrays.asList(new Button("Level 1"),
+    private final List<Button> level = Arrays.asList(new Button("Level 1"),
             new Button("Level 2 - Locked"),
             new Button("Level 3 - Locked"),
             new Button("Level 4 - Locked") ,

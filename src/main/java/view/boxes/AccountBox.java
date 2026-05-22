@@ -1,29 +1,23 @@
 package view.boxes;
 
-import controller.GameCtrl;
+import controller.LoginCtrl;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import model.entity.Account;
 
 public class AccountBox extends VBox {
-    private final Button startBtn = new Button("Start");
-    private final Button logoutBtn = new Button("Logout");
-    private final Button leaderboardBtn = new Button("Leaderboard");
-    private final Button exitBtn = new Button("Exit");
-
-    public AccountBox(GameCtrl gameCtrl, Account account) {
+    public AccountBox(LoginCtrl loginCtrl) {
         super(15);
-        Label welcomeLabel = new Label();
-        welcomeLabel.setText(account == null?"Welcome":("Welcome, " + account.getUserName()));
-        setAction(gameCtrl);
-        getChildren().addAll(welcomeLabel, startBtn, logoutBtn, leaderboardBtn, exitBtn);
-    }
 
-    public void setAction(GameCtrl gameCtrl) {
-        startBtn.setOnAction(event -> gameCtrl.handleStart());
-        logoutBtn.setOnAction(event -> gameCtrl.handleLogout());
-        exitBtn.setOnAction(event -> gameCtrl.handleExit());
-        leaderboardBtn.setOnAction(event -> gameCtrl.handleLeaderboard());
+        Label welcomeLabel = new Label();
+        welcomeLabel.setText(loginCtrl.getAccount() == null?"Welcome":("Welcome, " + loginCtrl.getAccount().getUserName()));
+
+        Button startBtn = new Button("Start"), logoutBtn = new Button("Logout"), leaderboardBtn = new Button("Leaderboard"), exitBtn = new Button("Exit");
+        startBtn.setOnAction(event -> loginCtrl.handleStart());
+        logoutBtn.setOnAction(event -> loginCtrl.handleLogout());
+        exitBtn.setOnAction(event -> loginCtrl.handleExit());
+        leaderboardBtn.setOnAction(event -> loginCtrl.handleLeaderboard());
+
+        getChildren().addAll(welcomeLabel, startBtn, logoutBtn, leaderboardBtn, exitBtn);
     }
 }
