@@ -7,6 +7,14 @@ LevelBox {
     -fx-alignment: Center;
 }
 
+.info {
+    -fx-text-fill: White;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 15px 30px;
+    -fx-alignment: center;
+}
+
 .button {
     -fx-pref-width: 300px;
     -fx-pref-height: 60px;

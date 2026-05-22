@@ -3,21 +3,13 @@ package controller;
 import dao.GameSaveDao;
 import dao.UserDao;
 import javafx.application.Platform;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import model.entity.Account;
 import model.entity.Crd;
 import model.entity.LinkyMap;
 import model.entity.MapSaveData;
-import view.InformationUtil;
 import view.game_nodes.*;
 import view.game_nodes.Interfaces.BoardInterface;
 import view.game_nodes.Interfaces.ProgressLabelInterface;
@@ -272,9 +264,13 @@ public class GameCtrl extends Parent {
         freezeCount--;
     }
 
+    public void handleLose() {
+        sceneCtrl.setScene(new LoseScene(this));
+    }
+
     public void handleHint() {
         if(hintPath.isEmpty()){
-            // handleLose();
+            handleLose();
         }
         else{
             Crd c1 = hintPath.getFirst();
@@ -412,7 +408,7 @@ public class GameCtrl extends Parent {
         sceneCtrl.setScene(new LoseScene(this));
     }
 
-    public void showWinScene(){
+    public void handleWin(){
         gameSaveDao.delMapSave(loadNumber, currentLevel);
         sceneCtrl.setScene(new WinScene(this));
     }
@@ -480,12 +476,12 @@ public class GameCtrl extends Parent {
                 maps.setMaxScore(loadNumber,currentLevel, scoreLabel.getScore());
             }
             levelScene.unlock(currentLevel, loadNumber);
-            showWinScene();
+            handleWin();
             return;
         }
         hintPath = linkyMap.pathAutoFind();
         if(hintPath.isEmpty() && bombCount == 0){
-            // handleLose();
+            handleLose();
         }
     }
 }

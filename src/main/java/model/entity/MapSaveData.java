@@ -7,9 +7,9 @@ public class MapSaveData {
     static final int loadNumberTot = 3;
     private ArrayList<int[][]> map;
     private boolean isPair;
-    private int[] score = new int[levelNumber];
-    private int[] remainTime = {180,300};
-    private int[] eliminated = new int[levelNumber];
+    private final int[] score = new int[levelNumber];
+    private final int[] remainTime = {180,300};
+    private final int[] eliminated = new int[levelNumber];
     private int loadNumber;
     private int[] bombCount = new int[levelNumber];
     private int[] freezeCount = new int[levelNumber];
@@ -50,7 +50,21 @@ public class MapSaveData {
     public int getRemainTime(int mode) { return remainTime[mode]; }
     public int getEliminated(int mode) { return eliminated[mode]; }
     public static int getTotal(int mode) {
-        return mode == 0 ? 50 : 16;
+        switch(mode) {
+            case 0:
+                return 16;
+            case 1:
+                return 36;
+            case 2:
+                return 32;
+            case 3:
+                return 64;
+            case 4:
+                return 100;
+            default:
+                return 1;
+        }
+
     }
 
     public void setBombCount(int mode, int bombCount) {

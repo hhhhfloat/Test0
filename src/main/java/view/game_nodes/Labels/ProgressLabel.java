@@ -31,7 +31,7 @@ public class ProgressLabel extends Label implements ProgressLabelInterface{
     }
 
     public String getProgress() {
-        double progress = (double) eliminated / total;
+        double progress = (double) eliminated / total * 100;
         return String.format("%.2f %%", progress);
     }
 }

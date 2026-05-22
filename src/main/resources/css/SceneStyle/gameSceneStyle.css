@@ -3,6 +3,14 @@
     -fx-background-size: cover;
 }
 
+.info {
+    -fx-text-fill: White;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 15px 30px;
+    -fx-alignment: center;
+}
+
 .label {
     -fx-background-image: url('/Sprites/label-bg.jpg');
     -fx-font-size: 20px;
