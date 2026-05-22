@@ -82,11 +82,9 @@ LoadBox {
     -fx-border-width: 4.5px;
 }
 
-VBox > Button {
+.back {
     -fx-pref-width: 380px;
     -fx-pref-height: 60px;
-    -fx-pref-width: 200px;
-    -fx-pref-height: 40px;
 
     -fx-background-radius: 10px;
     -fx-background-color: rgba(50, 150, 200, 0.8);
@@ -104,7 +102,7 @@ VBox > Button {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
-VBox > Button:hover {
+.back:hover {
     -fx-background-color: rgba(50, 215, 193, 0.8);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
@@ -115,7 +113,7 @@ VBox > Button:hover {
     -fx-border-width: 4.5px;
 }
 
-VBox > Button:pressed {
+.back:pressed {
     -fx-background-color: rgba(70, 170, 220, 0.8);
     -fx-border-color: rgba(30, 100, 140, 0.9);
     -fx-scale-x: 0.97;

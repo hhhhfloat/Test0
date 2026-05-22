@@ -1,9 +1,12 @@
 package view.game_nodes;
 
 import controller.GameCtrl;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import model.entity.Crd;
 
 import java.io.InputStream;
@@ -100,5 +103,22 @@ public class CellNode extends StackPane {
         st.setToY(0);
         st.setOnFinished(e -> setVisible(false));
         st.play();
+    }
+
+    public void setHint() {
+        Timeline flicker = new Timeline(
+                new KeyFrame(Duration.seconds(0.3), event -> {
+                    setTranslateX(-3);
+                    setTranslateY(-3);
+                    setStyle("-fx-border-width: 3px; -fx-border-color: red;");
+                }),
+                new KeyFrame(Duration.seconds(0.4), event -> setStyle("-fx-border-width: 3px; -fx-border-color: transparent;"))
+        );
+        flicker.setCycleCount(2);
+        flicker.play();
+
+        setStyle("-fx-border-width: 0px; -fx-border-color: transparent;");
+        setTranslateX(3);
+        setTranslateY(3);
     }
 }

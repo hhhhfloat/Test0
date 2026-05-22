@@ -54,8 +54,9 @@ public class TimeLabel extends Label implements TimeLabelInterface {
     @Override
     public void pauseTime(int seconds){
         pauseTime();
-        PauseTransition pause = new PauseTransition(Duration.seconds(30));
+        PauseTransition pause = new PauseTransition(Duration.seconds(seconds));
         pause.setOnFinished(e -> continueTime());
+        pause.play();
     }
 
     @Override

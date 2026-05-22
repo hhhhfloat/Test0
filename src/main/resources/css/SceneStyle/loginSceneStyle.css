@@ -33,7 +33,6 @@ HBox > Button:hover {
 }
 
 HBox > Button:pressed {
-    -fx-background-color: rgba(70, 170, 220, 0.8);
     -fx-scale-x: 0.97;
     -fx-scale-y: 0.97;
     -fx-translate-y: 1px;

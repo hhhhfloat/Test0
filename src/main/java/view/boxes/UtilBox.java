@@ -7,11 +7,14 @@ import javafx.scene.layout.VBox;
 
 public class UtilBox extends VBox{
     ToggleButton bombButton;
+    private boolean isFreeze;
     public UtilBox(GameCtrl gameCtrl){
         super(40);
         Button freezeButton = new Button("Freeze :x"), hintButton = new Button("Hint: x");
         bombButton = new ToggleButton("Bomb: x");
         bombButton.setOnMouseClicked(event -> gameCtrl.handleBombMode());
+
+        if(isFreeze)
         freezeButton.setOnMouseClicked(event -> gameCtrl.handleFreeze());
         hintButton.setOnMouseClicked(event -> gameCtrl.handleHint());
 

@@ -10,4 +10,7 @@ public class ScoreEntry {
     public int getScore() {
         return score;
     }
+    public String getName() {
+        return name;
+    }
 }

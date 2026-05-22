@@ -3,6 +3,7 @@ package controller;
 import dao.GameSaveDao;
 import dao.UserDao;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -250,7 +251,7 @@ public class GameCtrl extends Parent {
     }
 
    public void handleFreeze() {
-        timeLabel.pauseTime(30);
+        timeLabel.pauseTime(10);
         freezeCount--;
     }
 
@@ -440,7 +441,7 @@ public class GameCtrl extends Parent {
             audioCtrl.playEliminateSound();
         }
         linkyMap.delNumMap(route);
-        InformationUtil.playInformation((Pane) gameScene.getRoot(), "Eliminated:" + selectedCell.getType() + "x2!\n" + "Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
+        InformationUtil.playInformation(sceneCtrl.getRoot(), "Eliminated:" + selectedCell.getType() + "x2!\n" + "Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
         selectedCell = null;
         scoreLabel.addScore(combo);
         if (linkyMap.isComplete()) {

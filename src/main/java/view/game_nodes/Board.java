@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.scene.layout.*;
+import view.InformationUtil;
 import view.game_nodes.Interfaces.BoardInterface;
 
 
@@ -22,10 +23,12 @@ public class Board extends Pane implements BoardInterface {
     private Pane lineLayer;
     private final double size;
     private final double gap = 9.7;
+    private CellNode[][] cellNodes;
 
     public Board(int row, int col, double size, LinkyMap linkyMap, GameCtrl gameCtrl) {
         Random r = new Random();
         this.size = size;
+        cellNodes = new CellNode[row][col];
 
         Path cssPath = Paths.get("src", "main", "resources", "css", "board.css");
         String cssUri = cssPath.toUri().toString();
@@ -38,10 +41,10 @@ public class Board extends Pane implements BoardInterface {
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                CellNode cellNode = new CellNode(i, j, size, linkyMap.getMap()[i][j], gameCtrl,imgSet);
-                cellNode.setLayoutX(i*(size+gap));
-                cellNode.setLayoutY(j*(size+gap));
-                getChildren().add(cellNode);
+                cellNodes[i][j] = new CellNode(i, j, size, linkyMap.getMap()[i][j], gameCtrl,imgSet);
+                cellNodes[i][j].setLayoutX(i*(size+gap));
+                cellNodes[i][j].setLayoutY(j*(size+gap));
+                getChildren().add(cellNodes[i][j]);
             }
         }
 
@@ -85,6 +88,7 @@ public class Board extends Pane implements BoardInterface {
 
     @Override
     public void showHint(Crd c1, Crd c2){
-
+        cellNodes[c1.x()][c1.y()].setHint();
+        cellNodes[c2.x()][c2.y()].setHint();
     }
 }

@@ -10,10 +10,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.entity.Account;
+import model.state.ScoreEntry;
 import view.scenes.AccountScene;
 import view.scenes.InitialScene;
 import view.scenes.LoginScene;
 import view.scenes.RegisterScene;
+import java.util.List;
 
 public class LoginCtrl {
     private final UserDao userDao;
@@ -146,8 +148,9 @@ public class LoginCtrl {
     public void handleLeaderboard() {
         audioCtrl.playButtonSound();
         VBox list = new VBox(10);
-        for (int i = 1; i <= 30; i++) {
-            Label menuItem = new Label("No." + i);
+        List<ScoreEntry> userList = userDao.getLeaderboard(30);
+        for (int i = 1; i <= userList.toArray().length; i++) {
+            Label menuItem = new Label(String.format("No.%d: %s   Score:%d", i, userList.get(i-1).getName(), userList.get(i-1).getScore()));
             menuItem.setMaxWidth(Double.MAX_VALUE);
             menuItem.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
             list.getChildren().add(menuItem);

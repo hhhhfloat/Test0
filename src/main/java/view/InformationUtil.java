@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import javax.swing.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -20,6 +21,7 @@ public class InformationUtil{
         root.getChildren().add(overlayPane);
 
         Label information = new Label(info);
+        information.getStyleClass().add("info");
         overlayPane.getChildren().add(information);
 
         FadeTransition fadeInTransition = new FadeTransition(Duration.millis(80), information);

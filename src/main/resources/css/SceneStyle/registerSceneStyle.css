@@ -12,7 +12,7 @@ HBox {
 }
 
 HBox Button {
-    -fx-pref-width: 100px;
+    -fx-pref-width: 150px;
     -fx-pref-height: 20px;
 
     -fx-background-radius: 10px;

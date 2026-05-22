@@ -39,7 +39,6 @@ public class GameScene extends Scene {
         pauseButton.setLayoutX(15);
         pauseButton.setLayoutY(15);
 
-
         gameBoard = (Board) gameCtrl.getBoard();
         gameBoard.setLayoutX(134);
         gameBoard.setLayoutY(155);

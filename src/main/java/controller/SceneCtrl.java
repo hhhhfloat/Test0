@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import view.scenes.*;
 
@@ -12,7 +13,9 @@ public class SceneCtrl {
     public void setScene(Scene scene) {
         primaryStage.setScene(scene);
     }
-
+    public Pane getRoot() {
+        return (Pane) primaryStage.getScene().getRoot();
+    }
     public Stage getPrimaryStage() {
         return primaryStage;
     }
