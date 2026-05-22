@@ -20,7 +20,6 @@ public class GameScene extends Scene {
     static StackPane root = new StackPane();
     static UtilBox utilBox;
     static InfoBox infoBox;
-
     public GameScene(GameCtrl gameCtrl) {
         super(new BorderPane(createRoot(gameCtrl)), 800, 800);
         Path cssPath = Paths.get("src", "main", "resources", "css", "SceneStyle", "gameSceneStyle.css");
@@ -60,4 +59,5 @@ public class GameScene extends Scene {
     public static void bombLightOff(){
         utilBox.bombLightOff();
     }
+
 }

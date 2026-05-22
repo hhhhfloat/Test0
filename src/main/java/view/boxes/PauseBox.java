@@ -14,7 +14,7 @@ public class PauseBox extends VBox{
         Button continueBtn = new Button("Continue");
         continueBtn.setOnAction(e->gameCtrl.handleContinue());
         Button exitToMenuBtn = new Button("Exit To Menu");
-        exitToMenuBtn.setOnAction(event -> gameCtrl.handleExitToMenu());
+        exitToMenuBtn.setOnAction(event -> gameCtrl.handleExitToLevelSelect());
         Button exitBtn = new Button("Exit");
         exitBtn.setOnAction(event -> gameCtrl.handleExit());
         getChildren().addAll(restartBtn, saveBtn, continueBtn, exitToMenuBtn, exitBtn);

@@ -28,8 +28,6 @@ import view.game_nodes.Labels.TimeLabel;
 import view.scenes.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Properties;
 
 public class GameCtrl extends Parent {
@@ -310,8 +308,8 @@ public class GameCtrl extends Parent {
         timeLabel.pauseTime();
     }
 
-    //Pause Scene
-    public void handleExitToMenu() {
+    // Pause Scene
+    public void handleExitToLevelSelect() {
         audioCtrl.playButtonSound();
         handleSave();
         if (loadNumber != 0) {
@@ -320,9 +318,7 @@ public class GameCtrl extends Parent {
             alert.setContentText("Game automatically saved!");
             alert.showAndWait();
         }
-        account = null;
-        loadNumber = 0;
-        showAccountScene();
+        showLevelScene();
     }
 
     public void handleRestart() {
@@ -334,7 +330,6 @@ public class GameCtrl extends Parent {
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 gameSaveDao.delMapSave(loadNumber, mode);
-
                 showNewGameScene();
             }
         });
@@ -360,12 +355,12 @@ public class GameCtrl extends Parent {
 
 
     // save related variables
-    MapSaveData maps;
-    int bombCount, hintCount, freezeCount, eliminatedCount;
+    private MapSaveData maps;
+    private Properties config;
+    private int bombCount, hintCount, freezeCount, eliminatedCount;
 
     public void showNewGameScene() {
         int row = 12,col = 12;
-        Properties config;
         boolean isPair = false;
         try{
             maps = gameSaveDao.loadMaps(loadNumber);

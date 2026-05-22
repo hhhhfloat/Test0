@@ -19,7 +19,7 @@ import view.game_nodes.Interfaces.BoardInterface;
 
 
 public class Board extends Pane implements BoardInterface {
-    private final Pane lineLayer;
+    private Pane lineLayer;
     private final double size;
     private final double gap = 9.7;
 
