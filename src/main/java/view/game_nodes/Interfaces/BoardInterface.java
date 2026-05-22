@@ -1,6 +1,8 @@
 package view.game_nodes.Interfaces;
 
+import controller.GameCtrl;
 import model.entity.Crd;
+import model.entity.LinkyMap;
 import view.game_nodes.CellNode;
 
 import java.util.ArrayList;

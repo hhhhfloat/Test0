@@ -2,6 +2,7 @@ package view.scenes;
 
 import controller.GameCtrl;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import view.InformationUtil;
 import view.boxes.LevelBox;
@@ -14,7 +15,7 @@ public class LevelScene extends Scene{
     private final GameCtrl gameCtrl;
     private String congrats;
     private static final StackPane root = new StackPane();
-    private int unlock;
+    private int[] maxUnlocked = {1,1,1};
     private boolean isPlayInfo = false;
 
     public LevelScene(GameCtrl gameCtrl) {
@@ -26,53 +27,20 @@ public class LevelScene extends Scene{
         getStylesheets().add(cssPath.toUri().toString());
     }
 
-    public void playInfo() {
-        switch(unlock) {
-            case 2:
-                congrats = "Congrats! Level2 - Unlocked!";
-                break;
-            case 3:
-                congrats = "Congrats! Level3 - Unlocked!";
-                break;
-            case 4:
-                congrats = "Congrats! Level4 - Unlocked!";
-                break;
-            case 5:
-                congrats = "Congrats! Level5 - Unlocked!";
-                break;
-        }
-
+    public void playInfo(int loadNumber) {
+        congrats = "     Congratulations!\nLevel "+maxUnlocked[loadNumber]+" Unlocked!";
         if(isPlayInfo) {
             InformationUtil.playInformation(root, congrats);
             isPlayInfo = false;
         }
     }
-
-    public void unlock2(){
-        levelBox.getLevel2().setText("Level2");
-        levelBox.getLevel2().setOnAction(event -> gameCtrl.handleLevel2());
-        unlock = 2;
-        isPlayInfo = true;
-    }
-
-    public void unlock3(){
-        levelBox.getLevel3().setText("Level3");
-        levelBox.getLevel3().setOnAction(event -> gameCtrl.handleLevel3());
-        unlock = 3;
-        isPlayInfo = true;
-    }
-
-    public void unlock4(){
-        levelBox.getLevel4().setText("Level4");
-        levelBox.getLevel4().setOnAction(event -> gameCtrl.handleLevel4());
-        unlock = 4;
-        isPlayInfo = true;
-    }
-
-    public void unlock5(){
-        levelBox.getLevel5().setText("Level5");
-        levelBox.getLevel5().setOnAction(event -> gameCtrl.handleLevel5());
-        unlock = 5;
+    public void unlock(int currentLevel, int loadNumber){
+        int levelIndex = currentLevel + 1;
+        Button level = levelBox.getLevel(levelIndex++);
+        level.setText("Level"+levelIndex);
+        final int unlockIndex = levelIndex;
+        level.setOnAction(e->gameCtrl.handleLevel(unlockIndex));
+        maxUnlocked[loadNumber] = levelIndex;
         isPlayInfo = true;
     }
 }
