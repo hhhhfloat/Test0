@@ -349,6 +349,10 @@ public class GameCtrl extends Parent {
         sceneCtrl.setScene(new LoadScene(this));
     }
 
+    public void backToLoadScene(){
+
+    }
+
     public void showLoginScene() {
         sceneCtrl.setScene(new LoginScene(new LoginCtrl(userDao, audioCtrl, sceneCtrl, this)));
     }
