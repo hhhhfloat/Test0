@@ -3,11 +3,12 @@
     -fx-background-size: cover;
 }
 
-VBox {
+.winbox {
     -fx-alignment: Center;
 }
 
 .state {
+    -fx-alignment: Center;
     -fx-text-fill: Black;
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
     -fx-font-size: 100px;
@@ -15,6 +16,7 @@ VBox {
 }
 
 .stat {
+    -fx-alignment: Center;
     -fx-background-image: url('/Sprites/label-bg.jpg');
     -fx-text-fill: Black;
     -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
@@ -24,7 +26,8 @@ VBox {
 }
 
 .button {
-    -fx-pref-width: 120px;
+    -fx-alignment: Center;
+    -fx-pref-width: 150px;
     -fx-pref-height: 20px;
 
     -fx-background-radius: 10px;

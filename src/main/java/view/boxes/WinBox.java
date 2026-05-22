@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 public class WinBox extends VBox {
     public WinBox(GameCtrl gameCtrl) {
         super(10);
+        getStyleClass().add("winbox");
         Label state = new Label("WIN!!!"), scoreLabel = new Label("Score: " + gameCtrl.getScoreLabel().getScore()), timeLabel = new Label("Time used: " + gameCtrl.getTimeLabel().getTime());
         state.getStyleClass().add("state");
         scoreLabel.getStyleClass().add("stat");
