@@ -1,16 +1,14 @@
 package view.boxes;
 
 import controller.LoginCtrl;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class RegisterBox extends VBox{
     private final TextField usernameField;
     private final PasswordField passwordField;
+    private final PasswordField confirmFiled;
 
     public RegisterBox(LoginCtrl loginCtrl) {
         super(15);
@@ -18,15 +16,39 @@ public class RegisterBox extends VBox{
         Label messageLabel = new Label("Register");
 
         usernameField = new TextField();
-        usernameField.setPromptText("Please enter your username: ");
+        usernameField.setPromptText("Please enter your username");
         passwordField = new PasswordField();
-        passwordField.setPromptText("Please enter your password: ");
+        passwordField.setPromptText("Please enter your password");
+        confirmFiled = new PasswordField();
+        confirmFiled.setPromptText("Please confirm your password");
 
-        Button cancelBtn = new Button("Cancel"), confirmBtn = new Button("Confirm");
+        // restrict input upper bound to 2000 chars
+        usernameField.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().length() > 2000) {
+                return null;
+            }
+            return change;
+        }));
+        passwordField.setTextFormatter(new TextFormatter<>(change -> {
+            if(change.getControlNewText().length()>2000){
+                return null;
+            }
+            return change;
+        }));
+        confirmFiled.setTextFormatter(new TextFormatter<>(change -> {
+            if(change.getControlNewText().length()>2000){
+                return null;
+            }
+            return change;
+        }));
+
+        Button cancelBtn = new Button("Cancel"),
+                confirmBtn = new Button("Confirm");
+
         cancelBtn.setOnAction(event -> loginCtrl.handleRegisterCancel());
-        confirmBtn.setOnAction(event -> loginCtrl.handleRegisterConfirm(usernameField.getText(), passwordField.getText()));
+        confirmBtn.setOnAction(event -> loginCtrl.handleRegisterConfirm(usernameField.getText(), passwordField.getText(), confirmFiled.getText()));
         HBox choiceBox = new HBox(80, cancelBtn, confirmBtn);
 
-        getChildren().addAll(messageLabel, usernameField, passwordField, choiceBox);
+        getChildren().addAll(messageLabel, usernameField, passwordField, confirmFiled, choiceBox);
     }
 }

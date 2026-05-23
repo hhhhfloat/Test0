@@ -6,12 +6,14 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 
 public class UtilBox extends VBox{
-    private ToggleButton bombButton;
+    private final ToggleButton bombButton;
+    private final Button freezeButton, hintButton;
     private boolean isFreeze;
     public UtilBox(GameCtrl gameCtrl){
         super(40);
-        Button freezeButton = new Button("Freeze :x"), hintButton = new Button("Hint: x");
-        bombButton = new ToggleButton("Bomb × "+gameCtrl.getBombCount());
+        freezeButton = new Button("⌛ ×" + gameCtrl.getFreezeCount());
+        hintButton = new Button("❓ ×"+gameCtrl.getHintCount());
+        bombButton = new ToggleButton("💥 ×"+gameCtrl.getBombCount());
         bombButton.setOnMouseClicked(event -> gameCtrl.handleBombMode());
 
         if(isFreeze)
@@ -24,6 +26,9 @@ public class UtilBox extends VBox{
         bombButton.setSelected(false);
     }
     public void setBombCount(int count){
-        bombButton.setText("Bomb × "+count);
+        bombButton.setText("💥 ×"+count);
     }
+    public void setFreezeCount(int count){freezeButton.setText("⌛ ×"+count);}
+    public void setHintCount(int count){hintButton.setText("❓ ×"+count);}
+
 }

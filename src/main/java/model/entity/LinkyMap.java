@@ -230,7 +230,6 @@ public class LinkyMap {
                     while (Count[r] == 0) {
                         r = rand.nextInt(n);
                     }
-                    System.out.println();
                     map[x][y] = r;
                     buf_map[x][y] = r;
                     Count[r]--;

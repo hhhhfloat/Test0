@@ -22,7 +22,9 @@ public class LoginBox extends VBox {
         passwordField = new PasswordField();
         passwordField.setPromptText("Please enter your password: ");
 
-        Button cancelBtn = new Button("Cancel"), confirmBtn = new Button("Confirm"), registerBtn = new Button("Don't have an account yet? Click here to register");
+        Button cancelBtn = new Button("Cancel"),
+                confirmBtn = new Button("Confirm"),
+                registerBtn = new Button("Don't have an account yet? Click here to register");
         cancelBtn.setOnAction(event -> loginCtrl.handleLoginCancel());
         confirmBtn.setOnAction(e -> loginCtrl.handleLoginConfirm(usernameField.getText(), passwordField.getText()));
         registerBtn.setOnAction(e -> loginCtrl.handleRegister());

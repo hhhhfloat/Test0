@@ -13,4 +13,5 @@ public interface UserDao {
     void updateHighScore(String username, int score);
     List<ScoreEntry> getLeaderboard(int limit);
     Account findByUsername(String username);
+    void deleteAccount(String username);
 }

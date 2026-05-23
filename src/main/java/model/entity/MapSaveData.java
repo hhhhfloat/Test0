@@ -1,101 +1,107 @@
 package model.entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MapSaveData {
-    static final int levelNumber = 5;
-    static final int loadNumberTot = 3;
+    private static final int levelNumber = 5;
+    private static final int[] totalPairs = {8,18,16,32,50};
+    private static final int utilNumber = 3;
+    private static final int[] allRemainTime = {180,300,300,300,300};
+
     private ArrayList<int[][]> map;
     private boolean isPair;
-    private final int[] score = new int[levelNumber];
-    private final int[] remainTime = {180,300};
-    private final int[] eliminated = new int[levelNumber];
-    private int loadNumber;
+    private int[] score = new int[levelNumber];
+    private int[] remainTime = {180,300,300,300,300};
+    private int[] eliminated = new int[levelNumber];
     private int[] bombCount = new int[levelNumber];
     private int[] freezeCount = new int[levelNumber];
     private int[] hintCount = new int[levelNumber];
-    private int[][] maxHistoryScore = new int[loadNumberTot][levelNumber];
 
-    public MapSaveData(){}
+    // 记录本存档的各个关卡历史最高分
+    private int[] maxHistoryScore = new int[levelNumber];
+    private int maxUnlockedLevel = 0;
 
-    public MapSaveData(int loadNumber){
-        this.loadNumber = loadNumber;
+    public MapSaveData(){
         map = new ArrayList<>();
-        map.add(new int[0][0]);
-        map.add(new int[0][0]);
+        for (int i = 0; i < levelNumber; i++) {
+            map.add(new int[0][0]);
+        }
+        Arrays.fill(bombCount,utilNumber);
+        Arrays.fill(freezeCount, utilNumber);
+        Arrays.fill(hintCount,utilNumber);
     }
 
-    public int[][] getMap(int mode){
-        return map.get(mode);
+    public int getMaxUnlockedLevel() {
+        return maxUnlockedLevel;
     }
 
-    public void setMap(int mode, int[][] mp){
-        map.set(mode,mp);
+    public void setMaxUnlockedLevel(int maxUnlockedLevel) {
+        this.maxUnlockedLevel = maxUnlockedLevel;
     }
-    public int getScore(int mode) {
-        return score[mode];
+
+    public int[][] getMap(int currentLevel){
+        return map.get(currentLevel);
+    }
+
+    public void setMap(int currentLevel, int[][] mp){
+        map.set(currentLevel,mp);
+    }
+    public int getScore(int currentLevel) {
+        return score[currentLevel];
     }
     public boolean getIsPair() {
         return isPair;
     }
-    public void setScore(int mode, int score) {
-        this.score[mode] = score;
+    public void setScore(int currentLevel, int score) {
+        this.score[currentLevel] = score;
     }
     public void setIsPair(boolean isPair) {
         this.isPair = isPair;
     }
-    public void setRemainTime(int mode, int remainTime){
-        this.remainTime[mode] = remainTime;
+    public void setRemainTime(int currentLevel, int remainTime){
+        this.remainTime[currentLevel] = remainTime;
     }
-    public int getRemainTime(int mode) { return remainTime[mode]; }
-    public int getEliminated(int mode) { return eliminated[mode]; }
-    public static int getTotal(int mode) {
-        switch(mode) {
-            case 0:
-                return 16;
-            case 1:
-                return 36;
-            case 2:
-                return 32;
-            case 3:
-                return 64;
-            case 4:
-                return 100;
-            default:
-                return 1;
-        }
-
+    public void setRemainTime(int currentLevel){
+        this.remainTime[currentLevel] = allRemainTime[currentLevel];
+    }
+    public int getRemainTime(int currentLevel) { return remainTime[currentLevel]; }
+    public int getEliminated(int currentLevel) { return eliminated[currentLevel]; }
+    public static int getTotalPairs(int currentLevel) {
+        return totalPairs[currentLevel];
     }
 
-    public void setBombCount(int mode, int bombCount) {
-        this.bombCount[mode] = bombCount;
+    public void setHintCount(int currentLevel, int hintCount){this.hintCount[currentLevel] = hintCount;}
+    public void setBombCount(int currentLevel, int bombCount) {
+        this.bombCount[currentLevel] = bombCount;
     }
-    public void setEliminated(int mode, int eliminated) {
-        this.eliminated[mode] = eliminated;
+    public void setEliminated(int currentLevel, int eliminated) {
+        this.eliminated[currentLevel] = eliminated;
     }
-    public void setFreezeCount(int mode, int freezeCount) {
-        this.freezeCount[mode] = freezeCount;
-    }
-
-    public int getBombCount(int mode) {
-        return bombCount[mode];
-    }
-    public int getFreezeCount(int mode) {
-        return freezeCount[mode];
-    }
-    public int getHintCount(int mode) {
-        return hintCount[mode];
+    public void setFreezeCount(int currentLevel, int freezeCount) {
+        this.freezeCount[currentLevel] = freezeCount;
     }
 
-    public int getMaxScore(int loadNumber,int index) {
-        return maxHistoryScore[loadNumber][index];
+    public int getBombCount(int currentLevel) {
+        return bombCount[currentLevel];
+    }
+    public int getFreezeCount(int currentLevel) {
+        return freezeCount[currentLevel];
+    }
+    public int getHintCount(int currentLevel) {
+        return hintCount[currentLevel];
     }
 
-    public void setMaxScore(int loadNumber, int index, int maxScore) {
-        this.maxHistoryScore[loadNumber][index] = maxScore;
+    public int getMaxScore(int currentLevel) {
+        return maxHistoryScore[currentLevel];
     }
 
-    public int[][] getMaxHistoryScore() {
+    public void setMaxScore(int currentLevelx, int maxScore) {
+        this.maxHistoryScore[currentLevelx] = maxScore;
+    }
+
+    public int[] getMaxHistoryScore() {
         return maxHistoryScore;
     }
+
 }

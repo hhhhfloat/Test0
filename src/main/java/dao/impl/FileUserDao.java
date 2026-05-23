@@ -12,7 +12,7 @@ public class FileUserDao implements UserDao {
     private final Path userFile;
 
     public FileUserDao() {
-        userFile  = Paths.get("Data/users.properties");
+        userFile  = Paths.get("Data","users.properties");
     }
 
     private Properties loadProperties() {
@@ -109,5 +109,14 @@ public class FileUserDao implements UserDao {
         Account account = new Account(username);
         account.setPassword(pwd);
         return account;
+    }
+    @Override
+    public void deleteAccount(String username){
+        Properties props = loadProperties();
+        props.remove(username+".pwd");
+        props.remove(username+".highscore");
+        try(OutputStream out = Files.newOutputStream(userFile)){
+            props.store(out,"User [" + username+"] is deleted");
+        }catch(IOException e){return;}
     }
 }

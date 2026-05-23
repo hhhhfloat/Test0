@@ -88,7 +88,9 @@ public class Board extends Pane implements BoardInterface {
 
     @Override
     public void showHint(Crd c1, Crd c2){
-        cellNodes[c1.x()][c1.y()].setHint();
-        cellNodes[c2.x()][c2.y()].setHint();
+        CellNode cell1 = cellNodes[c1.x()][c1.y()];
+        CellNode cell2 = cellNodes[c2.x()][c2.y()];
+        cell1.setHint();
+        cell2.setHint();
     }
 }

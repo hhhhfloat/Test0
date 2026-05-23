@@ -16,7 +16,7 @@ public class LoseBox extends VBox {
         progressLabel.getStyleClass().add("stat");
 
         Button confirm = new Button("OH NO!!!");
-        confirm.setOnMouseClicked(event -> gameCtrl.showLevelScene());
+        confirm.setOnMouseClicked(event -> gameCtrl.showLevelSelectScene(false));
         getChildren().addAll(state, scoreLabel, timeLabel, progressLabel, confirm);
     }
 }

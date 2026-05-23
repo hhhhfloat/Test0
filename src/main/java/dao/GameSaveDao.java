@@ -1,6 +1,8 @@
 package dao;
 
 import java.util.Properties;
+
+import controller.GameCtrl;
 import model.entity.MapSaveData;
 
 public interface GameSaveDao {
@@ -8,16 +10,13 @@ public interface GameSaveDao {
     void setCurrentUser(String userName);
 
     // 保存地图
-    void saveMap(MapSaveData mapData,int loadNumber);
-    MapSaveData loadMaps(int loadNumber);
+    void saveCurrentLoad(MapSaveData mapData, int loadNumber);
+    MapSaveData loadSelectedLoad(int loadNumber);
 
-    // 保存Config
-    Properties loadConfig();
-    void saveConfig(Properties config);
 
     // 删档
-    void delMapSave(int loadNumber);
-    void delMapSave(int loadNumber,int currentLevel);
-    // delete config
-    void delConfigSave();
+    void delLoadSave(int loadNumber);
+    void delSelectedLevelSave(MapSaveData maps, int currentLevel);
+
+    void setGameCtrl(GameCtrl gameCtrl);
 }

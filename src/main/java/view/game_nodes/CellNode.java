@@ -106,6 +106,9 @@ public class CellNode extends StackPane {
     }
 
     public void setHint() {
+        final String originalStyle = getStyle();
+        final double originalTx = getTranslateX();
+        final double originalTy = getTranslateY();
         Timeline flicker = new Timeline(
                 new KeyFrame(Duration.seconds(0.3), event -> {
                     setTranslateX(-3);
@@ -120,5 +123,11 @@ public class CellNode extends StackPane {
         setStyle("-fx-border-width: 0px; -fx-border-color: transparent;");
         setTranslateX(3);
         setTranslateY(3);
+
+        flicker.setOnFinished(e->{
+            setStyle(originalStyle);
+            setTranslateX(originalTx);
+            setTranslateY(originalTy);
+        });
     }
 }
