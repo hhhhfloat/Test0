@@ -58,8 +58,7 @@ public class GameScene extends Scene {
         return root;
     }
 
-    public static void playInfo(int combo, int type){
-        String s = "Eliminated:" + type + "x2!\n" + "Combo " + combo + "!\n Score " + (10 + 5 * (combo - 1));
+    public static void playInfo(String s){
         InformationUtil.playInformation(root, s);
     }
 

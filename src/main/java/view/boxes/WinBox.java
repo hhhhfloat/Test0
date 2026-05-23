@@ -14,7 +14,7 @@ public class WinBox extends VBox {
         scoreLabel.getStyleClass().add("stat");
         timeLabel.getStyleClass().add("stat");
         Button confirm = new Button("Hooray!!!");
-        confirm.setOnMouseClicked(event -> gameCtrl.showLevelSelectScene(true));
+        confirm.setOnMouseClicked(event -> gameCtrl.showLevelSelectScene());
         getChildren().addAll(state, scoreLabel, timeLabel,confirm);
     }
 }

@@ -54,6 +54,15 @@ public class LoginCtrl {
         return loadNumber;
     }
 
+    public void syncHighestScore(MapSaveData maps){
+        int[] scores = maps.getMaxHistoryScore();
+        int sum = 0;
+        for (int i = 0; i < scores.length; i++) {
+            sum+=scores[i];
+        }
+        userDao.updateHighScore(account.getUserName(), sum);
+    }
+
     public void handleLogin() {
         audioCtrl.playButtonSound();
         showLoginScene();
@@ -175,6 +184,7 @@ public class LoginCtrl {
             }
             showLevelSelectScene(false);
         } else {
+            if(mapsForTourist != null)mapsForTourist = null;
             showLoadScene();
         }
     }
@@ -186,8 +196,11 @@ public class LoginCtrl {
         alert.setHeaderText("Sure to leave?");
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
+                loadNumber = 0;
                 account = null;
                 gameCtrl = null;
+                levelSelectScene = null;
+                if(mapsForTourist != null)mapsForTourist = null;
                 showInitialScene();
             }
         });

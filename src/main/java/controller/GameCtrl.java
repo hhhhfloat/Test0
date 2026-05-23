@@ -117,11 +117,6 @@ public class GameCtrl extends Parent {
         return loadNumber;
     }
 
-    // Loading Works
-    public void handleLoad0() {
-        showLevelSelectScene(false);
-    }
-
     public void loadGame() {
         try{
             maps = gameSaveDao.loadSelectedLoad(loadNumber);
@@ -200,15 +195,20 @@ public class GameCtrl extends Parent {
             maps.setBombCount(currentLevel, bombCount);
             maps.setRemainTime(currentLevel, timeLabel.getRemainingTime());
         }
-        maps.setMaxUnlockedLevel(levelSelectScene.getMaxUnlocked());
-        if(!isTourist){
-            gameSaveDao.saveCurrentLoad(maps, loadNumber);
-        }
+        handleLeaveLoad(loadNumber);
         if(isShowed){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Reminding");
-            alert.setHeaderText("Game saved " + (isTourist?"temporarily":""));
+            alert.setHeaderText("Game saved" + (isTourist?" temporarily":""));
             alert.showAndWait();
+        }
+    }
+
+    public void handleLeaveLoad(int loadNumber){
+        maps.setMaxUnlockedLevel(levelSelectScene.getMaxUnlocked());
+        if (!isTourist) {
+            gameSaveDao.saveCurrentLoad(maps, loadNumber);
+            loginCtrl.syncHighestScore(maps);
         }
     }
 
@@ -230,7 +230,7 @@ public class GameCtrl extends Parent {
         if(loadNumber == 0 || account == null){
             loginCtrl.showAccountScene();
         }else{
-            // handleSave(false);
+            handleLeaveLoad(loadNumber);
             loginCtrl.showLoadScene();
         }
     }
@@ -268,6 +268,7 @@ public class GameCtrl extends Parent {
     }
 
     public void handleLose() {
+        isNewUnlock = false;
         sceneCtrl.setScene(new LoseScene(this));
     }
 
@@ -289,13 +290,14 @@ public class GameCtrl extends Parent {
 
     // Pause Scene
     public void handleExitToLevelSelect() {
+        isNewUnlock = false;
         audioCtrl.playButtonSound();
         handleSave(false);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Save info");
         alert.setContentText("Game automatically saved!");
         alert.showAndWait();
-        showLevelSelectScene(false);
+        showLevelSelectScene();
     }
 
     public void handleRestart() {
@@ -332,8 +334,13 @@ public class GameCtrl extends Parent {
 
 
 
+    private boolean isNewUnlock;
 
-    public void showLevelSelectScene(boolean isNewUnlock) {
+    public boolean isNewUnlock() {
+        return isNewUnlock;
+    }
+
+    public void showLevelSelectScene() {
         loginCtrl.showLevelSelectScene(isNewUnlock);
     }
 
@@ -432,7 +439,8 @@ public class GameCtrl extends Parent {
             audioCtrl.playEliminateSound();
         }
         linkyMap.delNumMap(route);
-        GameScene.playInfo(++combo, selectedCell.getType());
+        String s = "Eliminated: 2×" + selectedCell.getType() + "!\n" + (++combo) + "× COMBO"  + "!\n+" + (10 + 5 * (combo - 1)+" score");
+        GameScene.playInfo(s);
         selectedCell = null;
         scoreLabel.addScore(combo);
         if (linkyMap.isComplete()) {
@@ -440,16 +448,21 @@ public class GameCtrl extends Parent {
             {
                 if(scoreLabel.getScore()>maps.getMaxScore(currentLevel)){
                     maps.setMaxScore(currentLevel, scoreLabel.getScore());
+                    GameScene.playInfo("*** NEW RECORD ***");
                 }
                 System.out.println(currentLevel);
                 gameSaveDao.delSelectedLevelSave(maps, currentLevel);
             }
-            levelSelectScene.unlock(currentLevel);
+            if(levelSelectScene.getMaxUnlocked()<=currentLevel){
+                isNewUnlock = true;
+                levelSelectScene.unlock(currentLevel);
+            }
             showWinScene();
             return;
         }
         hintPath = linkyMap.pathAutoFind();
         if(hintPath.isEmpty() && bombCount == 0){
+            isNewUnlock = false;
             handleLose();
         }
     }
