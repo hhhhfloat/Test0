@@ -108,24 +108,10 @@ public class GameCtrl extends Parent {
         if (account != null) {
             showLoadScene();
         } else {
-            loadNumber = 0;
             handleLoad0();
         }
     }
 
-    public void handleLogout() {
-        audioCtrl.playButtonSound();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm");
-        alert.setHeaderText("Are you sure you want to logout?");
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                account = null;
-                loadNumber = 0;
-                showLoginScene();
-            }
-        });
-    }
 
     public void handleExit() {
         audioCtrl.playButtonSound();
@@ -150,11 +136,13 @@ public class GameCtrl extends Parent {
     }
 
     public void handleSave(boolean isShowed) {
-        if (loadNumber == 0 && isShowed) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Reminding");
-            alert.setHeaderText("You can't save in visitor mode!");
-            alert.showAndWait();
+        if (loadNumber == 0) {
+            if(isShowed){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Reminding");
+                alert.setHeaderText("You can't save in visitor mode!");
+                alert.showAndWait();
+            }
             return;
         }
         // save map
@@ -176,47 +164,22 @@ public class GameCtrl extends Parent {
         }
     }
 
-    public void deleteLoad(int loadNumber) {
+    public void handleLoadDelete(int loadNumber) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
         alert.setHeaderText("Are you sure you want to delete this load?");
         alert.setContentText("All the data will be lost!");
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                gameSaveDao.delMapSave(loadNumber, 0);
-                gameSaveDao.delMapSave(loadNumber, 1);
+                gameSaveDao.delMapSave(loadNumber);
             }
         });
     }
 
-    public void handleLoad1() {
+    public void handleLoad(int index){
         audioCtrl.playButtonSound();
-        loadNumber = 1;
+        loadNumber = index;
         showLevelScene();
-    }
-
-    public void handleDelete1() {
-        deleteLoad(1);
-    }
-
-    public void handleLoad2() {
-        audioCtrl.playButtonSound();
-        loadNumber = 2;
-        showLevelScene();
-    }
-
-    public void handleDelete2() {
-        deleteLoad(2);
-    }
-
-    public void handleLoad3() {
-        audioCtrl.playButtonSound();
-        loadNumber = 3;
-        showLevelScene();
-    }
-
-    public void handleDelete3() {
-        deleteLoad(3);
     }
 
     public void handleBack() {
@@ -333,7 +296,10 @@ public class GameCtrl extends Parent {
     }
 
     public void showLevelScene() {
-        levelScene.playInfo(loadNumber);
+        if(loadNumber!=0){
+            levelScene.playInfo(loadNumber-1);
+        }
+
         sceneCtrl.setScene(levelScene);
     }
 
@@ -364,7 +330,7 @@ public class GameCtrl extends Parent {
             alert.setTitle("Warning");
             alert.setHeaderText("Invalid Save Data");
             alert.setContentText("The game will create a new save");
-            gameSaveDao.delMapSave(loadNumber, currentLevel);
+            gameSaveDao.delMapSave(loadNumber);
             alert.showAndWait();
             return;
         }
@@ -408,8 +374,7 @@ public class GameCtrl extends Parent {
         sceneCtrl.setScene(new LoseScene(this));
     }
 
-    public void handleWin(){
-        gameSaveDao.delMapSave(loadNumber, currentLevel);
+    public void showWinScene(){
         sceneCtrl.setScene(new WinScene(this));
     }
 
@@ -467,16 +432,21 @@ public class GameCtrl extends Parent {
             audioCtrl.playEliminateSound();
         }
         linkyMap.delNumMap(route);
-        gameScene.playInfo(++combo, selectedCell.getType());
+        GameScene.playInfo(++combo, selectedCell.getType());
         // InformationUtil.playInformation(gameScene.getRoot(), "Eliminated:" + selectedCell.getType() + "x2!\n" + "Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
         selectedCell = null;
         scoreLabel.addScore(combo);
         if (linkyMap.isComplete()) {
-            if(loadNumber != 0 && scoreLabel.getScore()>maps.getMaxScore(loadNumber, currentLevel)){
-                maps.setMaxScore(loadNumber,currentLevel, scoreLabel.getScore());
+            if(loadNumber != 0)
+            {
+                if(scoreLabel.getScore()>maps.getMaxScore(loadNumber, currentLevel)){
+                    maps.setMaxScore(loadNumber,currentLevel, scoreLabel.getScore());
+                }
+                gameSaveDao.delMapSave(loadNumber, currentLevel);
+                // set highest score
             }
             levelScene.unlock(currentLevel, loadNumber);
-            handleWin();
+            showWinScene();
             return;
         }
         hintPath = linkyMap.pathAutoFind();

@@ -16,7 +16,8 @@ public interface GameSaveDao {
     void saveConfig(Properties config);
 
     // 删档
-    void delMapSave(int loadNumber, int mode);
+    void delMapSave(int loadNumber);
+    void delMapSave(int loadNumber,int currentLevel);
     // delete config
     void delConfigSave();
 }

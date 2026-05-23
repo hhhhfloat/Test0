@@ -98,7 +98,7 @@ public class FileGameSaveDao implements GameSaveDao {
     }
 
     @Override
-    public void delMapSave(int loadNumber, int mode){
+    public void delMapSave(int loadNumber){
         // map delete
         if (currentUser == null || saveRoot == null || loadNumber == 0) {
             return;
@@ -110,6 +110,26 @@ public class FileGameSaveDao implements GameSaveDao {
             }
         } catch (Exception e) {return;}
     }
+    @Override
+    public void delMapSave(int loadNumber,int currentLevel){
+        // map delete
+        if (currentUser == null || saveRoot == null || loadNumber == 0) {
+            return;
+        }
+        MapSaveData maps = loadMaps(loadNumber);
+        if(maps != null){
+            maps.setMap(currentLevel, new int[0][0]);
+            maps.setScore(currentLevel, 0);
+        }
+        Path mapPath = saveRoot.resolve("MapSave" + loadNumber + ".json");
+        try (FileWriter writer = new FileWriter(mapPath.toFile())) {
+            gson.toJson(maps, writer);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed map data saving: " + e.getMessage(), e);
+        }
+
+    }
+
     @Override
     public void delConfigSave(){
         if(currentUser == null || saveRoot == null){
