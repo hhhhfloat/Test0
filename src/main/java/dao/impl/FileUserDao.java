@@ -69,11 +69,9 @@ public class FileUserDao implements UserDao {
     @Override
     public void updateHighScore(String username, int score) {
         int currentHigh = getHighScore(username);
-        if (score > currentHigh) {
-            Properties props = loadProperties();
-            props.setProperty(username + ".highscore", String.valueOf(score));
-            saveProperties(props);
-        }
+        Properties props = loadProperties();
+        props.setProperty(username + ".highscore", String.valueOf(score));
+        saveProperties(props);
     }
 
     @Override

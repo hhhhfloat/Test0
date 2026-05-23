@@ -52,7 +52,7 @@ public class GameCtrl extends Parent {
     private ArrayList<Crd> hintPath;
     private boolean isTourist;
 
-    public GameCtrl( SceneCtrl sceneCtrl, AudioCtrl audioCtrl, LoginCtrl loginCtrl) {
+    public GameCtrl( SceneCtrl sceneCtrl, AudioCtrl audioCtrl, LoginCtrl loginCtrl,GameSaveDao gameSaveDao) {
         this.sceneCtrl = sceneCtrl;
         this.audioCtrl = audioCtrl;
         this.loginCtrl = loginCtrl;
@@ -65,9 +65,8 @@ public class GameCtrl extends Parent {
         selectedCell = null;
         /// 游客数据在loginCtrl管理
         if(!loginCtrl.isTourist()){
-            gameSaveDao = new FileGameSaveDao();
-            gameSaveDao.setGameCtrl(this);
-            gameSaveDao.setCurrentUser(account.getUserName());
+            GameCtrl.gameSaveDao = gameSaveDao;
+            GameCtrl.gameSaveDao.setGameCtrl(this);
         }
     }
 
@@ -208,7 +207,7 @@ public class GameCtrl extends Parent {
         maps.setMaxUnlockedLevel(levelSelectScene.getMaxUnlocked());
         if (!isTourist) {
             gameSaveDao.saveCurrentLoad(maps, loadNumber);
-            loginCtrl.syncHighestScore(maps);
+            loginCtrl.syncHighestScore();
         }
     }
 

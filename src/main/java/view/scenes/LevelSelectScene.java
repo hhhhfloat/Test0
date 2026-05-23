@@ -17,6 +17,7 @@ public class LevelSelectScene extends Scene{
     private static StackPane root;
     private int maxUnlocked = 0;
 
+
     public LevelSelectScene(GameCtrl gameCtrl) {
         super(new StackPane(createRoot(gameCtrl)), 800, 800);
         this.gameCtrl = gameCtrl;

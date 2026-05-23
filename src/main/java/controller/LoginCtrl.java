@@ -2,6 +2,7 @@ package controller;
 
 import dao.GameSaveDao;
 import dao.UserDao;
+import dao.impl.FileGameSaveDao;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -21,6 +22,7 @@ public class LoginCtrl {
     private final UserDao userDao;
     private final AudioCtrl audioCtrl;
     private final SceneCtrl sceneCtrl;
+    public final int totLoadNumber = 3;
     private Account account;
     private boolean isTourist;
     private int loadNumber = 0;
@@ -54,13 +56,20 @@ public class LoginCtrl {
         return loadNumber;
     }
 
-    public void syncHighestScore(MapSaveData maps){
-        int[] scores = maps.getMaxHistoryScore();
-        int sum = 0;
-        for (int i = 0; i < scores.length; i++) {
-            sum+=scores[i];
+    public void syncHighestScore(){
+        int maxScore = 0;
+        for(int i = 1;i<=totLoadNumber;i++){
+            MapSaveData maps = gameSaveDao.loadSelectedLoad(i);
+            int sum = 0;
+            if(maps != null){
+                int[] scores = maps.getMaxHistoryScore();
+                for (int j = 0; j < scores.length; j++) {
+                    sum += scores[j];
+                }
+                maxScore = Math.max(maxScore, sum);
+            }
         }
-        userDao.updateHighScore(account.getUserName(), sum);
+        userDao.updateHighScore(account.getUserName(),maxScore);
     }
 
     public void handleLogin() {
@@ -151,6 +160,11 @@ public class LoginCtrl {
         } else {
             userDao.createUser(username, password);
             account = userDao.findByUsername(username);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText("Register succeeded");
+            alert.showAndWait();
+            isTourist = false;
+            loadNumber = 0;
             showAccountScene();
         }
     }
@@ -172,7 +186,7 @@ public class LoginCtrl {
     public void handleStart() {
         audioCtrl.playButtonSound();
         if (isTourist) { /// 游客模式登录
-            gameCtrl = new GameCtrl(sceneCtrl, audioCtrl,this);
+            gameCtrl = new GameCtrl(sceneCtrl, audioCtrl,this, null);
             if(mapsForTourist == null){
                 mapsForTourist = new MapSaveData();
             }
@@ -231,9 +245,8 @@ public class LoginCtrl {
     public void handleLoad(int k) {
         audioCtrl.playButtonSound();
         loadNumber = k;
-        gameCtrl = new GameCtrl(sceneCtrl, audioCtrl, this);
+        gameCtrl = new GameCtrl(sceneCtrl, audioCtrl, this, gameSaveDao);
         levelSelectScene = gameCtrl.getLevelSelectScene();
-        gameSaveDao = gameCtrl.getGameSaveDao();
         gameCtrl.loadGame();
         showLevelSelectScene(false);
     }
@@ -262,6 +275,11 @@ public class LoginCtrl {
         sceneCtrl.setScene(new RegisterScene(this));
     }
     public void showAccountScene() {
+        if(!isTourist){
+            gameSaveDao = new FileGameSaveDao();
+            gameSaveDao.setCurrentUser(account.getUserName());
+            syncHighestScore();
+        }
         sceneCtrl.setScene(new AccountScene(this));
     }
 
