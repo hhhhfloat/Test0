@@ -19,13 +19,16 @@ import view.game_nodes.Labels.ProgressLabel;
 import view.game_nodes.Labels.ScoreLabel;
 import view.game_nodes.Labels.TimeLabel;
 import view.scenes.*;
+
+import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class GameCtrl extends Parent {
     // 用户使用部分
     private final Account account;
-    private final GameSaveDao gameSaveDao;
+    private static GameSaveDao gameSaveDao = null;
     // controller 连接部分
     private final SceneCtrl sceneCtrl;
     private final AudioCtrl audioCtrl;
@@ -47,6 +50,7 @@ public class GameCtrl extends Parent {
     private final int loadNumber;
     private boolean bombMode = false;
     private ArrayList<Crd> hintPath;
+    private boolean isTourist;
 
     public GameCtrl( SceneCtrl sceneCtrl, AudioCtrl audioCtrl, LoginCtrl loginCtrl) {
         this.sceneCtrl = sceneCtrl;
@@ -57,14 +61,18 @@ public class GameCtrl extends Parent {
 
         /// initialize gameSaveDao
         account = loginCtrl.getAccount();
+        isTourist = (account == null);
         selectedCell = null;
-        gameSaveDao = new FileGameSaveDao();
-        gameSaveDao.setGameCtrl(this);
-        if(loginCtrl.isTourist()) { /// 游客登录
-            handleLoad0();
-        }else{
+        /// 游客数据在loginCtrl管理
+        if(!loginCtrl.isTourist()){
+            gameSaveDao = new FileGameSaveDao();
+            gameSaveDao.setGameCtrl(this);
             gameSaveDao.setCurrentUser(account.getUserName());
         }
+    }
+
+    public boolean isTourist() {
+        return isTourist;
     }
 
     public LevelSelectScene getLevelSelectScene() {
@@ -92,7 +100,9 @@ public class GameCtrl extends Parent {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm");
         alert.setHeaderText("Are you sure you want to exit?");
-        alert.setContentText("Game will be automatically saved.");
+        if(isTourist){
+            alert.setContentText("Game will be automatically saved");
+        }
         if (loadNumber != 0) {
             handleSave(false);
         }
@@ -114,7 +124,6 @@ public class GameCtrl extends Parent {
 
     public void loadGame() {
         try{
-            System.out.println(loadNumber);
             maps = gameSaveDao.loadSelectedLoad(loadNumber);
         }catch(Exception e){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -127,11 +136,12 @@ public class GameCtrl extends Parent {
         }
         if(maps == null) {
             maps = new MapSaveData();
-            System.out.println("null");
             return;
         }
         int maxUnlockedLevel = maps.getMaxUnlockedLevel();
-        levelSelectScene.setUnlockedLevel(maxUnlockedLevel);
+        if(maxUnlockedLevel != 0){
+            levelSelectScene.setUnlockedLevel(maxUnlockedLevel);
+        }
     }
 
     private final boolean[] levelIsPair = {
@@ -181,15 +191,6 @@ public class GameCtrl extends Parent {
     }
 
     public void handleSave(boolean isShowed) {
-        if (loadNumber == 0 || account == null) {
-            if(isShowed){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Reminding");
-                alert.setHeaderText("You can't save in visitor mode!");
-                alert.showAndWait();
-            }
-            return;
-        }
         // save map
         if(linkyMap != null){
             maps.setMap(currentLevel, linkyMap.getMap());
@@ -200,21 +201,22 @@ public class GameCtrl extends Parent {
             maps.setRemainTime(currentLevel, timeLabel.getRemainingTime());
         }
         maps.setMaxUnlockedLevel(levelSelectScene.getMaxUnlocked());
-        gameSaveDao.saveCurrentLoad(maps, loadNumber);
-
+        if(!isTourist){
+            gameSaveDao.saveCurrentLoad(maps, loadNumber);
+        }
         if(isShowed){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Reminding");
-            alert.setHeaderText("Game saved!");
+            alert.setHeaderText("Game saved " + (isTourist?"temporarily":""));
             alert.showAndWait();
         }
     }
 
-    public void handleLoadDelete(int loadNumber) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm");
-        alert.setHeaderText("Are you sure you want to delete this load?");
-        alert.setContentText("All the data will be lost!");
+    public static void deleteSave(int loadNumber){
+
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText("Are you sure to delete this save?");
+        alert.setContentText("It will be lost forever! (A long time!)");
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 gameSaveDao.delLoadSave(loadNumber);
@@ -228,7 +230,7 @@ public class GameCtrl extends Parent {
         if(loadNumber == 0 || account == null){
             loginCtrl.showAccountScene();
         }else{
-            handleSave(false);
+            // handleSave(false);
             loginCtrl.showLoadScene();
         }
     }
@@ -289,12 +291,10 @@ public class GameCtrl extends Parent {
     public void handleExitToLevelSelect() {
         audioCtrl.playButtonSound();
         handleSave(false);
-        if (loadNumber != 0) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Save info");
-            alert.setContentText("Game automatically saved!");
-            alert.showAndWait();
-        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Save info");
+        alert.setContentText("Game automatically saved!");
+        alert.showAndWait();
         showLevelSelectScene(false);
     }
 
@@ -306,10 +306,23 @@ public class GameCtrl extends Parent {
         alert.setContentText("All the unsaved data will be lost!");
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                gameSaveDao.delSelectedLevelSave(maps, currentLevel);
+                if(isTourist){
+                    resetMaps();
+                } else{
+                    gameSaveDao.delSelectedLevelSave(maps, currentLevel);
+                }
                 showNewGameScene();
             }
         });
+    }
+    public void resetMaps(){
+        maps.setMap(currentLevel, new int[0][0]);
+        maps.setScore(currentLevel, 0);
+        maps.setEliminated(currentLevel,0);
+        maps.setBombCount(currentLevel,3);
+        maps.setFreezeCount(currentLevel,3);
+        maps.setHintCount(currentLevel, 3);
+        maps.setRemainTime(currentLevel);
     }
 
     public void handleContinue() {
@@ -344,11 +357,23 @@ public class GameCtrl extends Parent {
 
 
     public void timeUp() {
-        gameSaveDao.delSelectedLevelSave(maps, currentLevel);
+        if(isTourist){
+            resetMaps();
+        }else{
+            gameSaveDao.delSelectedLevelSave(maps, currentLevel);
+        }
         sceneCtrl.setScene(new LoseScene(this));
+        audioCtrl.setVolume(0.5);
+        audioCtrl.playBombSound();
+        audioCtrl.setVolume(1.0);
     }
 
     public void showWinScene(){
+        try{
+            Thread.sleep(100);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         sceneCtrl.setScene(new WinScene(this));
     }
 
@@ -377,6 +402,7 @@ public class GameCtrl extends Parent {
                     selectedCell = cellNode;
                 } else {
                     eliminate(selectedCell, cellNode, route);
+                    eliminatedCount++;
                 }
             }
         }
@@ -407,7 +433,6 @@ public class GameCtrl extends Parent {
         }
         linkyMap.delNumMap(route);
         GameScene.playInfo(++combo, selectedCell.getType());
-        // InformationUtil.playInformation(gameScene.getRoot(), "Eliminated:" + selectedCell.getType() + "x2!\n" + "Combo " + ++combo + "!\n Score " + (10 + 5 * (combo - 1)));
         selectedCell = null;
         scoreLabel.addScore(combo);
         if (linkyMap.isComplete()) {
@@ -416,8 +441,8 @@ public class GameCtrl extends Parent {
                 if(scoreLabel.getScore()>maps.getMaxScore(currentLevel)){
                     maps.setMaxScore(currentLevel, scoreLabel.getScore());
                 }
+                System.out.println(currentLevel);
                 gameSaveDao.delSelectedLevelSave(maps, currentLevel);
-                // set highest score
             }
             levelSelectScene.unlock(currentLevel);
             showWinScene();
@@ -427,5 +452,9 @@ public class GameCtrl extends Parent {
         if(hintPath.isEmpty() && bombCount == 0){
             handleLose();
         }
+    }
+
+    public void setMaps(MapSaveData mapsForTourist) {
+        this.maps = mapsForTourist;
     }
 }

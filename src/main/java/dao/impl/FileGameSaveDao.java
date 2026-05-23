@@ -10,6 +10,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Properties;
 
 
@@ -53,7 +54,6 @@ public class FileGameSaveDao implements GameSaveDao {
         Path mapPath = saveRoot.resolve("LoadSave" + loadNumber + ".json");
         try (FileWriter writer = new FileWriter(mapPath.toFile())) {
             gson.toJson(mapData, writer);
-            System.out.println("Check");
         } catch (IOException e) {
             throw new RuntimeException("Failed map data saving: " + e.getMessage(), e);
         }

@@ -29,6 +29,8 @@ public class LoginCtrl {
     private LevelSelectScene levelSelectScene;
     private GameSaveDao gameSaveDao;
 
+    private MapSaveData mapsForTourist;
+
     public LoginCtrl(UserDao userDao, AudioCtrl audioCtrl, SceneCtrl sceneCtrl) {
         this.userDao = userDao;
         this.audioCtrl = audioCtrl;
@@ -162,6 +164,16 @@ public class LoginCtrl {
         audioCtrl.playButtonSound();
         if (isTourist) { /// 游客模式登录
             gameCtrl = new GameCtrl(sceneCtrl, audioCtrl,this);
+            if(mapsForTourist == null){
+                mapsForTourist = new MapSaveData();
+            }
+            gameCtrl.setMaps(mapsForTourist);
+            levelSelectScene = gameCtrl.getLevelSelectScene();
+            int maxUnlockedLevel = mapsForTourist.getMaxUnlockedLevel();
+            if(maxUnlockedLevel != 0){
+                levelSelectScene.setUnlockedLevel(maxUnlockedLevel);
+            }
+            showLevelSelectScene(false);
         } else {
             showLoadScene();
         }
@@ -213,7 +225,9 @@ public class LoginCtrl {
         showLevelSelectScene(false);
     }
     public void handleLoadDelete(int k){
-
+        audioCtrl.playButtonSound();
+        loadNumber = k;
+        GameCtrl.deleteSave(k);
     }
 
     public void showLevelSelectScene(boolean isNewUnlock) {
