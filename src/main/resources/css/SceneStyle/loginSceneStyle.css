@@ -12,17 +12,21 @@ HBox {
 }
 
 HBox > Button {
-    -fx-pref-width: 100px;
-    -fx-pref-height: 10px;
-    -fx-background-radius: 10px;
+    -fx-pref-width: 150px;
+    -fx-pref-height: 15px;
+    -fx-background-radius: 15px;
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
-    -fx-font-size: 15px;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 20px;
     -fx-font-style: italic;
 
-    -fx-padding: 10px 20px;
+    -fx-border-color: rgba(30, 100, 140, 0.9);
+    -fx-border-width: 4px;
+    -fx-border-radius: 10px;
+
+    -fx-padding: 15px 30px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
@@ -45,7 +49,7 @@ LoginBox > Button {
     -fx-background-color: rgba(0, 0, 0, 0.0);
 
     -fx-text-fill: white;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Consolas";
     -fx-font-size: 15px;
     -fx-font-style: italic;
     -fx-underline: true;
@@ -66,7 +70,7 @@ LoginBox > Button:pressed {
 .label {
     -fx-padding: 10px;
     -fx-text-fill: white;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Consolas";
     -fx-font-size: 40px;
     -fx-font-style: italic;
 

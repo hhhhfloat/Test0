@@ -24,7 +24,7 @@ public class LoginBox extends VBox {
 
         Button cancelBtn = new Button("Cancel"),
                 confirmBtn = new Button("Confirm"),
-                registerBtn = new Button("Don't have an account yet? Click here to register");
+                registerBtn = new Button("No account yet? Click here to register");
         cancelBtn.setOnAction(event -> loginCtrl.handleLoginCancel());
         confirmBtn.setOnAction(e -> loginCtrl.handleLoginConfirm(usernameField.getText(), passwordField.getText()));
         registerBtn.setOnAction(e -> loginCtrl.handleRegister());

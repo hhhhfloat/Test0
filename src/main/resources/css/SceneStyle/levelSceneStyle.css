@@ -8,6 +8,7 @@ LevelBox {
 }
 
 .info {
+    -fx-font-family: "Consolas";
     -fx-text-fill: White;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
@@ -23,7 +24,7 @@ LevelBox {
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Consolas";
     -fx-font-size: 20px;
     -fx-font-style: italic;
 

@@ -2,7 +2,6 @@
     -fx-background-image: url('/Sprites/bg.png');
     -fx-background-size: cover;
 }
-
 AccountBox {
     -fx-alignment: Center;
 }
@@ -15,7 +14,8 @@ AccountBox {
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+
+    -fx-font-family: "Consolas";
     -fx-font-size: 20px;
     -fx-font-style: italic;
 

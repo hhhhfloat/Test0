@@ -19,7 +19,7 @@ HBox Button {
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Consolas";
     -fx-font-size: 20px;
     -fx-font-style: italic;
 
@@ -57,7 +57,7 @@ RegisterBox > Button {
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Consolas";
     -fx-font-size: 20px;
     -fx-font-style: italic;
 
@@ -87,11 +87,9 @@ RegisterBox > Button:pressed {
 }
 
 .label {
-    -fx-background-color: rgba(70, 170, 200, 0.4);
-    -fx-background-radius: 5px;
 
     -fx-text-fill: white;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Consolas";
     -fx-font-size: 41px;
     -fx-font-style: italic;
 

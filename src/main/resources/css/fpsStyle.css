@@ -8,7 +8,7 @@
     -fx-pref-height: 30px;
 
     -fx-text-fill: white;
-    -fx-font-family: monospace;
+    -fx-font-family: "Consolas";
     -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-padding: 5px 10px;           /* 根据图片留白调整内边距 */

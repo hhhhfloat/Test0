@@ -68,5 +68,6 @@ public class GameScene extends Scene {
     public static void updateBombBtn(int count){
         utilBox.setBombCount(count);
     }
-
+    public static void updateHintBtn(int count){ utilBox.setHintCount(count);}
+    public static void updateFreezeBtn(int count){utilBox.setFreezeCount(count);}
 }

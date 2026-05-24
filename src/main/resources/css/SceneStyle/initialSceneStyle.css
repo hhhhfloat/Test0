@@ -8,22 +8,22 @@ InitialBox {
 }
 
 .button {
-    -fx-pref-width: 200px;
-    -fx-pref-height: 40px;
+    -fx-pref-width: 250px;
+    -fx-pref-height: 50px;
 
-    -fx-background-radius: 10px;
+    -fx-background-radius: 14px;
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
-    -fx-font-size: 20px;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 25px;
     -fx-font-style: italic;
 
     -fx-border-color: rgba(30, 100, 140, 0.9);
-    -fx-border-width: 4px;
-    -fx-border-radius: 10px;
+    -fx-border-width: 5.5px;
+    -fx-border-radius: 12.5px;
 
-    -fx-padding: 10px 20px;
+    -fx-padding: 12.5px 25px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
@@ -35,7 +35,7 @@ InitialBox {
     -fx-scale-y: 1.03;
 
     -fx-border-color: rgba(30, 160, 140, 0.95);
-    -fx-border-width: 4.5px;
+    -fx-border-width: 5px;
 }
 
 .button:pressed {

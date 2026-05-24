@@ -10,7 +10,7 @@
 .state {
     -fx-alignment: Center;
     -fx-text-fill: Black;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Consolas";
     -fx-font-size: 100px;
     -fx-font-style: italic;
 }
@@ -19,7 +19,7 @@
     -fx-alignment: Center;
     -fx-background-image: url('/Sprites/label-bg.jpg');
     -fx-text-fill: Black;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Consolas";
     -fx-font-size: 50px;
     -fx-font-style: italic;
     -fx-padding: 20px;
@@ -34,7 +34,7 @@
     -fx-background-color: rgba(50, 150, 200, 0.8);
 
     -fx-text-fill: Black;
-    -fx-font-family: "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Consolas";
     -fx-font-size: 20px;
     -fx-font-style: italic;
 

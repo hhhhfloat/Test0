@@ -262,23 +262,28 @@ public class GameCtrl extends Parent {
     }
 
     public void handleFreeze() {
-        timeLabel.pauseTime(10);
+        audioCtrl.playButtonSound();
         freezeCount--;
+        GameScene.updateFreezeBtn(freezeCount);
+        timeLabel.pauseTime(10);
     }
 
     public void handleLose() {
+        audioCtrl.playButtonSound();
         isNewUnlock = false;
         sceneCtrl.setScene(new LoseScene(this));
     }
 
     public void handleHint() {
-        if(hintPath.isEmpty()){
+        if(hintPath.isEmpty() && bombCount <= 0){
             handleLose();
         }
         else{
             Crd c1 = hintPath.getFirst();
             Crd c2 = hintPath.getLast();
             board.showHint(c1,c2);
+            hintCount--;
+            GameScene.updateHintBtn(hintCount);
         }
     }
 
