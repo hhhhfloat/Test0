@@ -70,4 +70,7 @@ public class GameScene extends Scene {
     }
     public static void updateHintBtn(int count){ utilBox.setHintCount(count);}
     public static void updateFreezeBtn(int count){utilBox.setFreezeCount(count);}
+    public static void freezeTime(boolean isFreeze){
+        infoBox.freezeTime(isFreeze);
+    }
 }

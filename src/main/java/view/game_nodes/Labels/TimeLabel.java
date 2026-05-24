@@ -55,7 +55,11 @@ public class TimeLabel extends Label implements TimeLabelInterface {
     public void pauseTime(int seconds){
         pauseTime();
         PauseTransition pause = new PauseTransition(Duration.seconds(seconds));
-        pause.setOnFinished(e -> continueTime());
+        pause.setOnFinished(e -> {
+            continueTime();
+            gameCtrl.setFreeze(false);
+            gameCtrl.playIceSound();
+        });
         pause.play();
     }
 

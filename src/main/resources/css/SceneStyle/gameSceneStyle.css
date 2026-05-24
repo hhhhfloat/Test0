@@ -102,3 +102,7 @@ Button:pressed {
     -fx-scale-y: 0.97;
     -fx-translate-y: 1px;
 }
+
+.freeze-style{
+    -fx-background-image: url('/Sprites/FreezeTime.png');
+}

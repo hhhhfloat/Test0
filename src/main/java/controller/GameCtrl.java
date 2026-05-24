@@ -261,11 +261,24 @@ public class GameCtrl extends Parent {
         }
     }
 
+    boolean isFreeze = false;
+
+    public void setFreeze(boolean freeze) {
+        isFreeze = freeze;
+        GameScene.freezeTime(isFreeze);
+    }
+    public void playIceSound(){
+        audioCtrl.playIceBreakSound();
+    }
+
     public void handleFreeze() {
         audioCtrl.playButtonSound();
-        freezeCount--;
-        GameScene.updateFreezeBtn(freezeCount);
-        timeLabel.pauseTime(10);
+        if(!isFreeze){
+            freezeCount--;
+            setFreeze(true);
+            GameScene.updateFreezeBtn(freezeCount);
+            timeLabel.pauseTime(10);
+        }
     }
 
     public void handleLose() {
@@ -278,7 +291,7 @@ public class GameCtrl extends Parent {
         if(hintPath.isEmpty() && bombCount <= 0){
             handleLose();
         }
-        else{
+        else if(hintCount > 0){
             Crd c1 = hintPath.getFirst();
             Crd c2 = hintPath.getLast();
             board.showHint(c1,c2);
