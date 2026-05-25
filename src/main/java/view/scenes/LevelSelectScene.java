@@ -43,7 +43,7 @@ public class LevelSelectScene extends Scene{
     }
 
     public void playInfo() {
-        congrats = "     Congratulations!\nLevel "+maxUnlocked+" Unlocked!";
+        congrats = "   Congratulations!\nLevel "+maxUnlocked+" Unlocked!";
         InformationUtil.playInformation(root, congrats);
     }
     public void unlock(int currentLevel){

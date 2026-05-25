@@ -37,7 +37,7 @@ public class CellNode extends StackPane {
             {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"},
             {"Enchanted Book", "Fishing Rod", "Leather Boots", "Name Tag", "Nautilus Shell", "Pufferfish", "Raw Cod", "Raw Salmon", "Shaddle", "Suspicious Stew", "Tropical Fish", "Water Bottle"},
             {"ChatGPT","Claude","DeepSeek","Doubao","Gemini","GithubCopilot","Kimi","Midjourney","Perplexity","Qianwen","stability","wenxinyiyan"},
-            {"discord","facebook","myspace","qq.png","reddit","twitter","wechat","wecom","weibo","whatapp","x","yahoo"}
+            {"discord","facebook","myspace","qq","reddit","twitter","wechat","wecom","weibo","whatapp","x","yahoo"}
     };
     private final static String[][] images_pair = {
             {"00cangqiong","01chiri","02dalu","03changkong","04han","05he","06hua","07song","08rixia","09tianzhong","10haishu","11shanhua","12di","13tian","14tiangong","15yuedian","16feng","17yu","18leigong","19yubo","20shicui","21tihong","22xuedong","23yanlou"},
@@ -82,7 +82,7 @@ public class CellNode extends StackPane {
         this.type = type;
         this.imgSet = imgSet;
         if(type>=0){
-            this.name = images_notPair[imgSet][type];
+            this.name = (isPair == 1)?images_notPair[imgSet][type]:images_pair[imgSet][type];
         }
 
         Optional.ofNullable(getClass().getResource("/css/cellNode.css"))

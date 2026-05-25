@@ -160,7 +160,7 @@ public class GameCtrl extends Parent {
         int[][] levelMap = maps.getMap(currentLevel);
         if(levelMap.length == row && levelMap[0].length == col){
             System.out.println("Map save loaded");
-            linkyMap = new LinkyMap(row, col, levelMap);
+            linkyMap = new LinkyMap(row, col, levelMap, isPair);
         }else {
             System.out.println("Default map applied for this level");
             linkyMap = new LinkyMap(row, col, currentLevel, isPair);
@@ -507,7 +507,7 @@ public class GameCtrl extends Parent {
             }else{
                 isNewRecord = loginCtrl.setMaxScore(currentLevel, scoreLabel.getScore());
             }
-            if(levelSelectScene.getMaxUnlocked()<=currentLevel){
+            if(levelSelectScene.getMaxUnlocked()<=currentLevel && levelSelectScene.getMaxUnlocked() != LevelSelectScene.getTotLevelNumber()-1){
                 isNewUnlock = true;
                 levelSelectScene.unlock(currentLevel);
             }

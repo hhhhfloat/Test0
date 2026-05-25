@@ -155,6 +155,19 @@ public class LinkyMap {
         map_T = Tsp(map);
         initNumMap();
     }
+    public LinkyMap(int MAPX, int MAPY, int[][] mp,int isPair){
+        this.MAPX = MAPX;
+        this.MAPY = MAPY;
+        MapType = 1;
+        map = new int[MAPX][MAPY];
+        map_T = new int[this.MAPY][this.MAPX];
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(mp[i], 0, map[i], 0, MAPY);
+        }
+        map_T = Tsp(map);
+        initNumMap();
+        this.isPair = isPair;
+    }
 
     public LinkyMap(int MAPX, int MAPY, int[][] mp, boolean isPair) {
         this.MAPX = MAPX;
@@ -580,7 +593,7 @@ public class LinkyMap {
 
         // 直线
         for (int i = 0; i < 4; i++) {
-            if (NumMap[x1][y1][i][0] == val && x1 + NumMap[x1][y1][i][1] * dir[i][0] == x2 && y1 + NumMap[x1][y1][i][1] * dir[i][1] == y2) {
+            if (isAllVoid(x1,y1,x2,y2)) {
                 path.add(new Crd(x1, y1));
                 path.add(new Crd(x2, y2));
                 return path;
@@ -685,16 +698,4 @@ public class LinkyMap {
         return false;
     }
 
-    // 测试用函数
-    public void PrintMap(int[][] map_) {
-        for (int i = 0; i < MAPX; i++) {
-            for (int j = 0; j < MAPY; j++) {
-                int t = map_[i][j];
-                if (t == -1) System.out.print("    ");
-                else if (t == '#') System.out.print(" ## ");
-                else System.out.printf(" %-3d", t);
-            }
-            System.out.println();
-        }
-    }
 }
