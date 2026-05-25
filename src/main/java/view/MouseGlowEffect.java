@@ -1,6 +1,9 @@
 package view;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -11,6 +14,11 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * 鼠标跟随光晕效果工具类
@@ -23,6 +31,8 @@ public class MouseGlowEffect {
     private double targetX, targetY;      // 鼠标目标位置
     private double currentX, currentY;    // 光晕当前位置
     private AnimationTimer timer;         // 动画循环
+    private final List<Timeline> activeRipples = new ArrayList<>();
+    private static final Random random = new Random();
 
     private MouseGlowEffect(Scene scene, Pane rootPane) {
         // 覆盖层（透明，不干扰交互）
@@ -46,8 +56,6 @@ public class MouseGlowEffect {
         );
         glowCircle.setFill(gradient);
         glowCircle.setMouseTransparent(true);
-
-// 阴影效果也调暗，降低发光强度
         DropShadow glowEffect = new DropShadow(BlurType.GAUSSIAN, Color.rgb(70, 40, 100, 0.4), 20, 0.3, 0, 0);
         glowCircle.setEffect(glowEffect);
 
@@ -55,6 +63,7 @@ public class MouseGlowEffect {
         rootPane.getChildren().add(overlayPane);
         overlayPane.toBack();
 
+        // 初始化光晕位置
         currentX = rootPane.getWidth() / 2;
         currentY = rootPane.getHeight() / 2;
         glowCircle.setCenterX(currentX);
@@ -62,7 +71,7 @@ public class MouseGlowEffect {
         targetX = currentX;
         targetY = currentY;
 
-        // 使用事件过滤器，避免覆盖其他处理器（并且可以持续跟踪）
+        // 跟踪鼠标位置，记录目标位置
         scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
             targetX = event.getX();
             targetY = event.getY();
@@ -70,6 +79,11 @@ public class MouseGlowEffect {
         scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, event -> {
             targetX = event.getX();
             targetY = event.getY();
+        });
+
+        // 鼠标点击生成扩散圆圈
+        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            addRippleEffect(event.getX(), event.getY());
         });
 
         // 动画循环：缓动跟踪
@@ -101,6 +115,46 @@ public class MouseGlowEffect {
                 targetY = currentY;
             }
         });
+    }
+    /**
+     * 添加波纹扩散效果（多个圆圈）
+     * @param x 圆心 X 坐标
+     * @param y 圆心 Y 坐标
+     */
+    private void addRippleEffect(double x, double y) {
+        // 生成 2~3 个不同大小和延迟的波纹
+        int count = random.nextInt(1,3);
+        for (int i = 0; i < count; i++) {
+            double maxRadius = 60 + i * 25;  // 60, 85, 110
+            double startOpacity = 0.5 - i * 0.1; // 0.5, 0.4, 0.3
+            long delayMillis = i * 40L;           // 0ms, 40ms, 80ms
+
+            double x_random = x+random.nextInt(-3,3),
+                    y_random = y+random.nextInt(-3,3);
+            Circle ripple = new Circle(x_random, y_random, 0);
+            ripple.setFill(Color.TRANSPARENT);
+            ripple.setStroke(Color.rgb(140, 120, 220, startOpacity));
+            ripple.setStrokeWidth(2.5);
+            ripple.setMouseTransparent(true);
+
+            overlayPane.getChildren().add(ripple);
+
+            // 动画：半径扩展，透明度降低，最后移除
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO,
+                            new KeyValue(ripple.radiusProperty(), 0),
+                            new KeyValue(ripple.strokeProperty(), Color.rgb(140, 120, 220, startOpacity))
+                    ),
+                    new KeyFrame(Duration.millis(random.nextInt(900,1800)),
+                            new KeyValue(ripple.radiusProperty(), maxRadius),
+                            new KeyValue(ripple.strokeProperty(), Color.rgb(140, 120, 220, 0))
+                    )
+            );
+            timeline.setDelay(Duration.millis(delayMillis));
+            timeline.setOnFinished(e -> overlayPane.getChildren().remove(ripple));
+            timeline.play();
+            activeRipples.add(timeline);
+        }
     }
 
     public static MouseGlowEffect attach(Scene scene, Pane rootPane) {
