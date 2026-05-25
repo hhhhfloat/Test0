@@ -24,11 +24,13 @@ public class Board extends Pane implements BoardInterface {
     private final double size;
     private final double gap = 9.7;
     private CellNode[][] cellNodes;
+    int isPair; // 1 is pair ; 2 is not pair
 
     public Board(int row, int col, double size, LinkyMap linkyMap, GameCtrl gameCtrl) {
         Random r = new Random();
         this.size = size;
         cellNodes = new CellNode[row][col];
+        isPair = linkyMap.getIsPair();
 
         Path cssPath = Paths.get("src", "main", "resources", "css", "board.css");
         String cssUri = cssPath.toUri().toString();
@@ -37,11 +39,11 @@ public class Board extends Pane implements BoardInterface {
         lineLayer = new Pane();
         lineLayer.setMouseTransparent(true);
 
-        int imgSet = r.nextInt(0,2);
+        int imgSet = r.nextInt(0,CellNode.getImageTotNum(isPair));
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                cellNodes[i][j] = new CellNode(i, j, size, linkyMap.getMap()[i][j], gameCtrl,imgSet);
+                cellNodes[i][j] = new CellNode(i, j, size, linkyMap.getMap()[i][j], gameCtrl,imgSet, isPair);
                 cellNodes[i][j].setLayoutX(i*(size+gap));
                 cellNodes[i][j].setLayoutY(j*(size+gap));
                 getChildren().add(cellNodes[i][j]);

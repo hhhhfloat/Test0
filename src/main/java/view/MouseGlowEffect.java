@@ -277,12 +277,12 @@ public class MouseGlowEffect {
         if (timer != null) {
             timer.stop();
         }
-        // [MODIFIED] 停止并清空所有波纹动画
+        // 停止并清空所有波纹动画
         for (Timeline t : activeRipples) {
             t.stop();
         }
         activeRipples.clear();
-        // [MODIFIED] 停止并清空所有流星相关动画
+        // 停止并清空所有流星相关动画
         for (Animation a : activeMeteors) {
             a.stop();
         }

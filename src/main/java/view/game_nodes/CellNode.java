@@ -14,7 +14,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Optional;
 
 public class CellNode extends StackPane {
@@ -22,12 +21,19 @@ public class CellNode extends StackPane {
     private final int type;
     private final int imgSet;
     private final ImageView image;
-    private static final HashMap<Integer, String> imgSets = new HashMap<>();
-    private static final HashMap<Integer, String> imgSets_pair = new HashMap<>();
     private boolean isBomb = false;
     private String name;
+    private String[] usingImgSet;
+    private String usingImgSetName;
+    private int isPair;
 
-    private final static String[][] images = {
+    private final static String[] imageSetNames_notPair = {
+            "Browsers","MCFishing","AI","Chats"
+    };
+    private final static String[] imageSetNames_Pair ={
+            "antipair","IndieGame"
+    };
+    private final static String[][] images_notPair = {
             {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"},
             {"Enchanted Book", "Fishing Rod", "Leather Boots", "Name Tag", "Nautilus Shell", "Pufferfish", "Raw Cod", "Raw Salmon", "Shaddle", "Suspicious Stew", "Tropical Fish", "Water Bottle"},
             {"ChatGPT","Claude","DeepSeek","Doubao","Gemini","GithubCopilot","Kimi","Midjourney","Perplexity","Qianwen","stability","wenxinyiyan"},
@@ -37,6 +43,11 @@ public class CellNode extends StackPane {
             {"00cangqiong","01chiri","02dalu","03changkong","04han","05he","06hua","07song","08rixia","09tianzhong","10haishu","11shanhua","12di","13tian","14tiangong","15yuedian","16feng","17yu","18leigong","19yubo","20shicui","21tihong","22xuedong","23yanlou"},
             {"00ceilingfan","01horrortie","02baba","03keke","04lightbulb","05neko","06ship60","07watch","08determination","09tobyfox","10ida","11totem","12charactor1","13character2","14cuphead","15handgun","16doublejump","17dreamnail","18cherry","19feather","20ancientfruit","21purplepants","22min","23toastedmarshmallow"}
     };
+    private static final int[] imageSetTotNum = {4,2};
+
+    public static int getImageTotNum(int isPair){
+        return imageSetTotNum[isPair-1];
+    }
 
     public int getType() {
         return type;
@@ -64,23 +75,14 @@ public class CellNode extends StackPane {
         }
     }
 
-    public static void initHashSet() {
-        imgSets.put(0, "Browsers");
-        imgSets.put(1, "MCFishing");
-        imgSets.put(2,"AI");
-        imgSets.put(3,"Chats");
-        imgSets_pair.put(0,"IndieGame");
-        imgSets_pair.put(1,"antipair");
-    }
-
-    public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl, int imgSet) {
-        initHashSet();
-
+    public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl, int imgSet, int isPair) {
+        usingImgSet = (isPair == 2)?images_pair[imgSet] : images_notPair[imgSet];
+        usingImgSetName = (isPair == 2)?imageSetNames_Pair[imgSet]:imageSetNames_notPair[imgSet];
         crd = new Crd(row, col);
         this.type = type;
         this.imgSet = imgSet;
         if(type>=0){
-            this.name = images[imgSet][type];
+            this.name = images_notPair[imgSet][type];
         }
 
         Optional.ofNullable(getClass().getResource("/css/cellNode.css"))
@@ -98,13 +100,13 @@ public class CellNode extends StackPane {
 
     private void updateImage() {
         Path directorpath;
-        if (type == -1) {
+        if (type < 0) {
             image.setImage(null);
-        } else if (type < images[imgSet].length) {
+        } else if (type < ((isPair == 1)?images_notPair[0].length:images_pair[0].length)) {
             if(isBomb) {
                 directorpath = Paths.get("src", "main", "resources", "Sprites", "Block", "TNT" + ".png");
             } else {
-                directorpath = Paths.get("src", "main", "resources", "Sprites", "Block", imgSets.get(imgSet), images[imgSet][type] + ".png");
+                directorpath = Paths.get("src", "main", "resources", "Sprites", "Block", usingImgSetName, usingImgSet[type] + ".png");
             }
             try (InputStream is = Files.newInputStream(directorpath)) {
                 Image img = new Image(is);

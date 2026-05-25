@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Cell;
 import model.entity.Account;
 import model.entity.Crd;
 import model.entity.LinkyMap;
@@ -135,7 +134,7 @@ public class GameCtrl extends Parent {
     }
 
     private final boolean[] levelIsPair = {
-            false, false, false, false, false};
+            false, false, true, true, false};
 
     public void handleLevel(int ind) {
         audioCtrl.playButtonSound();
@@ -148,7 +147,7 @@ public class GameCtrl extends Parent {
         setLinkyMap();
         setUtilCount();
         setGameInfo();
-        initGameNodes();
+        initLabels();
         hintPath = linkyMap.pathAutoFind();
         board = new Board(row, col, 36, linkyMap, this);
         gameScene = new GameScene(this);
@@ -175,7 +174,7 @@ public class GameCtrl extends Parent {
     public void setGameInfo(){
         eliminatedCount = maps.getEliminated(currentLevel);
     }
-    public void initGameNodes(){
+    public void initLabels(){
         timeLabel = new TimeLabel(maps.getRemainTime(currentLevel), this);
         scoreLabel = new ScoreLabel(maps.getScore(currentLevel));
         progressLabel = new ProgressLabel(eliminatedCount, MapSaveData.getTotalPairs(currentLevel));
@@ -403,7 +402,7 @@ public class GameCtrl extends Parent {
 
     public void handleCellClick(CellNode cellNode) {
         audioCtrl.playClickSound();
-        if (linkyMap.getMap()[cellNode.getCrd().x()][cellNode.getCrd().y()] != -1) {
+        if (linkyMap.getMap()[cellNode.getCrd().x()][cellNode.getCrd().y()] >= 0) {
             if (selectedCell == null) {
                 selectedCell = cellNode;
                 selectedCell.setHighlight(true);
