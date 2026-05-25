@@ -1,50 +1,63 @@
+
+
 .root {
-    -fx-background-image: url('/Sprites/bg.png');
+    -fx-background-color:
+    /* 弥散光晕（大面积，极淡） */
+    radial-gradient(center 25% 20%, radius 35%,
+    rgba(120, 80, 180, 0.2) 0%,
+    transparent 85%),
+    radial-gradient(center 80% 70%, radius 40%,
+    rgba(60, 120, 180, 0.15) 0%,
+    transparent 90%),
+    /* 蓝紫渐变（作为整个背景的基底） */
+    radial-gradient(center 30% 40%, radius 80%,
+    #1e1a3a 0%, #0c0a1a 65%, #020008 100%);
+
     -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
 }
 
+/* 居中容器 */
 .initialbox {
-    -fx-alignment: Center;
+    -fx-alignment: center;
+    -fx-spacing: 56px;
+    -fx-padding: 40px 20px;
 }
 
+/* 标签样式 */
 .label {
-    -fx-alignment: Center;
-    -fx-text-fill: rgba(255,255,255,0.95);
-    -fx-font-family: Sans-serif;
+    -fx-alignment: center;
+    -fx-text-fill: rgba(255, 255, 255, 0.95);
+    -fx-font-family: "Sans-serif";
     -fx-font-size: 125px;
     -fx-font-style: italic;
-
     -fx-padding: 12.5px 25px;
-    -fx-effect: dropshadow(gaussian, rgba(100,0,100,0.5), 2, 1, 1, 5);
+    -fx-effect: dropshadow(gaussian, rgba(100, 0, 100, 0.5), 2, 1, 1, 5);
 }
 
+/* 按钮样式 */
 .button {
     -fx-pref-width: 280px;
     -fx-pref-height: 80px;
-
     -fx-background-radius: 14px;
     -fx-background-color: rgba(50, 150, 200, 0.6);
-
-    -fx-text-fill: Black;
+    -fx-text-fill: black;
     -fx-font-family: "Consolas";
     -fx-font-size: 30px;
     -fx-font-style: italic;
-
     -fx-border-color: rgba(30, 100, 140, 0.9);
     -fx-border-width: 5.5px;
     -fx-border-radius: 12.5px;
-
     -fx-padding: 12.5px 25px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
 }
 
 .button:hover {
     -fx-background-color: rgba(50, 215, 193, 0.8);
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 15, 0, 0, 3);
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
-
     -fx-border-color: rgba(30, 160, 140, 0.95);
     -fx-border-width: 5px;
 }

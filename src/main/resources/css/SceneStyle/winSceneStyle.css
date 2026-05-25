@@ -1,55 +1,84 @@
 .root {
-    -fx-background-image: url('/Sprites/bg.png');
+    -fx-background-color:
+    /* 弥散光晕（大面积，极淡） */
+    radial-gradient(center 25% 20%, radius 35%,
+    rgba(120, 80, 180, 0.2) 0%,
+    transparent 85%),
+    radial-gradient(center 80% 70%, radius 40%,
+    rgba(60, 120, 180, 0.15) 0%,
+    transparent 90%),
+    /* 蓝紫渐变（作为整个背景的基底） */
+    radial-gradient(center 30% 40%, radius 80%,
+    #1e1a3a 0%, #0c0a1a 65%, #020008 100%);
     -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
 }
 
-.winbox {
-    -fx-alignment: Center;
+.losebox {
+    -fx-alignment: center;
+    -fx-spacing: 30px;
+    -fx-padding: 40px 20px;
 }
 
+/* 游戏结束主标题 - 保持大号斜体白字+紫影 */
 .state {
-    -fx-alignment: Center;
-    -fx-text-fill: Black;
-    -fx-font-family: "Consolas";
+    -fx-padding: 10px;
+    -fx-text-fill: rgba(255, 255, 255, 0.95);
+    -fx-font-family: "Sans-serif";
     -fx-font-size: 100px;
     -fx-font-style: italic;
+    -fx-effect: dropshadow(gaussian, rgba(100, 0, 100, 0.5), 2, 1, 1, 5);
+    -fx-alignment: center;
 }
 
+/* 统计信息文本框 - 科技感边框，半透背景，亮色边框 */
 .stat {
-    -fx-alignment: Center;
-    -fx-background-image: url('/Sprites/label-bg.jpg');
-    -fx-text-fill: Black;
+    -fx-padding: 15px 25px;
+    -fx-text-fill: rgba(220, 240, 255, 0.95);
     -fx-font-family: "Consolas";
-    -fx-font-size: 50px;
+    -fx-font-size: 32px;           /* 调小字体 */
     -fx-font-style: italic;
-    -fx-padding: 20px;
+    -fx-alignment: center;
+
+    /* 半透明深色背景，增强可读性且不掩盖星空 */
+    -fx-background-color: rgba(10, 15, 35, 0.65);
+    -fx-background-radius: 20px;
+
+    /* 科技感边框：青色 + 内发光效果 */
+    -fx-border-color: rgba(0, 200, 220, 0.7);
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+
+    /* 内部轻微阴影 + 外发光模拟科技感 */
+    -fx-effect: dropshadow(gaussian, rgba(0, 180, 200, 0.4), 8, 0, 0, 0),
+    dropshadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0, 0, 2);
+
+    /* 保证背景图片不干扰（移除原来的图片） */
+    -fx-background-image: none;
 }
 
+/* 可选：为多个统计信息增加垂直间距（如果使用 VBox 则自动生效） */
 .button {
-    -fx-alignment: Center;
     -fx-pref-width: 150px;
-    -fx-pref-height: 20px;
-
     -fx-background-radius: 10px;
     -fx-background-color: rgba(50, 150, 200, 0.8);
-
-    -fx-text-fill: Black;
+    -fx-text-fill: black;
     -fx-font-family: "Consolas";
     -fx-font-size: 20px;
     -fx-font-style: italic;
-
     -fx-border-color: rgba(30, 100, 140, 0.9);
     -fx-border-width: 4px;
     -fx-border-radius: 10px;
-
     -fx-padding: 10px 20px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
 }
 
 .button:hover {
     -fx-background-color: rgba(50, 215, 193, 0.8);
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 15, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
     -fx-border-color: rgba(30, 160, 140, 0.95);
     -fx-border-width: 4.5px;
 }

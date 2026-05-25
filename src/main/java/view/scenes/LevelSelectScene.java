@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import view.InformationUtil;
+import view.MouseGlowEffect;
 import view.boxes.LevelSelectBox;
 
 import java.nio.file.Path;
@@ -23,6 +24,7 @@ public class LevelSelectScene extends Scene{
         this.gameCtrl = gameCtrl;
         Path cssPath = Paths.get("src", "main", "resources", "css", "SceneStyle", "levelSceneStyle.css");
         getStylesheets().add(cssPath.toUri().toString());
+        MouseGlowEffect.attach(this, (StackPane) getRoot());
     }
 
     private static StackPane createRoot(GameCtrl gameCtrl){
