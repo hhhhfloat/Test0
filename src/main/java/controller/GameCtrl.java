@@ -139,6 +139,7 @@ public class GameCtrl extends Parent {
     public void handleLevel(int ind) {
         audioCtrl.playButtonSound();
         currentLevel = ind;
+        if(currentLevel < maps.getMaxUnlockedLevel())isNewUnlock = false;
         showNewGameScene();
     }
     public void showNewGameScene() {
@@ -232,7 +233,7 @@ public class GameCtrl extends Parent {
     //Game Scene
     public void handleBombMode() {
         audioCtrl.playButtonSound();
-        combo = 0;
+        clearCombo();
         if(bombMode){
             if(selectedCell!=null){
                 selectedCell.setBomb(false);
@@ -268,7 +269,7 @@ public class GameCtrl extends Parent {
     }
 
     public void handleFreeze() {
-        combo = 0;
+        clearCombo();
         audioCtrl.playButtonSound();
         if(!isFreeze){
             freezeCount--;
@@ -285,7 +286,7 @@ public class GameCtrl extends Parent {
     }
 
     public void handleHint() {
-        combo = 0;
+        clearCombo();
         if(hintPath.isEmpty() && bombCount <= 0){
             handleLose();
         }
@@ -299,7 +300,7 @@ public class GameCtrl extends Parent {
     }
 
     public void handlePause() {
-        combo = 0;
+        clearCombo();
         sceneCtrl.setScene(new PauseScene(this));
         timeLabel.pauseTime();
     }
@@ -407,6 +408,7 @@ public class GameCtrl extends Parent {
                 selectedCell.setHighlight(true);
                 if (bombMode) {selectedCell.setBomb(true);}
             } else if (selectedCell == cellNode) {
+                clearCombo();
                 cellNode.setHighlight(false);
                 selectedCell.setBomb(false);
                 selectedCell = null;
@@ -416,8 +418,8 @@ public class GameCtrl extends Parent {
                     selectedCell.setHighlight(false);
                     cellNode.setHighlight(true);
                     selectedCell = cellNode;
-                    combo = 0;
                 } else if (bombMode && cellNode.getType() != selectedCell.getType()) {
+                    clearCombo();
                     selectedCell.setBomb(false);
                     selectedCell.setHighlight(false);
                     cellNode.setBomb(true);
@@ -428,6 +430,11 @@ public class GameCtrl extends Parent {
                 }
             }
         }
+    }
+
+    public void clearCombo(){
+        combo = 0;
+        GameScene.playInfo("Combo out! 😣");
     }
 
     public void eliminate(CellNode cellNode1, CellNode cellNode2, ArrayList<Crd> route)
@@ -454,7 +461,7 @@ public class GameCtrl extends Parent {
             audioCtrl.playEliminateSound();
         }
         linkyMap.delNumMap(route);
-        String s = "Eliminated: 2×" + selectedCell.getType() + "!\n" + (++combo) + "× COMBO"  + "!\n+" + (10 + 5 * (combo - 1)+" score");
+        String s = "2 ×" + selectedCell.getName() + "! " + (++combo) + " COMBO"  + "!\n+" + (10 + 5 * (combo - 1)+" score");
         GameScene.playInfo(s);
         selectedCell = null;
         scoreLabel.addScore(combo);
@@ -490,6 +497,8 @@ public class GameCtrl extends Parent {
 
     public void setMaxUnlocked(int unlockIndex) {
         maps.setMaxUnlockedLevel(unlockIndex);
-        gameSaveDao.saveCurrentLoad(maps,loadNumber);
+        if(!isTourist){
+            gameSaveDao.saveCurrentLoad(maps, loadNumber);
+        }
     }
 }

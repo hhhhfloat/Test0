@@ -24,10 +24,13 @@ public class CellNode extends StackPane {
     private final ImageView image;
     private static final HashMap<Integer, String> imgSets = new HashMap<>();
     private boolean isBomb = false;
+    private String name;
 
     private final static String[][] images = {
             {"baidu", "brave", "edge", "firefox", "google", "ie", "opera", "qq", "quark", "safari", "samsung", "yandex"},
-            {"Enchanted Book", "Fishing Rod", "Leather Boots", "Name Tag", "Nautilus Shell", "Pufferfish", "Raw Cod", "Raw Salmon", "Shaddle", "Suspicious Stew", "Tropical Fish", "Water Bottle"}
+            {"Enchanted Book", "Fishing Rod", "Leather Boots", "Name Tag", "Nautilus Shell", "Pufferfish", "Raw Cod", "Raw Salmon", "Shaddle", "Suspicious Stew", "Tropical Fish", "Water Bottle"},
+            {"ChatGPT","Claude","DeepSeek","Doubao","Gemini","GithubCopilot","Kimi","Midjourney","Perplexity","Qianwen","stability","wenxinyiyan"},
+            {"discord","facebook","myspace","qq.png","reddit","twitter","wechat","wecom","weibo","whatapp","x","yahoo"}
     };
 
     public int getType() {
@@ -44,6 +47,10 @@ public class CellNode extends StackPane {
         updateImage();
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setHighlight(boolean highlight) {
         if (highlight) {
             getStyleClass().add("highlight");
@@ -55,6 +62,8 @@ public class CellNode extends StackPane {
     public static void initHashSet() {
         imgSets.put(0, "Browsers");
         imgSets.put(1, "MCFishing");
+        imgSets.put(2,"AI");
+        imgSets.put(3,"Chats");
     }
 
     public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl, int imgSet) {
@@ -63,6 +72,9 @@ public class CellNode extends StackPane {
         crd = new Crd(row, col);
         this.type = type;
         this.imgSet = imgSet;
+        if(type>=0){
+            this.name = images[imgSet][type];
+        }
 
         Optional.ofNullable(getClass().getResource("/css/cellNode.css"))
                 .map(URL::toExternalForm)
