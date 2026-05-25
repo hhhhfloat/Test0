@@ -47,7 +47,8 @@ public class WinScene extends Scene {
     public Label newRecordLabel(){
         Label newRecord = new Label("★ NEW RECORD ★");
         newRecord.getStyleClass().add("new-record");
-        newRecord.setFont(Font.font(fancyFonts[new Random().nextInt(fancyFonts.length)]));
+        String randomFont = fancyFonts[new Random().nextInt(0,fancyFonts.length)];
+        newRecord.setStyle("-fx-font-family: '" + randomFont + "';");
         double[] hue = {0};
 
         colorCycle = new Timeline(

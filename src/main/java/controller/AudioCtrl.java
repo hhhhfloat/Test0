@@ -27,6 +27,7 @@ public class AudioCtrl {
     private final Media eliminateSound = getMedia("eliminate");
     private final Media bombSound = getMedia("TNT");
     private final Media iceBreakSound = getMedia("iceBreak");
+    private final Media bgClickSound = getMedia("toggle");
 
     public void playBgMusic() {
         MediaPlayer mediaPlayer = new MediaPlayer(bgMusic);
@@ -51,6 +52,13 @@ public class AudioCtrl {
         MediaPlayer mediaPlayer = new MediaPlayer(clickSound);
         mediaPlayer.setVolume(1);
         mediaPlayer.play();
+    }
+
+    public void playToggleSound(){
+        MediaPlayer mediaPlayer = new MediaPlayer(bgClickSound);
+        mediaPlayer.setVolume(0.5);
+        mediaPlayer.play();
+        mediaPlayer.setOnEndOfMedia(()->mediaPlayer.setVolume(1.0));
     }
 
     public void playEliminateSound() {

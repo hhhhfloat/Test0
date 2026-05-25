@@ -5,6 +5,7 @@ import dao.UserDao;
 import dao.impl.FileUserDao;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import view.MouseGlowEffect;
 
 public class MainApp extends Application {
     public void start(Stage stage) {
@@ -13,6 +14,7 @@ public class MainApp extends Application {
         // controller初始化
         SceneCtrl sceneCtrl = new SceneCtrl(stage);
         AudioCtrl audioCtrl = new AudioCtrl();
+        MouseGlowEffect.setAudioCtrl(audioCtrl);
         LoginCtrl loginCtrl = new LoginCtrl(userDao, audioCtrl, sceneCtrl);
         // 行动
         // audioCtrl.playBgMusic();

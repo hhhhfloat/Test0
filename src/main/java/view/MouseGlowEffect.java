@@ -1,6 +1,7 @@
 package view;
 
 import com.sun.scenario.DelayedRunnable;
+import controller.AudioCtrl;
 import javafx.animation.*;
 import javafx.scene.Scene;
 import javafx.scene.effect.BlurType;
@@ -15,6 +16,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,6 +27,7 @@ import java.util.Random;
  */
 public class MouseGlowEffect {
 
+    private static AudioCtrl audioCtrl = null;
     private final Circle glowCircle;
     private final Pane overlayPane;
     private double targetX, targetY;      // 鼠标目标位置
@@ -33,7 +36,12 @@ public class MouseGlowEffect {
     private final List<Timeline> activeRipples = new ArrayList<>();
     private final List<Animation> activeMeteors = new ArrayList<>();
     private static final Random random = new Random();
-    private double lastClickX = 0, lastClickY = 0;
+    private ArrayDeque<Double> lastClickX = new ArrayDeque<>();
+    private ArrayDeque<Double> lastClickY = new ArrayDeque<>();
+
+    public static void setAudioCtrl(AudioCtrl audioCtrl) {
+        MouseGlowEffect.audioCtrl = audioCtrl;
+    }
 
     private MouseGlowEffect(Scene scene, Pane rootPane) {
         // 覆盖层（透明，不干扰交互）
@@ -83,13 +91,16 @@ public class MouseGlowEffect {
 
         // 鼠标点击生成扩散圆圈
         scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            audioCtrl.playToggleSound();
             double x = event.getX();
             double y = event.getY();
             addRippleEffect(x, y);
-            lastClickX = x;
-            lastClickY = y;
+            lastClickX.addLast(x);
+            lastClickY.addLast(y);
             PauseTransition pause = new PauseTransition(Duration.millis(random.nextInt(1000,5000)));
-            pause.setOnFinished(e -> createMeteor(lastClickX,lastClickY));
+            pause.setOnFinished(e -> {
+                createMeteor(lastClickX.pop(), lastClickY.pop());
+            });
             pause.play();
         });
 
@@ -214,7 +225,7 @@ public class MouseGlowEffect {
         double meteorBaseDurationMs = 600;
         Duration moveDuration = Duration.millis(meteorBaseDurationMs);
         Duration fadeInDuration = Duration.millis(meteorBaseDurationMs * 0.4);
-        Duration fadeOutDelay = Duration.millis(meteorBaseDurationMs * 0.5);
+        Duration fadeOutDelay = Duration.millis(meteorBaseDurationMs * 0.7);
         Duration fadeOutDuration = Duration.millis(meteorBaseDurationMs * 0.3);
 
         TranslateTransition tt = new TranslateTransition(moveDuration, meteor);
