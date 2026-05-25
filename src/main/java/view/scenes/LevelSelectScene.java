@@ -42,7 +42,8 @@ public class LevelSelectScene extends Scene{
     }
     public void unlock(int currentLevel){
         final int unlockIndex = currentLevel + 1;
-        if(unlockIndex>5)return;
+        if(unlockIndex>=5)return;
+        gameCtrl.setMaxUnlocked(unlockIndex);
         Button level = levelSelectBox.getLevel(unlockIndex);
         level.setText("Level"+unlockIndex);
         level.setOnAction(e->gameCtrl.handleLevel(unlockIndex));

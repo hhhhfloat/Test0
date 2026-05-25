@@ -3,11 +3,12 @@ package dao;
 import java.util.Properties;
 
 import controller.GameCtrl;
+import model.entity.Account;
 import model.entity.MapSaveData;
 
 public interface GameSaveDao {
     // 初始化用的设置用户名
-    void setCurrentUser(String userName);
+    void setCurrentUser(Account account);
 
     // 保存地图
     void saveCurrentLoad(MapSaveData mapData, int loadNumber);

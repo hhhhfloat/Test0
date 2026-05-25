@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import controller.GameCtrl;
 import dao.GameSaveDao;
 import com.google.gson.Gson;
+import model.entity.Account;
 import model.entity.MapSaveData;
 
 import java.io.*;
@@ -16,9 +17,9 @@ import java.util.Properties;
 
 public class FileGameSaveDao implements GameSaveDao {
     private GameCtrl gameCtrl;
+    private Account account;
     private int loadNumber;
     /// user identification
-    private String currentUser;
     /// save path
     private Path saveRoot;
     private Path currentUserDir;
@@ -35,10 +36,10 @@ public class FileGameSaveDao implements GameSaveDao {
 
     /// SET USER
     @Override
-    public void setCurrentUser(String userName) {
-        currentUser = userName;
+    public void setCurrentUser(Account account) {
+        this.account = account;
         // set saving path
-        saveRoot = Paths.get("Data","Saves","User_"+currentUser);
+        saveRoot = Paths.get("Data","Saves","User_"+account.getSafeUserName());
         try{
             Files.createDirectories(saveRoot);
         } catch (IOException e) {
@@ -48,7 +49,7 @@ public class FileGameSaveDao implements GameSaveDao {
 
     @Override
     public void saveCurrentLoad(MapSaveData mapData, int loadNumber) {
-        if (currentUser == null || saveRoot == null || loadNumber == 0) {
+        if (account == null || saveRoot == null || loadNumber == 0) {
             return;
         }
         Path mapPath = saveRoot.resolve("LoadSave" + loadNumber + ".json");
@@ -61,7 +62,7 @@ public class FileGameSaveDao implements GameSaveDao {
 
     @Override
     public MapSaveData loadSelectedLoad(int loadNumber) {
-        if (currentUser == null || saveRoot == null || loadNumber == 0) {
+        if (account == null || saveRoot == null || loadNumber == 0) {
             return null;
         }
         Path mapPath = saveRoot.resolve("LoadSave" + loadNumber + ".json");
@@ -78,7 +79,7 @@ public class FileGameSaveDao implements GameSaveDao {
     @Override
     public void delLoadSave(int loadNumber){
         // map delete
-        if (currentUser == null || saveRoot == null || loadNumber == 0) {
+        if (account== null || saveRoot == null || loadNumber == 0) {
             return;
         }
         Path mapPath = saveRoot.resolve("LoadSave" + loadNumber + ".json");

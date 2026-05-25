@@ -6,7 +6,7 @@ import model.state.ScoreEntry;
 import java.util.List;
 
 public interface UserDao {
-    boolean exist(String username);
+    boolean existForRegister(String username);
     boolean validate(String username, String password);
     void createUser(String username, String password);
     int getHighScore(String username);
@@ -14,4 +14,5 @@ public interface UserDao {
     List<ScoreEntry> getLeaderboard(int limit);
     Account findByUsername(String username);
     void deleteAccount(String username);
+    boolean existForLogin(String username);
 }
