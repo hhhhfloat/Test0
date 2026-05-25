@@ -1,7 +1,6 @@
 package controller;
 
 import dao.GameSaveDao;
-import dao.impl.FileGameSaveDao;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -19,11 +18,7 @@ import view.game_nodes.Labels.ProgressLabel;
 import view.game_nodes.Labels.ScoreLabel;
 import view.game_nodes.Labels.TimeLabel;
 import view.scenes.*;
-
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Properties;
 
 public class GameCtrl extends Parent {
     // 用户使用部分
@@ -50,7 +45,7 @@ public class GameCtrl extends Parent {
     private final int loadNumber;
     private boolean bombMode = false;
     private ArrayList<Crd> hintPath;
-    private boolean isTourist;
+    private final boolean isTourist;
 
     public GameCtrl( SceneCtrl sceneCtrl, AudioCtrl audioCtrl, LoginCtrl loginCtrl,GameSaveDao gameSaveDao) {
         this.sceneCtrl = sceneCtrl;
@@ -349,8 +344,6 @@ public class GameCtrl extends Parent {
         timeLabel.continueTime();
     }
 
-
-
     private boolean isNewUnlock;
 
     public boolean isNewUnlock() {
@@ -360,7 +353,6 @@ public class GameCtrl extends Parent {
     public void showLevelSelectScene() {
         loginCtrl.showLevelSelectScene(isNewUnlock);
     }
-
 
     // save related variables
     private MapSaveData maps;

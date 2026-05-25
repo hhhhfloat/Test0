@@ -63,8 +63,8 @@ public class LoginCtrl {
             int sum = 0;
             if(maps != null){
                 int[] scores = maps.getMaxHistoryScore();
-                for (int j = 0; j < scores.length; j++) {
-                    sum += scores[j];
+                for (int score : scores) {
+                    sum += score;
                 }
                 maxScore = Math.max(maxScore, sum);
             }
@@ -124,16 +124,16 @@ public class LoginCtrl {
         showAccountScene();
     }
 
-
-
     public void handleRegister() {
         audioCtrl.playButtonSound();
         showRegisterScene();
     }
+
     public void handleRegisterCancel() {
         audioCtrl.playButtonSound();
         sceneCtrl.setScene(new LoginScene(this));
     }
+
     public void handleRegisterConfirm(String username, String password, String confirmPwd) {
         audioCtrl.playButtonSound();
         if(username.isEmpty()){
@@ -168,7 +168,6 @@ public class LoginCtrl {
             showAccountScene();
         }
     }
-
 
     public void handleExit() {
         audioCtrl.playButtonSound();
@@ -250,6 +249,7 @@ public class LoginCtrl {
         gameCtrl.loadGame();
         showLevelSelectScene(false);
     }
+
     public void handleLoadDelete(int k){
         audioCtrl.playButtonSound();
         loadNumber = k;
@@ -282,7 +282,4 @@ public class LoginCtrl {
         }
         sceneCtrl.setScene(new AccountScene(this));
     }
-
-
-
 }

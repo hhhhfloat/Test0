@@ -14,6 +14,7 @@ public class LevelSelectBox extends VBox{
             new Button("Level 4 - Locked"));
     public LevelSelectBox(GameCtrl gameCtrl){
         super(40);
+        getStyleClass().add("levelbox");
         level.getFirst().setOnAction(event -> gameCtrl.handleLevel(0));
         Button back = new Button("Back");
         back.setOnMouseClicked(e->gameCtrl.handleBackFromLevelSelect());

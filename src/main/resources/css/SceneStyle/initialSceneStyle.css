@@ -3,20 +3,31 @@
     -fx-background-size: cover;
 }
 
-InitialBox {
+.initialbox {
     -fx-alignment: Center;
 }
 
+.label {
+    -fx-alignment: Center;
+    -fx-text-fill: rgba(255,255,255,0.95);
+    -fx-font-family: Sans-serif;
+    -fx-font-size: 125px;
+    -fx-font-style: italic;
+
+    -fx-padding: 12.5px 25px;
+    -fx-effect: dropshadow(gaussian, rgba(100,0,100,0.5), 2, 1, 1, 5);
+}
+
 .button {
-    -fx-pref-width: 250px;
-    -fx-pref-height: 50px;
+    -fx-pref-width: 280px;
+    -fx-pref-height: 80px;
 
     -fx-background-radius: 14px;
-    -fx-background-color: rgba(50, 150, 200, 0.8);
+    -fx-background-color: rgba(50, 150, 200, 0.6);
 
     -fx-text-fill: Black;
     -fx-font-family: "Consolas";
-    -fx-font-size: 25px;
+    -fx-font-size: 30px;
     -fx-font-style: italic;
 
     -fx-border-color: rgba(30, 100, 140, 0.9);

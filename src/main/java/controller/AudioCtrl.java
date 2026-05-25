@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 public class AudioCtrl {
 
-    private double volume;
+    private final double volume;
 
     public AudioCtrl(){
         volume = 1.0;
@@ -21,12 +21,12 @@ public class AudioCtrl {
         return volume;
     }
 
-    private Media bgMusic = getMedia("bgmusic_Cello");
-    private Media buttonSound = getMedia("button");
-    private Media clickSound = getMedia("click");
-    private Media eliminateSound = getMedia("eliminate");
-    private Media bombSound = getMedia("TNT");
-    private Media iceBreakSound = getMedia("iceBreak");
+    private final Media bgMusic = getMedia("bgmusic_Cello");
+    private final Media buttonSound = getMedia("button");
+    private final Media clickSound = getMedia("click");
+    private final Media eliminateSound = getMedia("eliminate");
+    private final Media bombSound = getMedia("TNT");
+    private final Media iceBreakSound = getMedia("iceBreak");
 
     public void playBgMusic() {
         MediaPlayer mediaPlayer = new MediaPlayer(bgMusic);
@@ -40,14 +40,6 @@ public class AudioCtrl {
         audioPath = Paths.get("src","main","resources","Audio",name+".mp3");
         media = new Media(audioPath.toUri().toString());
         return media;
-    }
-
-    public void pauseBgMusic() {
-
-    }
-
-    public void resumeBgMusic() {
-
     }
 
     public void playButtonSound() {
@@ -76,10 +68,6 @@ public class AudioCtrl {
     }
 
     public void setVolume(double volume) {
-
-    }
-
-    public void toggleMute() {
 
     }
 

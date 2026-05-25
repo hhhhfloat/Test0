@@ -3,7 +3,7 @@
     -fx-background-size: cover;
 }
 
-LevelBox {
+.levelbox {
     -fx-alignment: Center;
 }
 
