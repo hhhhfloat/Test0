@@ -92,9 +92,6 @@ public class FileUserDao implements UserDao {
         }
 
         entries.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
-        if (entries.size() > limit) {
-            entries = entries.subList(0, limit);
-        }
         return entries;
     }
 
