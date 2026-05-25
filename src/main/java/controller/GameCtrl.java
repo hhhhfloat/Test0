@@ -76,9 +76,6 @@ public class GameCtrl extends Parent {
     public BoardInterface getBoard() {
         return board;
     }
-    public GameSaveDao getGameSaveDao() {
-        return gameSaveDao;
-    }
     public ScoreLabelInterface getScoreLabel() {
         return scoreLabel;
     }
@@ -353,10 +350,6 @@ public class GameCtrl extends Parent {
 
     private boolean isNewUnlock;
 
-    public boolean isNewUnlock() {
-        return isNewUnlock;
-    }
-
     public void showLevelSelectScene() {
         loginCtrl.showLevelSelectScene(isNewUnlock);
     }
@@ -376,8 +369,6 @@ public class GameCtrl extends Parent {
     public int getFreezeCount() {
         return freezeCount;
     }
-
-
 
     public void timeUp() {
         if(isTourist){
@@ -414,17 +405,15 @@ public class GameCtrl extends Parent {
                 selectedCell = null;
             } else {
                 if(!linkyMap.isValidPick(cellNode.getCrd(),selectedCell.getCrd())){
+                    selectedCell.setHighlight(false);
                     if(bombMode){
                         selectedCell.setBomb(false);
-                        selectedCell.setHighlight(false);
                         cellNode.setBomb(true);
-                        selectedCell = cellNode;
                     }else{
                         clearCombo();
-                        selectedCell.setHighlight(false);
                         cellNode.setHighlight(true);
-                        selectedCell = cellNode;
                     }
+                    selectedCell = cellNode;
                 }else{
                     eliminatedCount++;
                     if(bombMode){
@@ -447,7 +436,7 @@ public class GameCtrl extends Parent {
                             progressLabel.eliminate();
                             board.eliminate(cellNode, selectedCell, route);
                             audioCtrl.playEliminateSound();
-                            String s = "2 ×" + selectedCell.getName() + "! " + (++combo) + " COMBO"  + "!\n+" + (10 + 5 * (combo - 1)+" score");
+                            String s = "2× " + selectedCell.getName() + "! " + (++combo) + " COMBO"  + "!\n+" + (10 + 5 * (combo - 1)+" score");
                             GameScene.playInfo(s);
                             selectedCell = null;
                             scoreLabel.addScore(combo);

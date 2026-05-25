@@ -11,9 +11,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Properties;
-
 
 public class FileGameSaveDao implements GameSaveDao {
     private GameCtrl gameCtrl;
@@ -26,7 +23,7 @@ public class FileGameSaveDao implements GameSaveDao {
     /// add the gson thing
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public FileGameSaveDao(){};
+    public FileGameSaveDao(){}
 
     @Override
     public void setGameCtrl(GameCtrl gameCtrl) {

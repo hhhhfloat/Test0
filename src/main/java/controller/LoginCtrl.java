@@ -15,7 +15,7 @@ import model.entity.Account;
 import model.entity.MapSaveData;
 import model.state.ScoreEntry;
 import view.scenes.*;
-
+import java.nio.file.Paths;
 import java.util.List;
 
 public class LoginCtrl {
@@ -26,6 +26,7 @@ public class LoginCtrl {
     private Account account;
     private boolean isTourist;
     private int loadNumber = 0;
+    Alert warningAlert= new Alert(Alert.AlertType.WARNING), infoAlert = new Alert(Alert.AlertType.INFORMATION), confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
 
     private GameCtrl gameCtrl;
     private LevelSelectScene levelSelectScene;
@@ -37,12 +38,18 @@ public class LoginCtrl {
         this.userDao = userDao;
         this.audioCtrl = audioCtrl;
         this.sceneCtrl = sceneCtrl;
+        String path = Paths.get("src", "main", "resources", "css", "infoStyle.css").toUri().toString();
+        warningAlert.setTitle("Warning");
+        warningAlert.getDialogPane().getStylesheets().add(path);
+        infoAlert.setTitle("Information");
+        infoAlert.getDialogPane().getStylesheets().add(path);
+        confirmAlert.setTitle("Confirm");
+        confirmAlert.getDialogPane().getStylesheets().add(path);
     }
 
     public boolean isTourist() {
         return isTourist;
     }
-
 
     public void setGameCtrl(GameCtrl gameCtrl){
         this.gameCtrl = gameCtrl;
@@ -54,6 +61,16 @@ public class LoginCtrl {
 
     public int getLoadNumber() {
         return loadNumber;
+    }
+
+    public void showWarningAlert(String string) {
+        warningAlert.setContentText(string);
+        warningAlert.showAndWait();
+    }
+
+    public void showInfoAlert(String string) {
+        infoAlert.setContentText(string);
+        infoAlert.showAndWait();
     }
 
     public void syncHighestScore(){
@@ -83,37 +100,23 @@ public class LoginCtrl {
     public void handleLoginConfirm(String username, String password) {
         audioCtrl.playButtonSound();
         if (username.trim().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setContentText("Username can't be null!");
-            alert.showAndWait();
+            showWarningAlert("Username can't be null!");
         } else if (!userDao.existForLogin(username)) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setContentText("Username doesn't exist!");
-            alert.showAndWait();
+            showWarningAlert("Username doesn't exist!");
         }
         else if (userDao.validate(username, password)) {
-            Alert alert;
             account = userDao.findByUsername(username);
             if(account == null){
                 userDao.deleteAccount(username);
-                alert = new Alert(Alert.AlertType.WARNING);
-                alert.setContentText("INVALID USER INFORMATION");
-                alert.showAndWait();
+                showWarningAlert("INVALID USER INFORMATION");
                 return;
             }
-            alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setContentText("Login succeeded!");
-            alert.showAndWait();
+            showInfoAlert("Login succeeded!");
             isTourist = false;
             loadNumber = 0;
             showAccountScene();
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setContentText("Wrong password");
-            alert.showAndWait();
+            showWarningAlert("Wrong password!");
         }
 
     }
@@ -123,7 +126,6 @@ public class LoginCtrl {
         audioCtrl.playButtonSound();
         showAccountScene();
     }
-
 
     private static final String SAFE_NAME_PATTERN = "[\\\\/:*?\"<>|\\p{Cntrl}]";
     public static String properName(String s){
@@ -146,41 +148,28 @@ public class LoginCtrl {
     public void handleRegisterConfirm(String username, String password, String confirmPwd) {
         audioCtrl.playButtonSound();
         if(username.isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Username can't be empty");
-            alert.showAndWait();
+            showWarningAlert("Username can't be empty");
             return;
         }
         String safeUsername = properName(username);
         if(safeUsername.length()>1000){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Please use a shorter name!\n***Shorten your name with \n.&❂*…←…鳼№茡洟丗▦©∭");
-            alert.showAndWait();
+            showWarningAlert("Please use a shorter name!\n***Shorten your name with \n.&❂*…←…鳼№茡洟丗▦©∭");
         }else if(safeUsername.length() > 200) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Please use a shorter name!");
-            alert.showAndWait();
+            showWarningAlert("Please use a shorter name!");
         }
         else if(userDao.existForRegister(username)){
             System.out.println("Check");
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Username already exists in safe format: " + safeUsername);
-            alert.showAndWait();
+            showWarningAlert("Username already exists in safe format: " + safeUsername);
         }
         else if(password.isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Please set up your password");
-            alert.showAndWait();
+            showWarningAlert("Please set up your password");
         }else if(!password.equals(confirmPwd)){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Password do not match");
+            showWarningAlert("Password do not match");
         } else {
             userDao.createUser(username, password);
             account = new Account(username);
             account.setPassword(password);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setContentText("Register succeeded");
-            alert.showAndWait();
+            showInfoAlert("Register succeeded");
             isTourist = false;
             loadNumber = 0;
             showAccountScene();
@@ -189,11 +178,9 @@ public class LoginCtrl {
 
     public void handleExit() {
         audioCtrl.playButtonSound();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm");
-        alert.setHeaderText("Are you sure you want to exit?");
-        alert.setContentText("All the unsaved data will be lost!");
-        alert.showAndWait().ifPresent(response -> {
+        confirmAlert.setHeaderText("Are you sure you want to exit?");
+        confirmAlert.setContentText("All the unsaved data will be lost!");
+        confirmAlert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 Platform.exit();
             }
@@ -219,7 +206,7 @@ public class LoginCtrl {
             showLoadScene();
         }
     }
-    private int[] maxScoreForTourist = new int[LevelSelectScene.getTotLevelNumber()];
+    private final int[] maxScoreForTourist = new int[LevelSelectScene.getTotLevelNumber()];
     public boolean setMaxScore(int currentLevel, int score) {
         if(score>maxScoreForTourist[currentLevel]){
             maxScoreForTourist[currentLevel] = score;
@@ -230,10 +217,9 @@ public class LoginCtrl {
 
     public void handleLogout() {
         audioCtrl.playButtonSound();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm");
-        alert.setHeaderText("Sure to leave?");
-        alert.showAndWait().ifPresent(response -> {
+        confirmAlert.setTitle("Confirm");
+        confirmAlert.setHeaderText("Sure to leave?");
+        confirmAlert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 loadNumber = 0;
                 account = null;
