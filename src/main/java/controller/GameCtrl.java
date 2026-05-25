@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Cell;
 import model.entity.Account;
 import model.entity.Crd;
 import model.entity.LinkyMap;
@@ -413,20 +414,50 @@ public class GameCtrl extends Parent {
                 selectedCell.setBomb(false);
                 selectedCell = null;
             } else {
-                ArrayList<Crd> route = linkyMap.pathFindByPoint(selectedCell.getCrd(), cellNode.getCrd());
-                if (!bombMode && route.isEmpty()) {
-                    selectedCell.setHighlight(false);
-                    cellNode.setHighlight(true);
-                    selectedCell = cellNode;
-                } else if (bombMode && cellNode.getType() != selectedCell.getType()) {
-                    clearCombo();
-                    selectedCell.setBomb(false);
-                    selectedCell.setHighlight(false);
-                    cellNode.setBomb(true);
-                    selectedCell = cellNode;
-                } else {
-                    eliminate(selectedCell, cellNode, route);
+                if(!linkyMap.isValidPick(cellNode.getCrd(),selectedCell.getCrd())){
+                    if(bombMode){
+                        selectedCell.setBomb(false);
+                        selectedCell.setHighlight(false);
+                        cellNode.setBomb(true);
+                        selectedCell = cellNode;
+                    }else{
+                        clearCombo();
+                        selectedCell.setHighlight(false);
+                        cellNode.setHighlight(true);
+                        selectedCell = cellNode;
+                    }
+                }else{
                     eliminatedCount++;
+                    if(bombMode){
+                        cellNode.setHighlight(true);
+                        selectedCell.setHighlight(true);
+                        progressLabel.eliminate();
+                        bombUp(cellNode, selectedCell);
+                    }
+                    else{
+                        ArrayList<Crd> route = linkyMap.pathFindByPoint(selectedCell.getCrd(), cellNode.getCrd());
+                        if(route.isEmpty()){
+                            clearCombo();
+                            selectedCell.setHighlight(false);
+                            cellNode.setHighlight(true);
+                            selectedCell = cellNode;
+                            return;
+                        }else{
+                            cellNode.setHighlight(true);
+                            selectedCell.setHighlight(true);
+                            progressLabel.eliminate();
+                            board.eliminate(cellNode, selectedCell, route);
+                            audioCtrl.playEliminateSound();
+                            String s = "2 ×" + selectedCell.getName() + "! " + (++combo) + " COMBO"  + "!\n+" + (10 + 5 * (combo - 1)+" score");
+                            GameScene.playInfo(s);
+                            selectedCell = null;
+                            scoreLabel.addScore(combo);
+
+                            linkyMap.delNumMap(route);
+
+                        }
+                        isDone();
+                    }
                 }
             }
         }
@@ -437,34 +468,31 @@ public class GameCtrl extends Parent {
         GameScene.playInfo("Combo out! 😣");
     }
 
-    public void eliminate(CellNode cellNode1, CellNode cellNode2, ArrayList<Crd> route)
+    public void bombUp(CellNode cell1, CellNode cell2){
+        cell1.setBomb(true);
+        cell2.setBomb(true);
+        cell1.eliminateCell();
+        cell2.eliminateCell();
+        ArrayList<Crd> del = new ArrayList<>();
+        del.add(cell1.getCrd());
+        del.add(cell2.getCrd());
+        linkyMap.delNumMap(del);
+        audioCtrl.playBombSound();
+        GameScene.bombLightOff();
+        bombCount--;
+        GameScene.updateBombBtn(bombCount);
+        bombMode = false;
+    }
+
+    private boolean isNewRecord = false;
+
+    public boolean isNewRecord() {
+        return isNewRecord;
+    }
+
+    public void isDone()
     {
-        cellNode1.setHighlight(true);
-        cellNode2.setHighlight(true);
-        progressLabel.eliminate();
-        if (bombMode && bombCount > 0) {
-            cellNode1.setBomb(true);
-            cellNode2.setBomb(true);
-            cellNode1.eliminateCell();
-            cellNode2.eliminateCell();
-            ArrayList<Crd> del = new ArrayList<>();
-            del.add(cellNode1.getCrd());
-            del.add(cellNode2.getCrd());
-            linkyMap.delNumMap(del);
-            audioCtrl.playBombSound();
-            GameScene.bombLightOff();
-            bombCount--;
-            GameScene.updateBombBtn(bombCount);
-            bombMode = false;
-        } else {
-            board.eliminate(cellNode1, cellNode2, route);
-            audioCtrl.playEliminateSound();
-        }
-        linkyMap.delNumMap(route);
-        String s = "2 ×" + selectedCell.getName() + "! " + (++combo) + " COMBO"  + "!\n+" + (10 + 5 * (combo - 1)+" score");
-        GameScene.playInfo(s);
-        selectedCell = null;
-        scoreLabel.addScore(combo);
+        // victory
         if (linkyMap.isComplete()) {
             timeLabel.pauseTime();
             combo = 0;
@@ -472,9 +500,13 @@ public class GameCtrl extends Parent {
             {
                 if(scoreLabel.getScore()>maps.getMaxScore(currentLevel)){
                     maps.setMaxScore(currentLevel, scoreLabel.getScore());
-                    GameScene.playInfo("*** NEW RECORD ***");
+                    isNewRecord = true;
+                }else{
+                    isNewRecord = false;
                 }
                 gameSaveDao.delSelectedLevelSave(maps, currentLevel);
+            }else{
+                isNewRecord = loginCtrl.setMaxScore(currentLevel, scoreLabel.getScore());
             }
             if(levelSelectScene.getMaxUnlocked()<=currentLevel){
                 isNewUnlock = true;
@@ -483,6 +515,8 @@ public class GameCtrl extends Parent {
             showWinScene();
             return;
         }
+
+        // lose (dead end)
         hintPath = linkyMap.pathAutoFind();
         if(hintPath.isEmpty() && bombCount == 0){
             combo = 0;

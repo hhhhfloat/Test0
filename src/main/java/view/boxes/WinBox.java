@@ -1,11 +1,23 @@
 package view.boxes;
 
 import controller.GameCtrl;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class WinBox extends VBox {
+
+    private Animation colorCycle;
     public WinBox(GameCtrl gameCtrl) {
         super(10);
         getStyleClass().add("losebox");
@@ -17,6 +29,13 @@ public class WinBox extends VBox {
         timeLabel.getStyleClass().add("stat");
         Button confirm = new Button("Hooray!!!");
         confirm.setOnMouseClicked(event -> gameCtrl.showLevelSelectScene());
-        getChildren().addAll(state, scoreLabel, timeLabel,confirm);
+        List<Node> list = new ArrayList<>(Arrays.asList(state,scoreLabel,timeLabel,confirm));
+
+        getChildren().addAll(list);
+
+
     }
+
+
+
 }

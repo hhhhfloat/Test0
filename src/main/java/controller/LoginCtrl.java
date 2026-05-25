@@ -219,6 +219,14 @@ public class LoginCtrl {
             showLoadScene();
         }
     }
+    private int[] maxScoreForTourist = new int[LevelSelectScene.getTotLevelNumber()];
+    public boolean setMaxScore(int currentLevel, int score) {
+        if(score>maxScoreForTourist[currentLevel]){
+            maxScoreForTourist[currentLevel] = score;
+            return true;
+        }
+        return false;
+    }
 
     public void handleLogout() {
         audioCtrl.playButtonSound();
@@ -311,4 +319,6 @@ public class LoginCtrl {
         }
         sceneCtrl.setScene(new AccountScene(this));
     }
+
+
 }

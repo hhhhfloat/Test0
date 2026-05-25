@@ -17,7 +17,11 @@ public class LevelSelectScene extends Scene{
     private String congrats;
     private static StackPane root;
     private int maxUnlocked = 0;
+    private static final int totLevelNumber = 5;
 
+    public static int getTotLevelNumber() {
+        return totLevelNumber;
+    }
 
     public LevelSelectScene(GameCtrl gameCtrl) {
         super(new StackPane(createRoot(gameCtrl)), 800, 800);

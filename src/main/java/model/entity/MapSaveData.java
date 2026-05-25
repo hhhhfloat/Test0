@@ -7,7 +7,7 @@ public class MapSaveData {
     private static final int levelNumber = 5;
     private static final int[] totalPairs = {8,18,16,32,50};
     private static final int utilNumber = 3;
-    private static final int[] allRemainTime = {180,300,300,300,300};
+    private static final int[] allRemainTime = {30,60,60,120,180};
 
     private ArrayList<int[][]> map;
     private boolean isPair;
@@ -30,6 +30,7 @@ public class MapSaveData {
         Arrays.fill(bombCount,utilNumber);
         Arrays.fill(freezeCount, utilNumber);
         Arrays.fill(hintCount,utilNumber);
+
     }
 
     public int getMaxUnlockedLevel() {

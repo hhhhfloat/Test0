@@ -23,6 +23,7 @@ public class CellNode extends StackPane {
     private final int imgSet;
     private final ImageView image;
     private static final HashMap<Integer, String> imgSets = new HashMap<>();
+    private static final HashMap<Integer, String> imgSets_pair = new HashMap<>();
     private boolean isBomb = false;
     private String name;
 
@@ -31,6 +32,10 @@ public class CellNode extends StackPane {
             {"Enchanted Book", "Fishing Rod", "Leather Boots", "Name Tag", "Nautilus Shell", "Pufferfish", "Raw Cod", "Raw Salmon", "Shaddle", "Suspicious Stew", "Tropical Fish", "Water Bottle"},
             {"ChatGPT","Claude","DeepSeek","Doubao","Gemini","GithubCopilot","Kimi","Midjourney","Perplexity","Qianwen","stability","wenxinyiyan"},
             {"discord","facebook","myspace","qq.png","reddit","twitter","wechat","wecom","weibo","whatapp","x","yahoo"}
+    };
+    private final static String[][] images_pair = {
+            {"00cangqiong","01chiri","02dalu","03changkong","04han","05he","06hua","07song","08rixia","09tianzhong","10haishu","11shanhua","12di","13tian","14tiangong","15yuedian","16feng","17yu","18leigong","19yubo","20shicui","21tihong","22xuedong","23yanlou"},
+            {"00ceilingfan","01horrortie","02baba","03keke","04lightbulb","05neko","06ship60","07watch","08determination","09tobyfox","10ida","11totem","12charactor1","13character2","14cuphead","15handgun","16doublejump","17dreamnail","18cherry","19feather","20ancientfruit","21purplepants","22min","23toastedmarshmallow"}
     };
 
     public int getType() {
@@ -64,6 +69,8 @@ public class CellNode extends StackPane {
         imgSets.put(1, "MCFishing");
         imgSets.put(2,"AI");
         imgSets.put(3,"Chats");
+        imgSets_pair.put(0,"IndieGame");
+        imgSets_pair.put(1,"antipair");
     }
 
     public CellNode(int row, int col, double size, int type, GameCtrl gameCtrl, int imgSet) {

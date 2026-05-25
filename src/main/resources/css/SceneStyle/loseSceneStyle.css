@@ -31,6 +31,15 @@
     -fx-alignment: center;
 }
 
+/* 待增加newrecord彩色闪烁字体 */
+/*Algerian  */
+.new-record {
+    -fx-font-size: 32px;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 0, 0.6), 15, 0, 0, 0);
+    -fx-alignment: center;
+}
 /* 统计信息文本框 - 科技感边框，半透背景，亮色边框 */
 .stat {
     -fx-padding: 15px 25px;

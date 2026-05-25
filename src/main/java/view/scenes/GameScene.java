@@ -13,6 +13,8 @@ import view.boxes.InfoBox;
 import view.boxes.UtilBox;
 import view.game_nodes.Board;
 
+import java.awt.event.ActionEvent;
+import java.beans.EventHandler;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -35,7 +37,7 @@ public class GameScene extends Scene {
         root = new StackPane();
 
         Button pauseButton = new Button();
-        pauseButton.setOnMouseClicked(event -> gameCtrl.handlePause());
+        pauseButton.setOnAction(event -> gameCtrl.handlePause());
         pauseButton.getStyleClass().add("pausebutton");
         pauseButton.setLayoutX(15);
         pauseButton.setLayoutY(15);
