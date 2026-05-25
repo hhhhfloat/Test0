@@ -240,6 +240,7 @@ public class LoginCtrl {
                 gameCtrl = null;
                 levelSelectScene = null;
                 if(mapsForTourist != null)mapsForTourist = null;
+                maxScoreForTourist = null;
                 showInitialScene();
             }
         });

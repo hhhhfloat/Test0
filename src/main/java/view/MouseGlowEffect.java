@@ -1,6 +1,7 @@
 package view;
 
 import com.sun.scenario.DelayedRunnable;
+import controller.AudioCtrl;
 import javafx.animation.*;
 import javafx.scene.Scene;
 import javafx.scene.effect.BlurType;
@@ -26,6 +27,7 @@ import java.util.Random;
  */
 public class MouseGlowEffect {
 
+    private static AudioCtrl audioCtrl = null;
     private final Circle glowCircle;
     private final Pane overlayPane;
     private double targetX, targetY;      // 鼠标目标位置
@@ -36,6 +38,10 @@ public class MouseGlowEffect {
     private static final Random random = new Random();
     private ArrayDeque<Double> lastClickX = new ArrayDeque<>();
     private ArrayDeque<Double> lastClickY = new ArrayDeque<>();
+
+    public static void setAudioCtrl(AudioCtrl audioCtrl) {
+        MouseGlowEffect.audioCtrl = audioCtrl;
+    }
 
     private MouseGlowEffect(Scene scene, Pane rootPane) {
         // 覆盖层（透明，不干扰交互）
@@ -85,6 +91,7 @@ public class MouseGlowEffect {
 
         // 鼠标点击生成扩散圆圈
         scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            audioCtrl.playToggleSound();
             double x = event.getX();
             double y = event.getY();
             addRippleEffect(x, y);
