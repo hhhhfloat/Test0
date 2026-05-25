@@ -1,15 +1,18 @@
 package dao.impl;
 
+import controller.LoginCtrl;
 import dao.UserDao;
 import model.entity.Account;
 import model.state.ScoreEntry;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 
 public class FileUserDao implements UserDao {
     private final Path userFile;
+    private LoginCtrl loginCtrl;
 
     public FileUserDao() {
         userFile  = Paths.get("Data","users.properties");
@@ -17,7 +20,7 @@ public class FileUserDao implements UserDao {
 
     private Properties loadProperties() {
         Properties props = new Properties();
-        try (InputStream in = Files.newInputStream(userFile)) {
+        try (Reader in = Files.newBufferedReader(userFile, StandardCharsets.UTF_8)) {
             props.load(in);
         } catch (IOException e) {
             System.err.println("读取用户文件失败: " + e.getMessage());
@@ -34,9 +37,23 @@ public class FileUserDao implements UserDao {
     }
 
     @Override
-    public boolean exist(String username) {
+    public boolean existForRegister(String username) {
         Properties properties = loadProperties();
-        return properties.contains(username);
+        if(properties.contains(username))return true;
+        else{
+            for(String name: properties.stringPropertyNames()){
+                if(name.endsWith(".safeName")){
+                    if(LoginCtrl.properName(username).equals(properties.get(name)))
+                        return true;
+                }
+            }
+            return false;
+        }
+    }
+    @Override
+    public boolean existForLogin(String username){
+        Properties properties = loadProperties();
+        return properties.containsKey(username+".safeName");
     }
 
     @Override
@@ -51,6 +68,7 @@ public class FileUserDao implements UserDao {
         Properties properties = loadProperties();
         properties.setProperty(username + ".pwd", password);
         properties.setProperty(username + ".highscore", "0");
+        properties.setProperty(username+".safeName",LoginCtrl.properName(username));
         saveProperties(properties);
     }
 
@@ -98,6 +116,7 @@ public class FileUserDao implements UserDao {
     @Override
     public Account findByUsername(String username) {
         Properties props = loadProperties();
+
         String pwd = props.getProperty(username + ".pwd");
         if (pwd == null) return null;
 
@@ -110,6 +129,7 @@ public class FileUserDao implements UserDao {
         Properties props = loadProperties();
         props.remove(username+".pwd");
         props.remove(username+".highscore");
+        props.remove(username+".safeName");
         try(OutputStream out = Files.newOutputStream(userFile)){
             props.store(out,"User [" + username+"] is deleted");
         }catch(IOException e){return;}

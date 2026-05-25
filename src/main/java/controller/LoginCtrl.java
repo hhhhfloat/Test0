@@ -87,7 +87,7 @@ public class LoginCtrl {
             alert.setTitle("Warning");
             alert.setContentText("Username can't be null!");
             alert.showAndWait();
-        } else if (!userDao.exist(username)) {
+        } else if (!userDao.existForLogin(username)) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
             alert.setContentText("Username doesn't exist!");
@@ -124,6 +124,15 @@ public class LoginCtrl {
         showAccountScene();
     }
 
+
+    private static final String SAFE_NAME_PATTERN = "[\\\\/:*?\"<>|\\p{Cntrl}]";
+    public static String properName(String s){
+        String cleaned = s.replaceAll(SAFE_NAME_PATTERN,"_");
+        if(cleaned.startsWith(".")||cleaned.startsWith("-")){
+            cleaned = "_"+cleaned;
+        }
+        return cleaned;
+    }
     public void handleRegister() {
         audioCtrl.playButtonSound();
         showRegisterScene();
@@ -140,14 +149,22 @@ public class LoginCtrl {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("Username can't be empty");
             alert.showAndWait();
-        }else if(userDao.exist(username)) {
+            return;
+        }
+        String safeUsername = properName(username);
+        if(safeUsername.length()>1000){
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Username already exists");
+            alert.setContentText("Please use a shorter name!\n***Shorten your name with \n.&❂*…←…鳼№茡洟丗▦©∭");
+            alert.showAndWait();
+        }else if(safeUsername.length() > 200) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("Please use a shorter name!");
             alert.showAndWait();
         }
-        else if(username.length() > 1000){
+        else if(userDao.existForRegister(username)){
+            System.out.println("Check");
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Please use a shorter name!\n***Shorten your name with \n&❂*…←…鳼№茡洟丗▦©∭");
+            alert.setContentText("Username already exists in safe format: " + safeUsername);
             alert.showAndWait();
         }
         else if(password.isEmpty()){
@@ -159,7 +176,8 @@ public class LoginCtrl {
             alert.setContentText("Password do not match");
         } else {
             userDao.createUser(username, password);
-            account = userDao.findByUsername(username);
+            account = new Account(username);
+            account.setPassword(password);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setContentText("Register succeeded");
             alert.showAndWait();
@@ -288,7 +306,7 @@ public class LoginCtrl {
     public void showAccountScene() {
         if(!isTourist){
             gameSaveDao = new FileGameSaveDao();
-            gameSaveDao.setCurrentUser(account.getUserName());
+            gameSaveDao.setCurrentUser(account);
             syncHighestScore();
         }
         sceneCtrl.setScene(new AccountScene(this));
