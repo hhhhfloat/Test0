@@ -244,7 +244,7 @@ public class LoginCtrl {
         List<ScoreEntry> userList = userDao.getLeaderboard(30);
         for (int i = 1; i <= userList.toArray().length; i++) {
             String info = String.format("No.%d: %s   Score:%d", i, userList.get(i-1).getName(), userList.get(i-1).getScore());
-            if(account!=null && account.getUserName().equals(userList.get(i-1).getName())) {
+            if(!isTourist && account.getUserName().equals(userList.get(i-1).getName())) {
                 userInfo = info;
             }
             Label menuItem = new Label(info);
@@ -262,7 +262,7 @@ public class LoginCtrl {
         label.setMaxWidth(Double.MAX_VALUE);
         label.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
 
-        VBox vBox = account != null ? new VBox(30, scrollPane, label) : new VBox(scrollPane);
+        VBox vBox = !isTourist ? new VBox(30, scrollPane, label) : new VBox(scrollPane);
 
         Scene scene = new Scene(vBox);
         Stage leaderboardStage = new Stage();
