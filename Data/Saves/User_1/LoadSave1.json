@@ -1,0 +1,60 @@
+{
+  "map": [
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  "isPair": false,
+  "score": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "remainTime": [
+    180,
+    300,
+    300,
+    300,
+    300
+  ],
+  "eliminated": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "bombCount": [
+    3,
+    3,
+    3,
+    3,
+    3
+  ],
+  "freezeCount": [
+    3,
+    3,
+    3,
+    3,
+    3
+  ],
+  "hintCount": [
+    3,
+    3,
+    3,
+    3,
+    3
+  ],
+  "maxHistoryScore": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "maxUnlockedLevel": 0
+}
