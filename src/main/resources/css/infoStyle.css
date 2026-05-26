@@ -1,12 +1,12 @@
 
 .dialog-pane {
-    -fx-background-color: rgb(215, 50, 50, 0.8);
-    -fx-border-color: rgb(50, 144, 215, 0.8);
+    -fx-background-color: rgb(10, 10, 100, 0.8);
+    -fx-border-color: rgb(50, 144, 255, 0.8);
     -fx-border-width: 3px;
 }
 
 .dialog-pane:header .header-panel {
-    -fx-background-color: rgb(221, 215, 35, 0.8);
+    -fx-background-color: rgb(10, 10, 100, 0.9);
 }
 
 .dialog-pane .header-panel .label {
