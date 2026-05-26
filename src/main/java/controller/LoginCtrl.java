@@ -15,6 +15,7 @@ import model.entity.Account;
 import model.entity.MapSaveData;
 import model.state.ScoreEntry;
 import view.scenes.*;
+
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -206,7 +207,7 @@ public class LoginCtrl {
             showLoadScene();
         }
     }
-    private final int[] maxScoreForTourist = new int[LevelSelectScene.getTotLevelNumber()];
+    private int[] maxScoreForTourist = new int[LevelSelectScene.getTotLevelNumber()];
     public boolean setMaxScore(int currentLevel, int score) {
         if(score>maxScoreForTourist[currentLevel]){
             maxScoreForTourist[currentLevel] = score;
@@ -226,7 +227,7 @@ public class LoginCtrl {
                 gameCtrl = null;
                 levelSelectScene = null;
                 if(mapsForTourist != null)mapsForTourist = null;
-                //maxScoreForTourist = new int[LevelSelectScene.getTotLevelNumber()];
+                maxScoreForTourist = new int[LevelSelectScene.getTotLevelNumber()];
                 showInitialScene();
             }
         });
@@ -234,32 +235,10 @@ public class LoginCtrl {
 
     public void handleLeaderboard() {
         audioCtrl.playButtonSound();
-        String userInfo = "";
-        VBox list = new VBox(10);
+
         List<ScoreEntry> userList = userDao.getLeaderboard(30);
-        for (int i = 1; i <= userList.toArray().length; i++) {
-            String info = String.format("No.%d: %s   Score:%d", i, userList.get(i-1).getName(), userList.get(i-1).getScore());
-            if(!isTourist && account.getUserName().equals(userList.get(i-1).getName())) {
-                userInfo = info;
-            }
-            Label menuItem = new Label(info);
-            menuItem.setMaxWidth(Double.MAX_VALUE);
-            menuItem.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
-            list.getChildren().add(menuItem);
-        }
 
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(list);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPrefSize(300, 300);
-
-        Label label = new Label(userInfo);
-        label.setMaxWidth(Double.MAX_VALUE);
-        label.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
-
-        VBox vBox = !isTourist ? new VBox(30, scrollPane, label) : new VBox(scrollPane);
-
-        Scene scene = new Scene(vBox);
+        Scene scene = new LeaderboardScene(userList, account);
         Stage leaderboardStage = new Stage();
         leaderboardStage.setScene(scene);
         leaderboardStage.show();

@@ -1,0 +1,79 @@
+.root {
+    -fx-background-color:
+    radial-gradient(center 25% 20%, radius 35%, rgba(120, 80, 180, 0.2) 0%, transparent 85%),
+    radial-gradient(center 80% 70%, radius 40%, rgba(60, 120, 180, 0.15) 0%, transparent 90%),
+    radial-gradient(center 30% 40%, radius 80%, #1e1a3a 0%, #0c0a1a 65%, #020008 100%);
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+.scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* 底层背景框：固定宽度，科技感样式 */
+.label {
+    -fx-padding: 15px 25px;
+    -fx-text-fill: transparent;   /* 文字透明，因为底层不显示文字 */
+    -fx-background-color: rgba(10, 15, 35, 0.65);
+    -fx-background-radius: 32px;
+    -fx-border-color: rgba(0, 200, 220, 0.7);
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 180, 200, 0.4), 8, 0, 0, 0),
+    dropshadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0, 0, 2);
+}
+
+/* 上层的三个标签：透明背景、无边框、内边距为0，只保留文字样式 */
+.rank, .name, .score {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-effect: null;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 20px;
+    -fx-font-style: italic;
+    -fx-text-fill: rgba(220, 240, 255, 0.95);
+}
+
+/* 排名：固定宽度 50px，左对齐 */
+.rank {
+    -fx-min-width: 50px;
+    -fx-pref-width: 50px;
+    -fx-max-width: 50px;
+    -fx-alignment: center-left;
+}
+
+/* 用户名：固定宽度 200px，左对齐，超出省略号已在代码中处理 */
+.name {
+    -fx-min-width: 200px;
+    -fx-pref-width: 200px;
+    -fx-max-width: 200px;
+    -fx-alignment: center-left;
+}
+
+/* 分数：固定宽度 150px，右对齐 */
+.score {
+    -fx-min-width: 150px;
+    -fx-pref-width: 150px;
+    -fx-max-width: 150px;
+    -fx-alignment: center-right;
+}
+
+/* 底部当前用户栏 */
+.current-user {
+    -fx-text-fill: #FFD966;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* 分隔线 */
+.separator-line {
+    -fx-background-color: rgba(0, 200, 220, 0.7);
+    -fx-pref-height: 2px;
+    -fx-max-height: 2px;
+}
