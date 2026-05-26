@@ -226,7 +226,7 @@ public class LoginCtrl {
                 gameCtrl = null;
                 levelSelectScene = null;
                 if(mapsForTourist != null)mapsForTourist = null;
-                maxScoreForTourist = new int[LevelSelectScene.getTotLevelNumber()];
+                //maxScoreForTourist = new int[LevelSelectScene.getTotLevelNumber()];
                 showInitialScene();
             }
         });
