@@ -233,15 +233,27 @@ public class LoginCtrl {
         });
     }
 
+    private Stage leaderboardStage;
+
     public void handleLeaderboard() {
         audioCtrl.playButtonSound();
 
+        if(leaderboardStage != null && leaderboardStage.isShowing()){
+            leaderboardStage.toFront();
+            return;
+        }
         List<ScoreEntry> userList = userDao.getLeaderboard(30);
 
         Scene scene = new LeaderboardScene(userList, account);
         Stage leaderboardStage = new Stage();
         leaderboardStage.setScene(scene);
         leaderboardStage.show();
+
+        leaderboardStage.setOnCloseRequest(e-> cleanLeaderboard());
+    }
+
+    public void cleanLeaderboard(){
+        leaderboardStage = null;
     }
 
     public void handleLoad(int k) {
