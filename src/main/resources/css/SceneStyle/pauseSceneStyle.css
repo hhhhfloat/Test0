@@ -30,7 +30,6 @@ PauseBox {
     -fx-font-family: "Consolas";
     -fx-font-size: 20px;
     -fx-font-style: italic;
-
     -fx-border-color: rgba(30, 100, 140, 0.9);
     -fx-border-width: 4px;
     -fx-border-radius: 10px;
