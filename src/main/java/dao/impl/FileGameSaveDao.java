@@ -4,9 +4,9 @@ import com.google.gson.GsonBuilder;
 import controller.GameCtrl;
 import dao.GameSaveDao;
 import com.google.gson.Gson;
+import javafx.scene.control.Alert;
 import model.entity.Account;
 import model.entity.MapSaveData;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -67,9 +67,15 @@ public class FileGameSaveDao implements GameSaveDao {
             return null;
         }
         try (FileReader reader = new FileReader(mapPath.toFile())) {
-            return gson.fromJson(reader, MapSaveData.class);
+            MapSaveData maps = gson.fromJson(reader, MapSaveData.class);
+            return maps;
         } catch (IOException e) {
-            throw new RuntimeException("Failed map loading: " + e.getMessage(), e);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Corrupted save data");
+            alert.setContentText("Save data eliminated");
+            alert.showAndWait();
+            delLoadSave(loadNumber);
+            return null;
         }
     }
 

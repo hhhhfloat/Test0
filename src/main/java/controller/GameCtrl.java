@@ -109,17 +109,7 @@ public class GameCtrl extends Parent {
     }
 
     public void loadGame() {
-        try{
-            maps = gameSaveDao.loadSelectedLoad(loadNumber);
-        }catch(Exception e){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Invalid Save Data");
-            alert.setContentText("The game will create a new save");
-            gameSaveDao.delLoadSave(loadNumber);
-            alert.showAndWait();
-            return;
-        }
+        maps = gameSaveDao.loadSelectedLoad(loadNumber);
         if(maps == null) {
             maps = new MapSaveData();
             return;

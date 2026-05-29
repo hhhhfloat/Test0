@@ -12,7 +12,7 @@ public class MapSaveData {
     private ArrayList<int[][]> map;
     private boolean isPair;
     private int[] score = new int[levelNumber];
-    private int[] remainTime = {180,300,300,300,300};
+    private int[] remainTime = {30,60,60,120,180};
     private int[] eliminated = new int[levelNumber];
     private int[] bombCount = new int[levelNumber];
     private int[] freezeCount = new int[levelNumber];
@@ -31,6 +31,14 @@ public class MapSaveData {
         Arrays.fill(freezeCount, utilNumber);
         Arrays.fill(hintCount,utilNumber);
 
+    }
+
+    public static int getLevelNumber() {
+        return levelNumber;
+    }
+
+    public ArrayList<int[][]> getMap() {
+        return map;
     }
 
     public int getMaxUnlockedLevel() {
