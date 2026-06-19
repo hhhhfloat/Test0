@@ -21,5 +21,6 @@ public class MainApp extends Application {
         loginCtrl.showInitialScene();
         stage.show();
         // Platform.runLater(()->new SimpleFpsHUD(stage));
+
     }
 }
