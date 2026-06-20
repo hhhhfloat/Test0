@@ -11,7 +11,7 @@ public class LoginCtrl {
     private final AuthSceneCtrl authSceneCtrl;
 
     private Account account;
-    private int loadNumber = 1;
+    private int loadNumber = 0;
 
     public LoginCtrl(UserDao userDao, AudioCtrl audioCtrl, AuthSceneCtrl authSceneCtrl){
         this.userDao = userDao;
@@ -20,10 +20,12 @@ public class LoginCtrl {
     }
 
     public void handleLoginQuit(){
+        audioCtrl.playButtonSound();
         // show the warning
         // if yes, quit; if no, disappear
     }
     public void handleLoginConfirm(String username, String password){
+        audioCtrl.playButtonSound();
         if (username.trim().isEmpty()){
             // warning : username can't be null
         } else if(!userDao.existForLogin(username)){
@@ -37,12 +39,83 @@ public class LoginCtrl {
                 return;
             }
             // warning : "Login succeeded"
-            loadNumber = 1;
+            loadNumber = 0;
             authSceneCtrl.showAccountScene(this);
         } else{
             // warning : wrong password
         }
     }
+    public void handleRegister(){
+        audioCtrl.playButtonSound();
+        authSceneCtrl.showRegisterScene(this);
+    }
+
+    public void handleRegisterCancel()
+    {
+        authSceneCtrl.showLoginScene(this);
+    }
+
+    public void handleRegisterConfirm(String username, String password, String confirmPwd){
+        audioCtrl.playButtonSound();
+        if(username.isEmpty()){
+            // warning : username can't be empty
+            return;
+        }
+        String safeUsername = properName(username);
+        if(username.length() > 1000){
+            // warning : Please use a shorter name \n Shorten your name with .&❂*…←…鳼№茡洟丗▦©∭
+        } else if (safeUsername.length()>200){
+            // warning : Please use a shorter name
+        }
+        else if (userDao.existForRegister(username)){
+            // warning : username already exists
+        }
+        else if(password.isEmpty()){
+            // warning : Please set up your password
+        }
+        else if(!password.equals(confirmPwd)){
+            // warning : password do not match
+        }
+        else {
+            userDao.createUser(username, password);
+            account = new Account(username);
+            account.setPassword(password);
+            // info : register succeeded
+            loadNumber = 0;
+            authSceneCtrl.showAccountScene(this);
+        }
+    }
 
 
+
+    /// Util methods
+
+    private static final String SAFE_NAME_PATTERN = "[\\\\/:*?\"<>|\\p{Cntrl}]";
+    public static String properName(String s){
+        String cleaned = s.replaceAll(SAFE_NAME_PATTERN,"_");
+        if(cleaned.startsWith(".")||cleaned.startsWith("-")){
+            cleaned = "_"+cleaned;
+        }
+        return cleaned;
+    }
+
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void handleLogout() {
+        audioCtrl.playButtonSound();
+        // warning : sure?
+        if(true){
+            loadNumber = 0;
+            account = null;
+            authSceneCtrl.showLoginScene(this);
+        }
+
+    }
+
+    public void handleQuit() {
+        // warning : sure?
+    }
 }

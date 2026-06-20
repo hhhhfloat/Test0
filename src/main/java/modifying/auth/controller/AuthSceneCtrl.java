@@ -4,6 +4,7 @@ package modifying.auth.controller;
 import javafx.stage.Stage;
 import modifying.auth.view.scene.AccountScene;
 import modifying.auth.view.scene.LoginScene;
+import modifying.auth.view.scene.RegisterScene;
 
 public class AuthSceneCtrl {
     private Stage authStage;
@@ -11,6 +12,7 @@ public class AuthSceneCtrl {
     /// Scenes without animation should be held
     private LoginScene loginScene;
     private AccountScene accountScene;
+    private RegisterScene registerScene;
 
     public AuthSceneCtrl(Stage authStage){
         this.authStage = authStage;
@@ -28,5 +30,12 @@ public class AuthSceneCtrl {
             accountScene = new AccountScene(loginCtrl);
         }
         authStage.setScene(accountScene);
+    }
+
+    public void showRegisterScene(LoginCtrl loginCtrl){
+        if(registerScene == null){
+            registerScene = new RegisterScene(loginCtrl);
+        }
+        authStage.setScene(registerScene);
     }
 }

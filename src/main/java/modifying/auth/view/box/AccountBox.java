@@ -11,23 +11,22 @@ public class AccountBox extends VBox {
         super(15);
 
         Account acc = loginCtrl.getAccount();
-        boolean isTourist = loginCtrl.isTourist();
 
         Label welcomeLabel = new Label();
-        welcomeLabel.setText(isTourist?"Welcome":("Welcome, " + acc.getUserName()));
+        welcomeLabel.setText("Welcome, " + acc.getUserName());
 
         Button startBtn = new Button("Start"),
-                logoutBtn = new Button(isTourist?"Leave":"Logout"),
+                logoutBtn = new Button("Logout"),
                 leaderboardBtn = new Button("Leaderboard"),
-                exitBtn = new Button("Exit");
+                quitBtn = new Button("Exit");
 
-        startBtn.setOnAction(event -> loginCtrl.handleStart());
+        // startBtn.setOnAction(event -> loginCtrl.handleStart());
         logoutBtn.setOnAction(event -> loginCtrl.handleLogout());
-        exitBtn.setOnAction(event -> loginCtrl.handleExit());
-        leaderboardBtn.setOnAction(event -> loginCtrl.handleLeaderboard());
+        quitBtn.setOnAction(event -> loginCtrl.handleQuit());
+        // leaderboardBtn.setOnAction(event -> loginCtrl.handleLeaderboard());
 
 
-        getChildren().addAll(welcomeLabel, startBtn, logoutBtn, leaderboardBtn, exitBtn);
+        getChildren().addAll(welcomeLabel, startBtn, logoutBtn, leaderboardBtn, quitBtn);
 
     }
 }

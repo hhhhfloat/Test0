@@ -36,7 +36,7 @@ public class AuthModule extends Application{
 
         authSceneCtrl.showLoginScene(loginCtrl);
 
-
+        authStage.show();
 
     }
 }
