@@ -1,0 +1,701 @@
+package before.model.entity;
+
+
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class LinkyMap {
+    /// VVVVVV 重要常数以及成员变量声明
+    // 四个方向 0上 1右 2下 3左
+    final int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+    static final int[][][] Pos =
+            {
+                    {
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                    },
+                    {
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+                            {0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+                            {0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+                            {0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+                            {0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+                            {0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                    },
+                    {
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                    },
+                    {
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                            {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                            {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                            {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                            {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                            {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                            {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                            {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                    },
+                    {
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                    }
+            };
+    static final int[] nType = {6, 8, 8, 10, 12};
+    static final int[] nToPut = {16, 36, 32, 64, 100};
+
+    private int MAPX, MAPY;
+    private int[][] map;
+    private int[][] map_T;
+    private int[][][][] NumMap;
+    private int[][][][] NumMap_T;
+    private int MapType;
+    private int[] Count;
+    int isPair; // 1 表示不是 pair, 2 表示是 pair
+
+    /// VVVVVV
+    // getters
+    public int[][] getMap() {
+        return map;
+    }
+
+    public int[][][][] getNumMap() {
+        return NumMap;
+    }
+
+    public int getMAPX() {
+        return MAPX;
+    }
+
+    public int getMAPY() {
+        return MAPY;
+    }
+
+    public int getMapType() {
+        return MapType;
+    }
+
+    public int getIsPair() {
+        return isPair;
+    }
+
+    public int[][] copyMap() {
+        int[][] copy = new int[MAPX][MAPY];
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(map[i], 0, copy[i], 0, MAPY);
+        }
+        return copy;
+    }
+
+    /// 构造函数，会生成地图以及对应数表
+    public LinkyMap(int MAPX, int MAPY, int mpType, boolean isPairMode) {
+        this.MAPX = MAPX;
+        this.MAPY = MAPY;
+        MapType = mpType;
+        map = new int[this.MAPX][this.MAPY];
+        map_T = new int[this.MAPY][this.MAPX];
+        isPair = isPairMode ? 2 : 1;
+        //随机生成初始地图
+        initMap();
+        // 生成数表
+        initNumMap();
+    }
+
+    public LinkyMap(int MAPX, int MAPY, int[][] mp) {
+        this.MAPX = MAPX;
+        this.MAPY = MAPY;
+        MapType = 1;
+        isPair = 1;
+        map = new int[MAPX][MAPY];
+        map_T = new int[this.MAPY][this.MAPX];
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(mp[i], 0, map[i], 0, MAPY);
+        }
+        map_T = Tsp(map);
+        initNumMap();
+    }
+    public LinkyMap(int MAPX, int MAPY, int[][] mp,int isPair){
+        this.MAPX = MAPX;
+        this.MAPY = MAPY;
+        MapType = 1;
+        map = new int[MAPX][MAPY];
+        map_T = new int[this.MAPY][this.MAPX];
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(mp[i], 0, map[i], 0, MAPY);
+        }
+        map_T = Tsp(map);
+        initNumMap();
+        this.isPair = isPair;
+    }
+
+    public LinkyMap(int MAPX, int MAPY, int[][] mp, boolean isPair) {
+        this.MAPX = MAPX;
+        this.MAPY = MAPY;
+        MapType = 1;
+        this.isPair = isPair ? 2 : 1;
+        map = new int[MAPX][MAPY];
+        map_T = new int[this.MAPY][this.MAPX];
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(mp[i], 0, map[i], 0, MAPY);
+        }
+        map_T = Tsp(map);
+        initNumMap();
+    }
+
+    /// 自动生成地图
+    public void initMap() {
+        Count = new int[nType[MapType] * isPair];
+        int[][] pos = new int[MAPX][MAPY];
+        int[][] buf_map = new int[MAPX][MAPY];
+        /// 清空地图
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
+                map[x][y] = -1;
+                buf_map[x][y] = -1;
+            }
+        }
+        /// 把需要的位置拿过来
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(Pos[MapType][i], 0, pos[i], 0, MAPY);
+        }
+        int count_ = 0;
+        do {
+            sRandCount();
+            sRandMap(pos, buf_map);
+            initNumMap();
+        } while (!canComplete());
+        for (int i = 0; i < MAPX; i++) {
+            System.arraycopy(buf_map[i], 0, map[i], 0, MAPY);
+        }
+        map_T = Tsp(map);
+    }
+
+    public void sRandCount() {
+        Random rand = new Random();
+        int n = nType[MapType];
+        int times = nToPut[MapType];
+        for (int i = 0; i < n; i++) {
+            Count[i * isPair] = 1;
+        }
+        for (int i = 0; i < times / 2 - n; i++) {
+            Count[rand.nextInt(n) * isPair]++;
+        }
+        if (isPair == 2) // 如果是Pair模式，需要另外调整Count，因为前面只随机了一对的其中一个
+        {
+            for (int i = 0; i < n; i++) {
+                Count[i * 2 + 1] = Count[i * 2];
+            }
+        } else {
+            for (int i = 0; i < n; i++) {
+                Count[i] *= 2;
+            }
+        }
+    }
+
+    public void sRandMap(int[][] pos, int[][] buf_map) {
+        int n = nType[MapType] * isPair;
+        Random rand = new Random();
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
+                if (pos[x][y] == 1) {
+                    int r = rand.nextInt(n);
+                    while (Count[r] == 0) {
+                        r = rand.nextInt(n);
+                    }
+                    map[x][y] = r;
+                    buf_map[x][y] = r;
+                    Count[r]--;
+                }
+            }
+        }
+    }
+
+    public boolean canComplete() {
+        while (!isComplete()) {
+            ArrayList<Crd> path = pathAutoFind();
+            delNumMap(path);
+            if (path.isEmpty() && !isComplete()) return false;
+        }
+        return true;
+    }
+
+    /// 生成初始数表
+    public void initNumMap() {
+        NumMap = new int[MAPX][MAPY][4][2];
+        // 扫描四元组
+        // 按非零格枚举，直接四个方向都一起
+        // 这次不扫直线
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
+                if (map[x][y] != -1) // 仅枚举非零格
+                {
+                    int val = map[x][y];
+                    for (int i = 0; i < 4; i++) {// 枚举四个方向
+                        int t0 = 1;
+                        int dx = dir[i][0], dy = dir[i][1];
+                        while ((x + t0 * dx != MAPX && x + t0 * dx != -1) && (y + t0 * dy != MAPY && y + t0 * dy != -1)) {// 判断下标不在地图外
+                            NumMap[x + t0 * dx][y + t0 * dy][(i + 2) % 4][0] = val;
+                            NumMap[x + t0 * dx][y + t0 * dy][(i + 2) % 4][1] = t0;
+                            // 走到终点
+                            if (map[x + t0 * dx][y + t0 * dy] != -1) {
+                                break;
+                            }
+                            t0++;
+                        }
+                    }
+                }
+            }
+        }
+        // 理论上此时我们有一个完整的数据地图NumMap[][][4][2]，外周尚未给与特殊照顾
+        // 需要从边缘上的空格向内扫出一些不可用的值 (用-1标记，但长度仍要记！！！)
+        for (int i = 0; i < MAPY; i++) {
+            // 顶行
+
+            int t0 = 0;
+            while (t0 != MAPX) {// 判断下标不在地图外
+                NumMap[t0][i][0][0] = -1;
+                NumMap[t0][i][0][1] = t0 + 1;
+                // 走到终点
+                if (map[t0][i] != -1) break;
+
+                t0++;
+            }
+            // 底行
+
+            int t1 = MAPX - 1;
+            while (t1 != -1) {
+                NumMap[t1][i][2][0] = -1;
+                NumMap[t1][i][2][1] = MAPX - t1;
+                if (map[t1][i] != -1) break;
+                t1--;
+            }
+        }
+        for (int i = 0; i < MAPX; i++) {
+            // 左列
+
+            int t2 = 0;
+            while (t2 != MAPY) {// 判断下标不在地图外
+                NumMap[i][t2][3][0] = -1;
+                NumMap[i][t2][3][1] = t2 + 1;
+                // 走到终点
+                if (map[i][t2] != -1) break;
+                t2++;
+            }
+            // 右列
+            int t3 = MAPY - 1;
+            while (t3 != -1) {
+                NumMap[i][t3][1][0] = -1;
+                NumMap[i][t3][1][1] = MAPY - t3;
+                if (map[i][t3] != -1) break;
+                t3--;
+            }
+        }
+
+        NumMap_T = Tsp(NumMap);
+        // 数表生成完成
+    }
+
+    /// 检测输入的点是否合理
+    public boolean isValidPick(Crd p1, Crd p2) {
+        int x1 = p1.x(), x2 = p2.x();
+        int y1 = p1.y();
+        int y2 = p2.y();
+        if (x1 == x2 && y1 == y2) {
+            return false; // 同一点
+        } else if (x1 < 0 || x1 >= MAPX || x2 < 0 || x2 >= MAPX || y1 < 0 || y2 < 0 || y1 >= MAPY || y2 >= MAPY) {
+            return false; // 超范围
+        } else if (map[x1][y1] < 0 || map[x2][y2] < 0) {
+            return false; // 选了空格/障碍物
+        } else {
+            return map[x1][y1] / 2 == map[x2][y2] / 2 && Math.abs(map[x1][y1] - map[x2][y2]) == isPair - 1;// 点值不相等
+        }
+    }
+
+    ///  VVVVVV
+    /// 消去后更新数表与地图（给定消去的非零点）
+    public void delNumMap(ArrayList<Crd> crde) {
+        HashSet<Crd> crds = new HashSet<>(crde);
+        for (Crd p : crds) {
+            int x = p.x(), y = p.y();
+            if (map[x][y] == -1) continue; // 值为-2代表障碍物，不能跳过
+            //延申原先方向的（不知道如何避免重复）（知道如何避免重复了但是好复杂）
+            for (int i = 0; i < 4; i++) {
+                int t0 = 1;
+                int dx = dir[i][0], dy = dir[i][1];
+                int px = x + t0 * dx, py = y + t0 * dy;// 此时走一步的坐标
+                int ii = (i + 2) % 4; // 需要记录的方向
+                int val = NumMap[x][y][ii][0]; // 覆写要用到的两个值
+                int dis = NumMap[x][y][ii][1];
+
+                if (px < 0 || px >= MAPX || py < 0 || py >= MAPY) continue; // 如果再走一步就出去了，没有东西需要改
+                if (
+                        val == NumMap[px][py][ii][0] // 数字相同
+                                && dis == NumMap[px][py][ii][1] - 1 // 步数加一
+                ) { // 这说明这个方向已经被覆写过了
+                    continue;
+                }
+
+                // 开始覆写
+                while (x + t0 * dx < MAPX && x + t0 * dx >= 0 && y + t0 * dy < MAPY && y + t0 * dy >= 0) {// 在地图内，向方向 i 行进，检测 (i+2)%4 方向的点
+                    px = x + t0 * dx;
+                    py = y + t0 * dy; // 临时点坐标
+                    // 走到这里了就先改了
+                    NumMap[px][py][ii][0] = val;
+                    NumMap[px][py][ii][1] = dis + t0;
+                    NumMap_T[py][px][3 - ii][0] = val;
+                    NumMap_T[py][px][3 - ii][1] = dis + t0;
+                    boolean b = crds.contains(new Crd(px, py));
+                    if (map[x + t0 * dx][y + t0 * dy] != -1 && !b) // 不是空格且哈希匹配不是消掉的——停步
+                    {
+                        break;
+                    }
+                    t0++;
+                }
+            }
+            // 不能在地图上抹除，因为还需要结合哈希匹配来去重
+        }
+        // 覆写全部完成，更新地图
+        for (Crd p : crds) {
+            map[p.x()][p.y()] = -1;
+            map_T[p.y()][p.x()] = -1;
+        }
+
+    }
+
+    /// VVVVVV
+    /// 自动寻找路径（无路则返回空ArrayList）返回起点-(拐点-拐点-)终点
+    public ArrayList<Crd> pathAutoFind() {
+        if (isComplete()) return new ArrayList<>();
+        // 全部一次性枚举！
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
+                if (map[x][y] >= 0)    // 非空格，找直线
+                {
+                    for (int i = 0; i < 4; i++) {
+                        if (NumMap[x][y][i][0] >= 0 && map[x][y] / 2 == NumMap[x][y][i][0] / 2 && Math.abs(map[x][y] - NumMap[x][y][i][0]) == isPair - 1) //因为map[x][y]不是-1，不用考虑空条
+                        {
+                            ArrayList<Crd> path = new ArrayList<>();
+                            int dx = dir[i][0], dy = dir[i][1];
+                            path.add(new Crd(x, y));
+                            int z = NumMap[x][y][i][1];
+                            path.add(new Crd(x + dx * z, y + dy * z));
+                            return path;
+                        }
+                    }
+                } else // 空格，枚举同行拐点！
+                {
+                    ArrayList<Crd> path = new ArrayList<>();
+                    // 取右侧还有空格的空格
+                    int k = NumMap[x][y][1][1];
+                    // 枚举步数内的所有空格对
+                    for (int i = 0; i < k - 1; i++) {
+                        // 既然在枚举空格，那就干脆把单拐点也做掉！
+                        path = OneTwiPath(x, y + i);
+                        if (!path.isEmpty()) return path;
+                        // 此时再来枚举其余右侧空格，组成空格对
+                        for (int j = i + 1; j < k; j++) {
+                            int[] mmm = {0, 2}; // 枚举空格对中每一个的上/下数字
+                            for (int z : mmm) {
+                                for (int w : mmm) {
+                                    if (NumMap[x][y + i][z][0] >= 0 && NumMap[x][y + j][w][0] >= 0 && NumMap[x][y + i][z][0] / 2 == NumMap[x][y + j][w][0] / 2 && Math.abs(NumMap[x][y + i][z][0] - NumMap[x][y + j][w][0]) == isPair - 1) {
+                                        // 起点
+                                        path.add(new Crd(x + NumMap[x][y + i][z][1] * dir[z][0], y + i));
+                                        // 拐点一
+                                        path.add(new Crd(x, y + i));
+                                        // 拐点二
+                                        path.add(new Crd(x, y + j));
+                                        // 终点
+                                        path.add(new Crd(x + NumMap[x][y + j][w][1] * dir[w][0], y + j));
+                                        return path;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // 别忘了最后这一个单拐点还没检测
+                    path = OneTwiPath(x, y + k - 1);
+                    if (!path.isEmpty()) return path;
+                    y += k - 1;
+                }
+            }
+        }
+
+        // 纵向双拐点分析，是的原本的函数可以这样用
+        return Tsp(rowTwoTwi());
+    }
+
+    /// 自动单拐点路径返回(输入已知合法的拐点坐标)
+    ArrayList<Crd> OneTwiPath(int x, int y) {
+        // 四个方向 0上 1右 2下 3左
+        int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+        ArrayList<Crd> path = new ArrayList<>();
+        for (int d = 0; d < 4; d++) {
+            if (NumMap[x][y][d][0] >= 0 && NumMap[x][y][(d + 1) % 4][0] >= 0 && NumMap[x][y][d][0] / 2 == NumMap[x][y][(d + 1) % 4][0] / 2 && Math.abs(NumMap[x][y][d][0] - NumMap[x][y][(d + 1) % 4][0]) == isPair - 1) {
+                int k1 = NumMap[x][y][d][1], k2 = NumMap[x][y][(d + 1) % 4][1]; // 记录两个方向的步数
+                path.add(new Crd(x + dir[d][0] * k1, y + dir[d][1] * k1));
+                path.add(new Crd(x, y));
+                // 使用新方向
+                int t = (d + 1) % 4;
+                path.add(new Crd(x + dir[t][0] * k2, y + dir[t][1] * k2));
+                return path;
+            }
+        }
+        return path;
+    }
+
+    /// 横向自动寻找双拐点路径，已经发挥最大作用
+    ArrayList<Crd> rowTwoTwi() {
+        // 四个方向 0上 1右 2下 3左
+        int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+        int MAPX = map_T.length;
+        int MAPY = map_T[0].length;
+        ArrayList<Crd> path = new ArrayList<>();
+        for (int x = 0; x < MAPX; x++) {
+            for (int y = 0; y < MAPY; y++) {
+                if (map_T[x][y] == -1 && NumMap_T[x][y][1][1] >= 2) {
+                    // 取右侧还有空格的空格
+                    int k = NumMap_T[x][y][1][1]; // 枚举步数内的所有空格对
+                    for (int i = 0; i < k - 1; i++) {
+                        for (int j = i + 1; j < k; j++) {
+                            int[] mmm = {0, 2}; // 枚举空格对中每一个的上/下数字
+                            for (int z : mmm) {
+                                for (int w : mmm) {
+                                    if (NumMap_T[x][y + i][z][0] >= 0 && NumMap_T[x][y + j][w][0] >= 0 && NumMap_T[x][y + i][z][0] / 2 == NumMap_T[x][y + j][w][0] / 2 && Math.abs(NumMap_T[x][y + i][z][0] - NumMap_T[x][y + j][w][0]) == isPair - 1) {
+                                        // 起点
+                                        path.add(new Crd(x + NumMap_T[x][y + i][z][1] * dir[z][0], y + i));
+                                        // 拐点一
+                                        path.add(new Crd(x, y + i));
+                                        // 拐点二
+                                        path.add(new Crd(x, y + j));
+                                        // 终点
+                                        path.add(new Crd(x + NumMap_T[x][y + j][w][1] * dir[w][0], y + j));
+                                        return path;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    y += k;
+                }
+            }
+        }
+        return path;
+    }
+
+    /// NumMap用的转置函数
+    public int[][][][] Tsp(int[][][][] Nm) {
+        int[][][][] nt = new int[MAPY][MAPX][4][2];
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
+                for (int k = 0; k < 4; k++) {
+                    nt[j][i][3 - k][0] = Nm[i][j][k][0];
+                    nt[j][i][3 - k][1] = Nm[i][j][k][1];
+                }
+            }
+        }
+        return nt;
+    }
+
+    /// map用的转置函数
+    public int[][] Tsp(int[][] mp) {
+        int[][] map_T = new int[MAPY][MAPX];
+        for (int i = 0; i < MAPY; i++) {
+            for (int j = 0; j < MAPX; j++) {
+                map_T[i][j] = mp[j][i];
+            }
+        }
+        return map_T;
+    }
+
+    /// path用的转置函数
+    public ArrayList<Crd> Tsp(ArrayList<Crd> path) {
+        ArrayList<Crd> pt = new ArrayList<>();
+        for (Crd p : path) {
+            pt.add(new Crd(p.y(), p.x()));
+        }
+        return pt;
+    }
+
+    /// 检测map完成的函数（无参默认检查自己的地图）
+    public boolean isComplete() {
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
+                if (map[i][j] >= 0) return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isComplete(int[][] map_) {
+        for (int i = 0; i < MAPX; i++) {
+            for (int j = 0; j < MAPY; j++) {
+                if (map_[i][j] >= 0) return false;
+            }
+        }
+        return true;
+    }
+
+    //将ArrayList转化成HashSet
+    public HashSet<Crd> hashPath(ArrayList<Crd> path) {
+        return new HashSet<>(path);
+    }
+
+    /// 给定点找连线的函数(无路径则返回空路径) ，默认传入的是正确的选点
+    public ArrayList<Crd> pathFindByPoint(Crd p1, Crd p2) {
+        // System.out.println("Check -1");
+        if (!isValidPick(p1, p2)) return new ArrayList<>();
+        // System.out.println("Check 0");
+        int x1 = p1.x(), x2 = p2.x();
+        int y1 = p1.y(), y2 = p2.y();
+        ArrayList<Crd> path = new ArrayList<>();
+        int val = map[x1][y1];
+
+        // 直线
+        for (int i = 0; i < 4; i++) {
+            if (isAllVoid(x1,y1,x2,y2)) {
+                path.add(new Crd(x1, y1));
+                path.add(new Crd(x2, y2));
+                return path;
+            }
+        }
+        // System.out.println("Check 1");
+        // 剩下的情况必定不在直线上
+        // 单拐点
+        if (isAllVoid(x1, y1, x1, y2) && isAllVoid(x1, y2, x2, y2) && map[x1][y2] == -1) {
+            path.add(new Crd(x1, y1));
+            path.add(new Crd(x1, y2));
+            path.add(new Crd(x2, y2));
+            return path;
+        }
+        if (isAllVoid(x1, y1, x2, y1) && isAllVoid(x2, y1, x2, y2) && map[x2][y1] == -1) {
+            path.add(new Crd(x1, y1));
+            path.add(new Crd(x2, y1));
+            path.add(new Crd(x2, y2));
+            return path;
+        }
+
+        // System.out.println("Check 2");
+        // 双拐点
+        // 纵向
+        ArrayList<Integer> possible = new ArrayList<>();
+        for (int i = y1 - NumMap[x1][y1][3][1] + 1; i < y1 + NumMap[x1][y1][1][1]; i++) {
+            if (i == y1 || i == y2) continue;
+            if (map[x1][i] == -1 && map[x2][i] == -1 && isAllVoid(x1, i, x2, i) && isAllVoid(x2, i, x2, y2)) {
+                possible.add(i);
+            }
+        }
+        if (!possible.isEmpty()) {
+            if (possible.getFirst() > y1 && possible.getFirst() > y2) {
+                int i = possible.getFirst();
+                path.add(new Crd(x1, y1));
+                path.add(new Crd(x1, i));
+                path.add(new Crd(x2, i));
+                path.add(new Crd(x2, y2));
+                return path;
+            } else if (possible.getLast() < y1 && possible.getLast() < y2) {
+                int i = possible.getLast();
+                path.add(new Crd(x1, y1));
+                path.add(new Crd(x1, i));
+                path.add(new Crd(x2, i));
+                path.add(new Crd(x2, y2));
+                return path;
+            } else {
+                int min = MAPY * 2;
+                int rec = 0;
+                for (int t : possible) {
+                    int s = Math.abs(t - y1) + Math.abs(t - y2);
+                    if (s < min) {
+                        min = s;
+                        rec = t;
+                    }
+                }
+                path.add(new Crd(x1, y1));
+                path.add(new Crd(x1, rec));
+                path.add(new Crd(x2, rec));
+                path.add(new Crd(x2, y2));
+                return path;
+            }
+        }
+        // System.out.println("Check 3");
+
+        // 横向
+        for (int i = x1 - NumMap[x1][y1][0][1] + 1; i < x1 + NumMap[x1][y1][2][1]; i++) {
+            if (i == x1 || i == x2) continue;
+            if (map[i][y1] == -1 && map[i][y2] == -1 && isAllVoid(i, y1, i, y2) && isAllVoid(i, y2, x2, y2)) {
+                possible.add(i);
+            }
+        }
+        if (possible.isEmpty()) return path;
+        int min = MAPX * 2;
+        int rec = 0;
+        for (int t : possible) {
+            int s = Math.abs(t - y1) + Math.abs(t - x2);
+            if (s < min) {
+                min = s;
+                rec = t;
+            }
+        }
+        path.add(new Crd(x1, y1));
+        path.add(new Crd(rec, y1));
+        path.add(new Crd(rec, y2));
+        path.add(new Crd(x2, y2));
+        // System.out.println("Check 4");
+        return path;
+    }
+
+    // 只是为了方便写一个 探查同行/列点之间是否都是空
+    public boolean isAllVoid(int x1, int y1, int x2, int y2) {
+        // 1 -> 2
+        if (x1 == x2) {
+            int yDir = (y1 < y2) ? 1 : 3;
+            return NumMap[x1][y1][yDir][1] >= Math.abs(y1 - y2);
+        }
+        if (y1 == y2) {
+            int xDir = (x1 < x2) ? 2 : 0;
+            return NumMap[x1][y1][xDir][1] >= Math.abs(x1 - x2);
+        }
+        return false;
+    }
+
+}

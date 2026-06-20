@@ -1,8 +1,8 @@
 package org.example;
 
-import model.entity.HRLinkyMap;
-import model.entity.LinkyMap;
-import model.entity.Crd;
+import before.model.entity.HRLinkyMap;
+import before.model.entity.LinkyMap;
+import before.model.entity.Crd;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
