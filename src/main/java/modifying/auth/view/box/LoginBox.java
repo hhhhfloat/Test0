@@ -33,4 +33,9 @@ public class LoginBox extends VBox {
 
         getChildren().addAll(messageLabel, usernameField, passwordField, choiceBox, registerBtn);
     }
+
+    public void clearTextField() {
+        usernameField.clear();
+        passwordField.clear();
+    }
 }

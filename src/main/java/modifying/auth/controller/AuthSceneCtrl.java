@@ -22,6 +22,7 @@ public class AuthSceneCtrl {
         if(loginScene == null){
             loginScene = new LoginScene(loginCtrl);
         }
+        loginScene.clearTextField();
         authStage.setScene(loginScene);
     }
 
@@ -29,6 +30,7 @@ public class AuthSceneCtrl {
         if(accountScene == null){
             accountScene = new AccountScene(loginCtrl);
         }
+        accountScene.syncUser();
         authStage.setScene(accountScene);
     }
 
@@ -36,6 +38,7 @@ public class AuthSceneCtrl {
         if(registerScene == null){
             registerScene = new RegisterScene(loginCtrl);
         }
+        registerScene.clearTextField();
         authStage.setScene(registerScene);
     }
 }

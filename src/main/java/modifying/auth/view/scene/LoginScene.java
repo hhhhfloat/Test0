@@ -15,9 +15,26 @@ public class LoginScene extends Scene {
     private static final int SCREEN_WIDTH = AuthModule.getScreenWidth();
     private static final int SCREEN_HEIGHT = AuthModule.getScreenHeight();
 
+    private static StackPane root;
+    private LoginBox loginBox;
+
     public LoginScene(LoginCtrl loginCtrl){
-        super(new StackPane(new LoginBox(loginCtrl)), SCREEN_WIDTH, SCREEN_HEIGHT);
+        super(new StackPane(createRoot()), SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        loginBox = new LoginBox(loginCtrl);
+        root.getChildren().add(loginBox);
+
         getStylesheets().add(Paths.get("src","main","resources","css","SceneStyle","loginSceneStyle.css").toUri().toString());
         MouseGlowEffect.attach(this, (StackPane)getRoot());
+    }
+
+    private static StackPane createRoot(){
+        root = new StackPane();
+        return root;
+    }
+
+
+    public void clearTextField() {
+        loginBox.clearTextField();
     }
 }

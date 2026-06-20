@@ -51,4 +51,10 @@ public class RegisterBox extends VBox {
 
         getChildren().addAll(messageLabel, usernameField, passwordField, confirmFiled, choiceBox);
     }
+
+    public void clearTextField() {
+        usernameField.clear();
+        passwordField.clear();
+        confirmFiled.clear();
+    }
 }

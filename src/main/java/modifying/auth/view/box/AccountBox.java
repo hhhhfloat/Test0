@@ -7,18 +7,24 @@ import javafx.scene.layout.VBox;
 import modifying.auth.controller.LoginCtrl;
 
 public class AccountBox extends VBox {
+
+    private LoginCtrl loginCtrl;
+
+    private Label welcomeLabel;
+    private Button startBtn, logoutBtn, leaderboardBtn, quitBtn;
+
     public AccountBox(LoginCtrl loginCtrl) {
         super(15);
 
-        Account acc = loginCtrl.getAccount();
+        this.loginCtrl = loginCtrl;
 
-        Label welcomeLabel = new Label();
-        welcomeLabel.setText("Welcome, " + acc.getUserName());
+        welcomeLabel = new Label();
+        welcomeLabel.setText("Welcome, " + loginCtrl.getAccount().getUserName());
 
-        Button startBtn = new Button("Start"),
-                logoutBtn = new Button("Logout"),
-                leaderboardBtn = new Button("Leaderboard"),
-                quitBtn = new Button("Exit");
+        startBtn = new Button("Start");
+        logoutBtn = new Button("Logout");
+        leaderboardBtn = new Button("Leaderboard");
+        quitBtn = new Button("Exit");
 
         // startBtn.setOnAction(event -> loginCtrl.handleStart());
         logoutBtn.setOnAction(event -> loginCtrl.handleLogout());
@@ -27,6 +33,8 @@ public class AccountBox extends VBox {
 
 
         getChildren().addAll(welcomeLabel, startBtn, logoutBtn, leaderboardBtn, quitBtn);
-
+    }
+    public void syncAccount(){
+        welcomeLabel.setText("Welcome, " + loginCtrl.getAccount().getUserName());
     }
 }

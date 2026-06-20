@@ -14,9 +14,26 @@ public class RegisterScene extends Scene {
     private static final int SCREEN_WIDTH = AuthModule.getScreenWidth();
     private static final int SCREEN_HEIGHT = AuthModule.getScreenHeight();
 
+    private static StackPane root;
+    private RegisterBox registerBox;
+
     public RegisterScene(LoginCtrl loginCtrl){
-        super(new StackPane(new RegisterBox(loginCtrl)),800,800);
+        super(new StackPane(createRoot()), SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        registerBox = new RegisterBox(loginCtrl);
+        root.getChildren().add(registerBox);
+
         getStylesheets().add(Paths.get("src", "main", "resources", "css", "SceneStyle", "registerSceneStyle.css").toUri().toString());
         MouseGlowEffect.attach(this, (StackPane) getRoot());
     }
+
+    private static StackPane createRoot(){
+        root = new StackPane();
+        return root;
+    }
+
+    public void clearTextField(){
+        registerBox.clearTextField();
+    }
+
 }
