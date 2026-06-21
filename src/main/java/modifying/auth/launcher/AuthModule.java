@@ -11,14 +11,7 @@ import modifying.auth.controller.LoginCtrl;
 
 public class AuthModule extends Application{
 
-    private static final int SCREEN_WIDTH = 800;
-    private static final int SCREEN_HEIGHT = 800;
-    public static int getScreenHeight() {
-        return SCREEN_HEIGHT;
-    }
-    public static int getScreenWidth() {
-        return SCREEN_WIDTH;
-    }
+
 
     @Override
     public void start(Stage authStage){
