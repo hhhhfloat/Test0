@@ -22,7 +22,7 @@ public class AudioCtrl {
     }
 
     private final Media bgMusic = getMedia("bgmusic_Cello");
-    private final Media buttonSound = getMedia("button");
+    private final Media buttonSound = getMedia("click");
     private final Media clickSound = getMedia("click");
     private final Media eliminateSound = getMedia("eliminate");
     private final Media bombSound = getMedia("TNT");

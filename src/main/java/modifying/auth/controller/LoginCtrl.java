@@ -3,6 +3,7 @@ package modifying.auth.controller;
 import before.controller.AudioCtrl;
 import before.dao.UserDao;
 import before.model.entity.Account;
+import modifying.shared.model.TOAST_TYPE;
 
 
 public class LoginCtrl {
@@ -27,22 +28,21 @@ public class LoginCtrl {
     public void handleLoginConfirm(String username, String password){
         audioCtrl.playButtonSound();
         if (username.trim().isEmpty()){
-            // warning : username can't be null
+
         } else if(!userDao.existForLogin(username)){
-            // warning : username doesn't exist
+            authSceneCtrl.showToast("Username doesn't exist", TOAST_TYPE.WARNING);
         }
         else if(userDao.validate(username, password)){
             account = userDao.findByUsername(username);
             if(account == null) {
                 userDao.deleteAccount(username);
-                // warning : INVALID username
+                authSceneCtrl.showToast("Invalid Username", TOAST_TYPE.WARNING);
                 return;
             }
-            // warning : "Login succeeded"
             loadNumber = 0;
-            authSceneCtrl.showAccountScene(this);
+            authSceneCtrl.showAccountScene(this,"Login Succeeded",TOAST_TYPE.SUCCESS);
         } else{
-            // warning : wrong password
+            authSceneCtrl.showToast("Wrong password", TOAST_TYPE.WARNING);
         }
     }
     public void handleRegister(){
@@ -58,31 +58,30 @@ public class LoginCtrl {
     public void handleRegisterConfirm(String username, String password, String confirmPwd){
         audioCtrl.playButtonSound();
         if(username.isEmpty()){
-            // warning : username can't be empty
+            authSceneCtrl.showToast("Username cannot be empty",TOAST_TYPE.WARNING);
             return;
         }
         String safeUsername = properName(username);
         if(username.length() > 1000){
-            // warning : Please use a shorter name \n Shorten your name with .&❂*…←…鳼№茡洟丗▦©∭
+            authSceneCtrl.showToast("Please use a shorter name\n2h0rteΠ γ0ur namε w1tμ\n.&❂*…←…鳼№茡洟丗▦©∭", TOAST_TYPE.ERROR);
         } else if (safeUsername.length()>200){
-            // warning : Please use a shorter name
+            authSceneCtrl.showToast("Please use a shorter name !#&@\\DEL※",TOAST_TYPE.WARNING);
         }
         else if (userDao.existForRegister(username)){
-            // warning : username already exists
+            authSceneCtrl.showToast("Username exists",TOAST_TYPE.WARNING);
         }
         else if(password.isEmpty()){
-            // warning : Please set up your password
+            authSceneCtrl.showToast("Please set up your password",TOAST_TYPE.WARNING);
         }
         else if(!password.equals(confirmPwd)){
-            // warning : password do not match
+            authSceneCtrl.showToast("Passwords do not match", TOAST_TYPE.WARNING);
         }
         else {
             userDao.createUser(username, password);
             account = new Account(username);
             account.setPassword(password);
-            // info : register succeeded
             loadNumber = 0;
-            authSceneCtrl.showAccountScene(this);
+            authSceneCtrl.showAccountScene(this,"Register succeeded",TOAST_TYPE.SUCCESS);
         }
     }
 
@@ -106,12 +105,15 @@ public class LoginCtrl {
 
     public void handleLogout() {
         audioCtrl.playButtonSound();
-        // warning : sure?
-        if(true){
-            loadNumber = 0;
-            account = null;
-            authSceneCtrl.showLoginScene(this);
-        }
+        authSceneCtrl.showConfirmDialog(
+                "Confirm",
+                "Sure to logout?",
+                ()->{
+                    audioCtrl.playButtonSound();
+                    loadNumber=0;
+                    account = null;
+                    authSceneCtrl.showLoginScene(this);
+                }, audioCtrl::playButtonSound);
 
     }
 
