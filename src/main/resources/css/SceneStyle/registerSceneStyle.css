@@ -1,45 +1,42 @@
-.root {
-    -fx-background-color:
-    /* 弥散光晕（大面积，极淡） */
-    radial-gradient(center 25% 20%, radius 35%,
-    rgba(120, 80, 180, 0.2) 0%,
-    transparent 85%),
-    radial-gradient(center 80% 70%, radius 40%,
-    rgba(60, 120, 180, 0.15) 0%,
-    transparent 90%),
-    /* 蓝紫渐变（作为整个背景的基底） */
-    radial-gradient(center 30% 40%, radius 80%,
-    #1e1a3a 0%, #0c0a1a 65%, #020008 100%);
-
-    -fx-background-size: cover;
-    -fx-background-repeat: no-repeat;
-}
-
-RegisterBox {
-    -fx-alignment: Center;
-}
-
+/* ===== 通用布局 ===== */
 HBox {
-    -fx-alignment: Center;
+    -fx-alignment: center;
 }
 
-HBox Button {
-    -fx-pref-width: 150px;
-    -fx-pref-height: 20px;
+/* ===== 标题标签 ===== */
+.label {
+    -fx-padding: 10px;
+    -fx-text-fill: white;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 50px;
+    -fx-font-style: italic;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 1);
+}
 
+/* ===== 文本输入框 ===== */
+.text-field {
+    -fx-max-width: 500px;
+    -fx-pref-height: 60px;
+    -fx-font-size: 16px;
+    -fx-font-family: "Consolas";
     -fx-background-radius: 10px;
-    -fx-background-color: rgba(50, 150, 200, 0.8);
+    -fx-border-radius: 10px;
+}
 
+/* ===== 主按钮（Cancel / Confirm） ===== */
+HBox > Button {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 20px;
+    -fx-background-radius: 20px;
+    -fx-background-color: rgba(50, 150, 200, 0.8);
     -fx-text-fill: Black;
     -fx-font-family: "Consolas";
-    -fx-font-size: 20px;
+    -fx-font-size: 26px;
     -fx-font-style: italic;
-
     -fx-border-color: rgba(30, 100, 140, 0.9);
     -fx-border-width: 4px;
-    -fx-border-radius: 10px;
-
-    -fx-padding: 10px 20px;
+    -fx-border-radius: 13px;
+    -fx-padding: 15px 30px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
@@ -47,72 +44,11 @@ HBox > Button:hover {
     -fx-background-color: rgba(50, 215, 193, 0.8);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
-
-    -fx-border-color: rgba(30, 160, 140, 0.95);
-    -fx-border-width: 4.5px;
+    /* 🔥 移除 -fx-scale-x/y，由 UIUtils 动画控制 */
 }
 
 HBox > Button:pressed {
-    -fx-background-color: rgba(70, 170, 220, 0.8);
-    -fx-border-color: rgba(30, 100, 140, 0.9);
     -fx-scale-x: 0.97;
     -fx-scale-y: 0.97;
-    -fx-translate-y: 1px;
+    -fx-translate-y: 2px;
 }
-
-RegisterBox > Button {
-    -fx-pref-width: 400px;
-    -fx-pref-height: 20px;
-    -fx-background-radius: 10px;
-    -fx-background-color: rgba(50, 150, 200, 0.8);
-
-    -fx-text-fill: Black;
-    -fx-font-family: "Consolas";
-    -fx-font-size: 20px;
-    -fx-font-style: italic;
-
-    -fx-border-color: rgba(30, 100, 140, 0.9);
-    -fx-border-width: 4px;
-    -fx-border-radius: 10px;
-
-    -fx-padding: 10px 20px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
-}
-
-RegisterBox > Button:hover {
-    -fx-background-color: rgba(50, 215, 193, 0.8);
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
-
-    -fx-border-color: rgba(30, 160, 140, 0.95);
-    -fx-border-width: 4.5px;
-}
-
-RegisterBox > Button:pressed {
-    -fx-scale-x: 0.97;
-    -fx-scale-y: 0.97;
-    -fx-translate-y: 1px;
-}
-
-.label {
-
-    -fx-text-fill: white;
-    -fx-font-family: "Consolas";
-    -fx-font-size: 41px;
-    -fx-font-style: italic;
-
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 1);
-}
-
-.text-field {
-    -fx-max-width: 400px;
-    -fx-pref-height: 50px;
-    -fx-font-size: 15px;
-    -fx-background-radius: 6px;
-    -fx-border-radius: 6px;
-}
-

@@ -22,7 +22,7 @@ import java.util.Random;
 
 /**
  * 鼠标跟随光晕效果工具类
- * 用法：在创建 Scene 后调用 MouseGlowEffect.attach(scene, rootPane)
+ * 用法：在创建 Scene 后调用 MouseGlowEffect.attach(authScene, rootPane)
  */
 public class MouseGlowEffect {
 
@@ -44,12 +44,7 @@ public class MouseGlowEffect {
 
     private MouseGlowEffect(Scene scene, Pane rootPane) {
         // 覆盖层（透明，不干扰交互）
-        overlayPane = new Pane();
-        overlayPane.setMouseTransparent(true);
-        overlayPane.setPickOnBounds(false);
-        overlayPane.prefWidthProperty().bind(rootPane.widthProperty());
-        overlayPane.prefHeightProperty().bind(rootPane.heightProperty());
-
+        overlayPane = rootPane;
 
         // 光晕圆形
         glowCircle = new Circle(50);  // 半径改为50
@@ -115,24 +110,6 @@ public class MouseGlowEffect {
             }
         };
         timer.start();
-
-
-        // 窗口大小改变时重新居中（如果鼠标从未移动）
-        rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {
-            if (targetX == currentX && targetX == rootPane.getWidth() / 2) {
-                currentX = newVal.doubleValue() / 2;
-                glowCircle.setCenterX(currentX);
-                targetX = currentX;
-            }
-        });
-        rootPane.heightProperty().addListener((obs, oldVal, newVal) -> {
-            if (targetY == currentY && targetY == rootPane.getHeight() / 2) {
-                currentY = newVal.doubleValue() / 2;
-                glowCircle.setCenterY(currentY);
-                targetY = currentY;
-            }
-        });
-        rootPane.getChildren().addFirst(overlayPane);
     }
     /**
      * 添加波纹扩散效果（多个圆圈）

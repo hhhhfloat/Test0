@@ -1,0 +1,65 @@
+/* ===== 确认框容器 ===== */
+.confirm-box {
+    -fx-background-color: rgba(20, 20, 30, 0.95);
+    -fx-border-color: rgba(120, 80, 200, 0.5);
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 20, 0, 0, 5);
+
+    /* 固定尺寸（基于 800x800 逻辑坐标系） */
+    -fx-pref-width: 320px;              /* 800 * 0.4 */
+    -fx-max-width: 320px;
+    -fx-max-height : 200px;
+    -fx-padding: 24px 32px;
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
+}
+
+/* ===== 标题 ===== */
+#confirm-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 22px;               /* 800 * 0.0275 */
+    -fx-font-weight: bold;
+}
+
+/* ===== 消息 ===== */
+#confirm-message {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 16px;               /* 800 * 0.02 */
+    -fx-text-alignment: center;
+}
+
+/* ===== 确认按钮 ===== */
+.confirm-btn-confirm {
+    -fx-background-color: rgba(50, 215, 193, 0.8);
+    -fx-text-fill: #000000;
+    -fx-font-size: 18px;               /* 800 * 0.0225 */
+    -fx-pref-width: 120px;             /* 800 * 0.15 */
+    -fx-pref-height: 45px;             /* 800 * 0.05625 */
+    -fx-background-radius: 10px;
+    -fx-border-color: rgba(30, 160, 140, 0.9);
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+}
+
+.confirm-btn-confirm:hover {
+    -fx-background-color: rgba(80, 235, 213, 0.9);
+    -fx-cursor: hand;
+}
+
+/* ===== 取消按钮 ===== */
+.confirm-btn-cancel {
+    -fx-background-color: rgba(200, 80, 80, 0.7);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 45px;
+    -fx-background-radius: 10px;
+    -fx-border-color: rgba(160, 50, 50, 0.8);
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+}
+
+.confirm-btn-cancel:hover {
+    -fx-background-color: rgba(220, 100, 100, 0.8);
+    -fx-cursor: hand;
+}

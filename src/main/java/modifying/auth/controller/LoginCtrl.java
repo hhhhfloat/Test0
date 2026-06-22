@@ -3,7 +3,9 @@ package modifying.auth.controller;
 import before.controller.AudioCtrl;
 import before.dao.UserDao;
 import before.model.entity.Account;
+import javafx.application.Platform;
 import modifying.shared.model.TOAST_TYPE;
+
 
 
 public class LoginCtrl {
@@ -13,6 +15,9 @@ public class LoginCtrl {
 
     private Account account;
     private int loadNumber = 0;
+    public Account getAccount() {
+        return account;
+    }
 
     public LoginCtrl(UserDao userDao, AudioCtrl audioCtrl, AuthSceneCtrl authSceneCtrl){
         this.userDao = userDao;
@@ -20,16 +25,21 @@ public class LoginCtrl {
         this.authSceneCtrl = authSceneCtrl;
     }
 
+    // Login Scene events
     public void handleLoginQuit(){
         audioCtrl.playButtonSound();
-        // show the warning
-        // if yes, quit; if no, disappear
+        authSceneCtrl.showConfirmDialog(
+                "Sure to quit?",
+                "",
+                ()->{
+                    audioCtrl.playButtonSound();
+                    Platform.exit();
+                }, ()->{}
+        );
     }
     public void handleLoginConfirm(String username, String password){
         audioCtrl.playButtonSound();
-        if (username.trim().isEmpty()){
-
-        } else if(!userDao.existForLogin(username)){
+        if(!username.trim().isEmpty() && !userDao.existForLogin(username)){
             authSceneCtrl.showToast("Username doesn't exist", TOAST_TYPE.WARNING);
         }
         else if(userDao.validate(username, password)){
@@ -42,19 +52,20 @@ public class LoginCtrl {
             loadNumber = 0;
             authSceneCtrl.showAccountScene(this,"Login Succeeded",TOAST_TYPE.SUCCESS);
         } else{
-            authSceneCtrl.showToast("Wrong password", TOAST_TYPE.WARNING);
+            authSceneCtrl.showToast("Incorrect password", TOAST_TYPE.WARNING);
         }
     }
     public void handleRegister(){
         audioCtrl.playButtonSound();
         authSceneCtrl.showRegisterScene(this);
+
     }
 
+    // Register Scene events
     public void handleRegisterCancel()
     {
         authSceneCtrl.showLoginScene(this);
     }
-
     public void handleRegisterConfirm(String username, String password, String confirmPwd){
         audioCtrl.playButtonSound();
         if(username.isEmpty()){
@@ -68,7 +79,7 @@ public class LoginCtrl {
             authSceneCtrl.showToast("Please use a shorter name !#&@\\DEL※",TOAST_TYPE.WARNING);
         }
         else if (userDao.existForRegister(username)){
-            authSceneCtrl.showToast("Username exists",TOAST_TYPE.WARNING);
+            authSceneCtrl.showToast("Safe name ["+properName(username)+"] is taken. Please choose another one.",TOAST_TYPE.WARNING);
         }
         else if(password.isEmpty()){
             authSceneCtrl.showToast("Please set up your password",TOAST_TYPE.WARNING);
@@ -85,6 +96,43 @@ public class LoginCtrl {
         }
     }
 
+    // Account Scene events
+
+    public void handleStart(){
+        audioCtrl.playButtonSound();
+        authSceneCtrl.showLoadScene(this);
+    }
+    public void handleLogout() {
+        audioCtrl.playButtonSound();
+        authSceneCtrl.showConfirmDialog(
+                "Sure to logout?",
+                "",
+                ()->{
+                    audioCtrl.playButtonSound();
+                    loadNumber=0;
+                    account = null;
+                    authSceneCtrl.showLoginScene(this);
+                }, audioCtrl::playButtonSound);
+
+    }
+    public void handleQuit() {
+        audioCtrl.playButtonSound();
+        authSceneCtrl.showConfirmDialog(
+                "Sure to quit?",
+                "",
+                ()->{
+                    audioCtrl.playButtonSound();
+                    Platform.exit();
+                }, ()->{}
+        );
+    }
+
+    // Load Scene events
+    public void handleLoad(int k){
+        audioCtrl.playButtonSound();
+        loadNumber = k;
+        // only need to find the place of load file and check whether the hash code matches
+    }
 
 
     /// Util methods
@@ -99,25 +147,6 @@ public class LoginCtrl {
     }
 
 
-    public Account getAccount() {
-        return account;
-    }
 
-    public void handleLogout() {
-        audioCtrl.playButtonSound();
-        authSceneCtrl.showConfirmDialog(
-                "Confirm",
-                "Sure to logout?",
-                ()->{
-                    audioCtrl.playButtonSound();
-                    loadNumber=0;
-                    account = null;
-                    authSceneCtrl.showLoginScene(this);
-                }, audioCtrl::playButtonSound);
 
-    }
-
-    public void handleQuit() {
-        // warning : sure?
-    }
 }

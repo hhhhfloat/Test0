@@ -1,0 +1,34 @@
+/* ===== 弹窗容器 ===== */
+.toast-box {
+    -fx-background-color: rgba(20, 20, 30, 0.92);
+    -fx-border-color: rgba(120, 80, 200, 0.4);
+    -fx-border-width: 1.5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 12, 0, 0, 4);
+    -fx-alignment: center;
+
+    /* 固定尺寸（基于 800x800 逻辑坐标系） */
+    -fx-pref-width: 280px;              /* 800 * 0.35 */
+    -fx-max-width: 280px;
+    -fx-padding: 14px 28px;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+}
+
+/* ===== 弹窗文字 ===== */
+#toast-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.95);
+    -fx-font-family: "Consolas";
+    -fx-font-size: 16px;               /* 800 * 0.02 */
+    -fx-font-style: normal;
+    -fx-font-weight: normal;
+    -fx-effect: dropshadow(gaussian, rgba(100, 0, 200, 0.3), 2, 0, 0, 2);
+
+    /* 自动换行宽度 */
+    -fx-pref-width: 200px;
+    -fx-max-width: 200px;
+}
+
+/* 颜色变体 */
+.toast-success #toast-label { -fx-text-fill: #8effb0; }
+.toast-error #toast-label   { -fx-text-fill: #ff8a8a; }
+.toast-warning #toast-label { -fx-text-fill: #ffd966; }
