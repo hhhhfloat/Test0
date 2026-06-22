@@ -1,4 +1,4 @@
-package before.view;
+package modifying.auth.view.tools;
 
 import before.controller.AudioCtrl;
 import javafx.animation.*;

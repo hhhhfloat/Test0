@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import before.view.InformationUtil;
-import before.view.MouseGlowEffect;
+import modifying.auth.view.tools.MouseGlowEffect;
 import before.view.boxes.LevelSelectBox;
 
 import java.nio.file.Path;

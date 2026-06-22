@@ -1,5 +1,9 @@
 package modifying.auth.dao;
 
+import modifying.shared.model.MapSaveData;
+
+import java.util.Optional;
+
 public interface LoadDao {
     /**
      * 验证指定存档的有效性
@@ -8,6 +12,16 @@ public interface LoadDao {
      * @return 验证结果
      */
     ValidationResult validateSave(String safeUserName, int loadNumber);
+
+    Optional<SaveMetadata> getSaveMetadata(String safeUserName, int loadNumber);
+
+    /**
+     * @param playTime 游玩时间（格式化后的字符串）
+     * @param score    当前分数
+     */
+    record SaveMetadata(String playTime, int score) { }
+
+    void saveSaveData(String safeUserName, int loadNumber, MapSaveData mapSaveData);
 
     /**
      * 删除指定存档

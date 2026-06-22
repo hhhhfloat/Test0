@@ -3,7 +3,7 @@ package modifying.auth.launcher;
 import before.controller.AudioCtrl;
 import before.dao.UserDao;
 import before.dao.impl.FileUserDao;
-import before.view.MouseGlowEffect;
+import modifying.auth.view.tools.MouseGlowEffect;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import modifying.auth.controller.AuthSceneCtrl;

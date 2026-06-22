@@ -1,14 +1,12 @@
 package modifying.auth.view.sceneRoots;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import modifying.auth.controller.LoginCtrl;
+import modifying.auth.view.tools.AuthToolTip;
 import modifying.shared.view.UIUtils;
 
 import java.nio.file.Paths;
@@ -19,6 +17,7 @@ public class LoginView extends StackPane {
     private TextField usernameField;
     private PasswordField passwordField;
     private final LoginCtrl loginCtrl;
+
 
     public LoginView(LoginCtrl loginCtrl) {
         this.loginCtrl = loginCtrl;
@@ -45,6 +44,7 @@ public class LoginView extends StackPane {
         Button registerBtn = new Button("No account yet? Click here to register");
 
         quitBtn.setOnAction(event -> loginCtrl.handleLoginQuit());
+        quitBtn.setOnMouseEntered(e-> System.out.println("aaaaa"));
         confirmBtn.setOnAction(e -> loginCtrl.handleLoginConfirm(
                 usernameField.getText(),
                 passwordField.getText()
@@ -67,6 +67,7 @@ public class LoginView extends StackPane {
                 choiceBox,
                 registerBtn
         );
+
     }
 
     public void clearTextField() {

@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import before.view.MouseGlowEffect;
+import modifying.auth.view.tools.MouseGlowEffect;
 import before.view.boxes.WinBox;
 import java.nio.file.Paths;
 import java.util.Random;

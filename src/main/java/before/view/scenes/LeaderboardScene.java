@@ -8,7 +8,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import before.model.entity.Account;
 import before.model.state.ScoreEntry;
-import before.view.MouseGlowEffect;
+import modifying.auth.view.tools.MouseGlowEffect;
 
 import java.nio.file.Paths;
 import java.util.List;

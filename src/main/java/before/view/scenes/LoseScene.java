@@ -3,7 +3,7 @@ package before.view.scenes;
 import before.controller.GameCtrl;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
-import before.view.MouseGlowEffect;
+import modifying.auth.view.tools.MouseGlowEffect;
 import before.view.boxes.LoseBox;
 import java.nio.file.Paths;
 

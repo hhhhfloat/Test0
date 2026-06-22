@@ -1,7 +1,7 @@
 package modifying.auth.controller;
 
 
-import before.view.MouseGlowEffect;
+import modifying.auth.view.tools.MouseGlowEffect;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
@@ -173,7 +173,8 @@ public class AuthSceneCtrl {
     }
 
     public void showLoadScene(LoginCtrl loginCtrl, String toastMessage, TOAST_TYPE toastType) {
-        loadView = (LoadView) viewCache.computeIfAbsent("LOAD",k->new LoadView(loginCtrl));
+        loadView = (LoadView) viewCache.computeIfAbsent("LOAD",k->new LoadView(loginCtrl, this));
+        loadView.refreshTooltips();
         switchToContent(loadView, toastMessage, toastType);
     }
     public void showLoadScene(LoginCtrl loginCtrl){
@@ -336,5 +337,9 @@ public class AuthSceneCtrl {
     }
 
 
+    public void refreshTooltips(){
+        if(loadView != null)
+            loadView.refreshTooltips();
+    }
 
 }

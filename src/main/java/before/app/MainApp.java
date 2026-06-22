@@ -7,7 +7,7 @@ import before.dao.UserDao;
 import before.dao.impl.FileUserDao;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import before.view.MouseGlowEffect;
+import modifying.auth.view.tools.MouseGlowEffect;
 
 public class MainApp extends Application {
     public void start(Stage stage) {

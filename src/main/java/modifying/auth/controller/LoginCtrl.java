@@ -6,6 +6,7 @@ import before.model.entity.Account;
 import javafx.application.Platform;
 import modifying.auth.dao.LoadDao;
 import modifying.auth.dao.loadDao.FileLoadDao;
+import modifying.shared.model.MapSaveData;
 import modifying.shared.model.TOAST_TYPE;
 
 
@@ -152,28 +153,44 @@ public class LoginCtrl {
             case NOT_FOUND:
                 authSceneCtrl.showConfirmDialog(
                         "Empty save",
-                        "Do you wanna create a new save?",
-                        ()->{},
-                        ()->{}
+                        "New Save Created",
+                        ()->{
+                            MapSaveData newData = new MapSaveData(loadNumber);
+                            loadDao.saveSaveData(safeName, loadNumber, newData);
+                            authSceneCtrl.refreshTooltips();
+                        },
+                        null
                 );
                 break;
             case INVALID:
             case CORRUPTED:
                 authSceneCtrl.showConfirmDialog(
                         "Save file corrupted or modified",
-                        "Save automatically deleted",
-                        ()->{},
+                        "New Save Created",
+                        ()->{
+                            MapSaveData newData = new MapSaveData(loadNumber);
+                            loadDao.saveSaveData(safeName, loadNumber, newData);
+                            authSceneCtrl.refreshTooltips();
+                        },
                         null
                 );
         }
     }
     public void handleDelete(int k){
         audioCtrl.playButtonSound();
-        String safeName = account.getSafeUserName();
-        boolean deleted = loadDao.deleteSave(safeName, k);
-        if(deleted){
-            authSceneCtrl.showToast("Load deleted", TOAST_TYPE.ERROR);
-        }
+        authSceneCtrl.showConfirmDialog(
+                "Sure to delete?",
+                "",
+                ()->{
+                    String safeName = account.getSafeUserName();
+                    boolean deleted = loadDao.deleteSave(safeName, k);
+                    if(deleted){
+                        authSceneCtrl.showToast("Load deleted", TOAST_TYPE.ERROR);
+                        authSceneCtrl.refreshTooltips();
+                    }
+                },()->{}
+        );
+
     }
     public void handleBackToAccount(){
         audioCtrl.playButtonSound();
