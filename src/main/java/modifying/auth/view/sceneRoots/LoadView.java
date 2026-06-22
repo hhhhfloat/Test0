@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class LoadView extends StackPane {
 
-    private static final int totLoadNumber = 3;
+    private static final int totLoadNumber = LoginCtrl.getTotLoadNumber();
 
     private LoginCtrl loginCtrl;
     private VBox loadBox;
@@ -31,9 +31,6 @@ public class LoadView extends StackPane {
         ArrayList<Button> saves = new ArrayList<>();
         ArrayList<Button> deletes = new ArrayList<>();
         ArrayList<HBox> loads = new ArrayList<>();
-        saves.add(null);
-        deletes.add(null);
-        loads.add(null);
         for (int i = 1; i <= totLoadNumber; i++) {
             Button save = new Button("Load "+i);
             Button delete = new Button();
@@ -42,18 +39,19 @@ public class LoadView extends StackPane {
 
             final int k = i;
             save.setOnAction(e->loginCtrl.handleLoad(k));
-            delete.setOnAction(e->loginCtrl.handleLoadDelete(k));
+            delete.setOnAction(e->loginCtrl.handleDelete(k));
 
             save.getStyleClass().add("action-button");
-            delete.getStyleClass().add("cross");
+            delete.getStyleClass().add("cross-button");
 
             HBox load = new HBox(15,save,delete);
             loads.add(load);
         }
 
         Button back = new Button("Back");
-        back.setOnAction(event -> loginCtrl.showAccountScene());
+        back.setOnAction(event -> loginCtrl.handleBackToAccount());
         back.getStyleClass().add("action-button");
+
 
 
         loadBox.getChildren().addAll(loads);

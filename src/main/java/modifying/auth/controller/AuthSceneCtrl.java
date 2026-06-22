@@ -304,7 +304,8 @@ public class AuthSceneCtrl {
 
         // 悬停效果由 CSS 的 :hover 处理，不需要 Java 代码
 
-        HBox buttonBox = new HBox(30, confirmBtn, cancelBtn);
+        HBox buttonBox = new HBox(30, confirmBtn);
+        if(onCancel != null) buttonBox.getChildren().add(cancelBtn);
         buttonBox.setAlignment(Pos.CENTER);
 
         contentBox.getChildren().addAll(titleLabel, msgLabel, buttonBox);
@@ -324,12 +325,14 @@ public class AuthSceneCtrl {
             rootGroup.setEffect(null);
             if (onConfirm != null) onConfirm.run();
         });
-        cancelBtn.setOnAction(e -> {
-            messagePane.getChildren().remove(overlay);
-            messagePane.setMouseTransparent(true);
-            rootGroup.setEffect(null);
-            if (onCancel != null) onCancel.run();
-        });
+        if(onCancel != null){
+            cancelBtn.setOnAction(e -> {
+                messagePane.getChildren().remove(overlay);
+                messagePane.setMouseTransparent(true);
+                rootGroup.setEffect(null);
+                onCancel.run();
+            });
+        }
     }
 
 

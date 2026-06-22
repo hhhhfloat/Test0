@@ -4,17 +4,27 @@ import before.controller.AudioCtrl;
 import before.dao.UserDao;
 import before.model.entity.Account;
 import javafx.application.Platform;
+import modifying.auth.dao.LoadDao;
+import modifying.auth.dao.loadDao.FileLoadDao;
 import modifying.shared.model.TOAST_TYPE;
 
 
 
 public class LoginCtrl {
     private final UserDao userDao;
+    private final LoadDao loadDao = new FileLoadDao();
+
     private final AudioCtrl audioCtrl;
     private final AuthSceneCtrl authSceneCtrl;
 
     private Account account;
     private int loadNumber = 0;
+
+    private static final int totLoadNumber = 3;
+    public static int getTotLoadNumber() {
+        return totLoadNumber;
+    }
+
     public Account getAccount() {
         return account;
     }
@@ -131,7 +141,43 @@ public class LoginCtrl {
     public void handleLoad(int k){
         audioCtrl.playButtonSound();
         loadNumber = k;
+        String safeName = account.getSafeUserName();
+        LoadDao.ValidationResult result = loadDao.validateSave(safeName,loadNumber);
+
         // only need to find the place of load file and check whether the hash code matches
+        switch (result){
+            case VALID:
+                authSceneCtrl.showToast("Save Loaded", TOAST_TYPE.SUCCESS);
+                break;
+            case NOT_FOUND:
+                authSceneCtrl.showConfirmDialog(
+                        "Empty save",
+                        "Do you wanna create a new save?",
+                        ()->{},
+                        ()->{}
+                );
+                break;
+            case INVALID:
+            case CORRUPTED:
+                authSceneCtrl.showConfirmDialog(
+                        "Save file corrupted or modified",
+                        "Save automatically deleted",
+                        ()->{},
+                        null
+                );
+        }
+    }
+    public void handleDelete(int k){
+        audioCtrl.playButtonSound();
+        String safeName = account.getSafeUserName();
+        boolean deleted = loadDao.deleteSave(safeName, k);
+        if(deleted){
+            authSceneCtrl.showToast("Load deleted", TOAST_TYPE.ERROR);
+        }
+    }
+    public void handleBackToAccount(){
+        audioCtrl.playButtonSound();
+        authSceneCtrl.showAccountScene(this);
     }
 
 

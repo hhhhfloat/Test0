@@ -25,6 +25,7 @@ VBox, HBox {
 
 /* ===== 操作按钮（适用于 HBox 和 VBox） ===== */
 .action-button {
+    -fx-max-width: 270px;
     -fx-pref-width: 200px;
     -fx-pref-height: 20px;
     -fx-background-radius: 20px;
@@ -86,13 +87,11 @@ VBox, HBox {
 }
 
 .cross-button:hover {
-    -fx-background-color: rgba(50, 215, 193, 0.8);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 3);
 }
 
 .cross-button:pressed {
-    -fx-background-color: rgba(70, 170, 220, 0.8);
     -fx-scale-x: 0.97;
     -fx-scale-y: 0.97;
     -fx-translate-y: 1px;
