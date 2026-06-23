@@ -19,6 +19,7 @@ import modifying.auth.view.sceneRoots.AccountView;
 import modifying.auth.view.sceneRoots.LoadView;
 import modifying.auth.view.sceneRoots.LoginView;
 import modifying.auth.view.sceneRoots.RegisterView;
+import modifying.shared.model.MapSaveData;
 import modifying.shared.model.TOAST_TYPE;
 import modifying.shared.view.UIUtils;
 
@@ -342,4 +343,8 @@ public class AuthSceneCtrl {
             loadView.refreshTooltips();
     }
 
+
+    /// end the application and give the mapSaveData reference to the main application
+    public void launchGame(MapSaveData mapSaveData) {
+    }
 }

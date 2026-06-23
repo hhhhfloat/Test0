@@ -21,7 +21,7 @@ public class LoadView extends StackPane {
 
     private LoginCtrl loginCtrl;
     private VBox loadBox;
-    private final LoadDao loadDao = new FileLoadDao();
+    private final LoadDao loadDao;
 
     private final ArrayList<Button> saveButtons = new ArrayList<>();
     private final ArrayList<AuthToolTip> tooltips = new ArrayList<>();
@@ -32,6 +32,7 @@ public class LoadView extends StackPane {
     public LoadView(LoginCtrl loginCtrl, AuthSceneCtrl authSceneCtrl) {
         this.loginCtrl = loginCtrl;
         this.authSceneCtrl = authSceneCtrl;
+        this.loadDao = loginCtrl.getLoadDao();
 
         loadBox = new VBox(15);
         loadBox.setAlignment(Pos.CENTER);

@@ -13,13 +13,17 @@ import modifying.shared.model.TOAST_TYPE;
 
 public class LoginCtrl {
     private final UserDao userDao;
-    private final LoadDao loadDao = new FileLoadDao();
+    private final LoadDao loadDao = new FileLoadDao(this);
 
     private final AudioCtrl audioCtrl;
     private final AuthSceneCtrl authSceneCtrl;
 
     public AudioCtrl getAudioCtrl() {
         return audioCtrl;
+    }
+
+    public LoadDao getLoadDao() {
+        return loadDao;
     }
 
     private Account account;
@@ -147,38 +151,20 @@ public class LoginCtrl {
         audioCtrl.playButtonSound();
         loadNumber = k;
         String safeName = account.getSafeUserName();
-        LoadDao.ValidationResult result = loadDao.validateSave(safeName,loadNumber);
 
-        // only need to find the place of load file and check whether the hash code matches
-        switch (result){
-            case VALID:
-                authSceneCtrl.showToast("Save Loaded", TOAST_TYPE.SUCCESS);
-                break;
-            case NOT_FOUND:
-                authSceneCtrl.showConfirmDialog(
-                        "Empty save",
-                        "New Save Created",
-                        ()->{
-                            MapSaveData newData = new MapSaveData(loadNumber);
-                            loadDao.saveSaveData(safeName, loadNumber, newData);
-                            authSceneCtrl.refreshTooltips();
-                        },
-                        null
-                );
-                break;
-            case INVALID:
-            case CORRUPTED:
-                authSceneCtrl.showConfirmDialog(
-                        "Save file corrupted or modified",
-                        "New Save Created",
-                        ()->{
-                            MapSaveData newData = new MapSaveData(loadNumber);
-                            loadDao.saveSaveData(safeName, loadNumber, newData);
-                            authSceneCtrl.refreshTooltips();
-                        },
-                        null
-                );
-        }
+        // 一行代码获得有效存档数据（自动处理空/损坏情况）
+        MapSaveData mapSaveData = loadDao.loadOrCreateSave(safeName, loadNumber);
+
+        // 刷新 Tooltip（更新存档状态）
+        authSceneCtrl.refreshTooltips();
+
+        authSceneCtrl.showToast("Save Loaded", TOAST_TYPE.SUCCESS);
+
+
+        /// 真正的游戏从现在开始
+        // 🔥 接下来将 mapSaveData 传给 Game 层启动游戏
+        authSceneCtrl.launchGame(mapSaveData);
+
     }
     public void handleDelete(int k){
         audioCtrl.playButtonSound();

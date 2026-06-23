@@ -11,8 +11,6 @@ import modifying.auth.controller.LoginCtrl;
 
 public class AuthModule extends Application{
 
-
-
     @Override
     public void start(Stage authStage){
         UserDao userDao = new FileUserDao();

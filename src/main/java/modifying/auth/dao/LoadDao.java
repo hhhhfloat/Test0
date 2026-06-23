@@ -37,4 +37,12 @@ public interface LoadDao {
         NOT_FOUND,      // 文件不存在
         CORRUPTED;      // 文件无法解析（格式错误）
     }
+
+    /**
+     * 加载或创建存档（始终返回非空 MapSaveData）
+     * @param safeUserName 用户安全名
+     * @param loadNumber   存档编号
+     * @return 有效的 MapSaveData（若原存档无效则新建并保存）
+     */
+    MapSaveData loadOrCreateSave(String safeUserName, int loadNumber);
 }

@@ -192,4 +192,31 @@ public class FileLoadDao implements LoadDao {
             throw new RuntimeException("保存存档失败：" + filePath, e);
         }
     }
+
+    @Override
+    public MapSaveData loadOrCreateSave(String safeUserName, int loadNumber){
+        // 先验证存档有效性
+        ValidationResult result = validateSave(safeUserName, loadNumber);
+        if (result == ValidationResult.VALID) {
+            // 有效则加载并返回
+            Path filePath = getSavePath(safeUserName, loadNumber);
+            try (FileReader reader = new FileReader(filePath.toFile())) {
+                SaveDataWrapper wrapper = gson.fromJson(reader, SaveDataWrapper.class);
+                if (wrapper != null && wrapper.getDataJson() != null) {
+                    String originalJson = decodeFromBase64(wrapper.getDataJson());
+                    MapSaveData mapData = gson.fromJson(originalJson, MapSaveData.class);
+                    if (mapData != null) {
+                        return mapData;
+                    }
+                }
+            } catch (Exception e) {
+                // 加载失败则视为无效，继续创建新存档
+            }
+        }
+
+        // 无效（NOT_FOUND / INVALID / CORRUPTED）或加载失败 → 创建新存档
+        MapSaveData newData = new MapSaveData(loadNumber); // 使用带 loadNumber 的构造
+        saveSaveData(safeUserName, loadNumber, newData);
+        return newData;
+    }
 }
