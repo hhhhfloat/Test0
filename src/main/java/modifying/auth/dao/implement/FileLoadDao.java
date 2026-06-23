@@ -1,6 +1,6 @@
-package modifying.auth.dao.loadDao;
+package modifying.auth.dao.implement;
 
-import before.model.entity.SaveDataWrapper;
+import modifying.shared.model.SaveDataWrapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import modifying.auth.controller.LoginCtrl;

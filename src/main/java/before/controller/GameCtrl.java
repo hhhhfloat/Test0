@@ -8,7 +8,7 @@ import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import before.model.entity.Account;
+import modifying.auth.model.Account;
 import before.model.entity.Crd;
 import before.model.entity.LinkyMap;
 import before.model.entity.MapSaveData;
@@ -19,6 +19,7 @@ import before.view.game_nodes.Interfaces.TimeLabelInterface;
 import before.view.game_nodes.Labels.ProgressLabel;
 import before.view.game_nodes.Labels.ScoreLabel;
 import before.view.game_nodes.Labels.TimeLabel;
+import modifying.shared.controller.AudioCtrl;
 
 import java.util.ArrayList;
 

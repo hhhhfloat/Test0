@@ -1,9 +1,9 @@
-package before.dao.impl;
+package modifying.auth.dao.implement;
 
-import before.controller.LoginCtrl;
-import before.dao.UserDao;
-import before.model.entity.Account;
-import before.model.state.ScoreEntry;
+import modifying.auth.controller.LoginCtrl;
+import modifying.auth.dao.UserDao;
+import modifying.auth.model.Account;
+import modifying.auth.model.ScoreEntry;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -12,7 +12,6 @@ import java.util.*;
 
 public class FileUserDao implements UserDao {
     private final Path userFile;
-    private LoginCtrl loginCtrl;
 
     public FileUserDao() {
         userFile  = Paths.get("Data","users.properties");

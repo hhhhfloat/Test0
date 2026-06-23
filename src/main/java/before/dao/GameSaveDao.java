@@ -1,7 +1,7 @@
 package before.dao;
 
 import before.controller.GameCtrl;
-import before.model.entity.Account;
+import modifying.auth.model.Account;
 import before.model.entity.MapSaveData;
 
 public interface GameSaveDao {

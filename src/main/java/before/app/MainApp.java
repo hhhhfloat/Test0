@@ -1,10 +1,10 @@
 package before.app;
 
-import before.controller.AudioCtrl;
+import modifying.shared.controller.AudioCtrl;
 import before.controller.LoginCtrl;
 import before.controller.SceneCtrl;
-import before.dao.UserDao;
-import before.dao.impl.FileUserDao;
+import modifying.auth.dao.UserDao;
+import modifying.auth.dao.implement.FileUserDao;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import modifying.auth.view.tools.MouseGlowEffect;

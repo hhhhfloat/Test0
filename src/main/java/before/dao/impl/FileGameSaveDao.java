@@ -5,9 +5,9 @@ import before.controller.GameCtrl;
 import before.dao.GameSaveDao;
 import com.google.gson.Gson;
 import javafx.scene.control.Alert;
-import before.model.entity.Account;
+import modifying.auth.model.Account;
 import before.model.entity.MapSaveData;
-import before.model.entity.SaveDataWrapper;
+import modifying.shared.model.SaveDataWrapper;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

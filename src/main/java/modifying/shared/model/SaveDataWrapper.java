@@ -1,4 +1,4 @@
-package before.model.entity;
+package modifying.shared.model;
 
 public class SaveDataWrapper {
     private String dataJson;

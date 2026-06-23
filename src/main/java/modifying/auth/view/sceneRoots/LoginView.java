@@ -6,9 +6,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import modifying.auth.controller.LoginCtrl;
-import modifying.auth.view.tools.AuthToolTip;
 import modifying.auth.view.tools.PasswordRevealField;
-import modifying.shared.view.UIUtils;
 
 import java.nio.file.Paths;
 

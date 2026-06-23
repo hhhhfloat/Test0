@@ -8,7 +8,6 @@ import javafx.scene.layout.VBox;
 import modifying.auth.controller.AuthSceneCtrl;
 import modifying.auth.controller.LoginCtrl;
 import modifying.auth.dao.LoadDao;
-import modifying.auth.dao.loadDao.FileLoadDao;
 import modifying.auth.view.tools.AuthToolTip;
 import modifying.shared.model.TOAST_TYPE;
 

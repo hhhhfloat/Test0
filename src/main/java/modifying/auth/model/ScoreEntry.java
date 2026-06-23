@@ -1,4 +1,4 @@
-package before.model.state;
+package modifying.auth.model;
 // 用户名、分数、日期
 public class ScoreEntry {
     private int score;

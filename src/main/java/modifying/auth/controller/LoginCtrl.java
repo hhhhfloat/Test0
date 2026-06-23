@@ -1,11 +1,12 @@
 package modifying.auth.controller;
 
-import before.controller.AudioCtrl;
-import before.dao.UserDao;
-import before.model.entity.Account;
+import modifying.shared.controller.AudioCtrl;
+import modifying.auth.dao.UserDao;
+import modifying.auth.model.Account;
 import javafx.application.Platform;
 import modifying.auth.dao.LoadDao;
-import modifying.auth.dao.loadDao.FileLoadDao;
+import modifying.auth.dao.implement.FileLoadDao;
+import modifying.shared.controller.MainController;
 import modifying.shared.model.MapSaveData;
 import modifying.shared.model.TOAST_TYPE;
 
@@ -17,6 +18,7 @@ public class LoginCtrl {
 
     private final AudioCtrl audioCtrl;
     private final AuthSceneCtrl authSceneCtrl;
+    private final MainController mainController;
 
     public AudioCtrl getAudioCtrl() {
         return audioCtrl;
@@ -38,10 +40,11 @@ public class LoginCtrl {
         return account;
     }
 
-    public LoginCtrl(UserDao userDao, AudioCtrl audioCtrl, AuthSceneCtrl authSceneCtrl){
+    public LoginCtrl(UserDao userDao, AudioCtrl audioCtrl, AuthSceneCtrl authSceneCtrl, MainController mainController){
         this.userDao = userDao;
         this.audioCtrl = audioCtrl;
         this.authSceneCtrl = authSceneCtrl;
+        this.mainController = mainController;
     }
 
     // Login Scene events
@@ -163,7 +166,8 @@ public class LoginCtrl {
 
         /// 真正的游戏从现在开始
         // 🔥 接下来将 mapSaveData 传给 Game 层启动游戏
-        authSceneCtrl.launchGame(mapSaveData);
+        mainController.setMapSaveData(mapSaveData);
+        mainController.onAuthSuccess(account.getUserName());
 
     }
     public void handleDelete(int k){

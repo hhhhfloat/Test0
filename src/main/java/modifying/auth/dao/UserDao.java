@@ -1,7 +1,7 @@
-package before.dao;
+package modifying.auth.dao;
 
-import before.model.entity.Account;
-import before.model.state.ScoreEntry;
+import modifying.auth.model.Account;
+import modifying.auth.model.ScoreEntry;
 
 import java.util.List;
 

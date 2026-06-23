@@ -19,7 +19,7 @@ import modifying.auth.view.sceneRoots.AccountView;
 import modifying.auth.view.sceneRoots.LoadView;
 import modifying.auth.view.sceneRoots.LoginView;
 import modifying.auth.view.sceneRoots.RegisterView;
-import modifying.shared.model.MapSaveData;
+import modifying.shared.controller.MainController;
 import modifying.shared.model.TOAST_TYPE;
 import modifying.shared.view.UIUtils;
 
@@ -78,8 +78,11 @@ public class AuthSceneCtrl {
     private final StackPane permanentRoot;
     private final StackPane contentContainer;
 
-    public AuthSceneCtrl(Stage authStage){
+    private final MainController mainController;
+
+    public AuthSceneCtrl(Stage authStage, MainController mainController){
         this.authStage = authStage;
+        this.mainController = mainController;
 
         authRoot = new StackPane();
         authScene = new Scene(authRoot, LOGIC_WIDTH, LOGIC_HEIGHT);
@@ -344,7 +347,6 @@ public class AuthSceneCtrl {
     }
 
 
-    /// end the application and give the mapSaveData reference to the main application
-    public void launchGame(MapSaveData mapSaveData) {
-    }
+    /// end the application and tell the mainController to start gameModule
+
 }

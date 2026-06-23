@@ -1,4 +1,4 @@
-package before.controller;
+package modifying.shared.controller;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;

@@ -1,6 +1,6 @@
 package modifying.auth.view.tools;
 
-import before.controller.AudioCtrl;
+import modifying.shared.controller.AudioCtrl;
 import javafx.animation.*;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

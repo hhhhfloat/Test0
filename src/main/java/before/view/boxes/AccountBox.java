@@ -4,7 +4,7 @@ import before.controller.LoginCtrl;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import before.model.entity.Account;
+import modifying.auth.model.Account;
 
 public class AccountBox extends VBox {
     public AccountBox(LoginCtrl loginCtrl) {

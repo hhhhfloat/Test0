@@ -1,6 +1,6 @@
 package modifying.auth.view.tools;
 
-import before.controller.AudioCtrl;
+import modifying.shared.controller.AudioCtrl;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;

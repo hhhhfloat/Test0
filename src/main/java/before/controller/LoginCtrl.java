@@ -1,7 +1,7 @@
 package before.controller;
 
 import before.dao.GameSaveDao;
-import before.dao.UserDao;
+import modifying.auth.dao.UserDao;
 import before.dao.impl.FileGameSaveDao;
 import before.view.scenes.*;
 import javafx.application.Platform;
@@ -9,9 +9,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-import before.model.entity.Account;
+import modifying.auth.model.Account;
 import before.model.entity.MapSaveData;
-import before.model.state.ScoreEntry;
+import modifying.auth.model.ScoreEntry;
+import modifying.shared.controller.AudioCtrl;
 
 import java.nio.file.Paths;
 import java.util.List;
