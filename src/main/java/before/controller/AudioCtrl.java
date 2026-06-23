@@ -2,81 +2,114 @@ package before.controller;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AudioCtrl {
 
     private final double volume;
+    private MediaPlayer bgPlayer;
 
-    public AudioCtrl(){
-        volume = 1.0;
+    // 🔥 使用 MediaPlayer 缓存池（每个音效一个实例）
+    private final Map<String, MediaPlayer> soundPool = new HashMap<>();
+
+    public AudioCtrl() {
+        this(1.0);
     }
+
     public AudioCtrl(double volume) {
         this.volume = volume;
+
+        // 创建并缓存所有短音效的 MediaPlayer
+        createSound("button", "click");
+        createSound("click", "click");
+        createSound("eliminate", "eliminate");
+        createSound("bomb", "TNT");
+        createSound("iceBreak", "iceBreak");
+        createSound("toggle", "toggle");
     }
 
-    public double getVolume() {
-        return volume;
+    /**
+     * 创建并预热一个音效 MediaPlayer
+     */
+    private void createSound(String key, String fileName) {
+        Media media = new Media(getClass().getResource("/Audio/" + fileName + ".mp3").toString());
+        MediaPlayer player = new MediaPlayer(media);
+        player.setVolume(volume);
+        player.setCycleCount(1);
+
+        // 🔥 预热：播放一次并立即暂停，强制解码器加载数据到内存
+        player.setOnReady(() -> {
+            player.play();
+            player.pause();
+            player.seek(Duration.ZERO);
+        });
+
+        soundPool.put(key, player);
     }
 
-    private final Media bgMusic = getMedia("bgmusic_Cello");
-    private final Media buttonSound = getMedia("click");
-    private final Media clickSound = getMedia("click");
-    private final Media eliminateSound = getMedia("eliminate");
-    private final Media bombSound = getMedia("TNT");
-    private final Media iceBreakSound = getMedia("iceBreak");
-    private final Media bgClickSound = getMedia("toggle");
-
-    public void playBgMusic() {
-        MediaPlayer mediaPlayer = new MediaPlayer(bgMusic);
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.play();
+    /**
+     * 播放音效（从池中获取并重置）
+     */
+    private void playSound(String key) {
+        MediaPlayer player = soundPool.get(key);
+        if (player != null) {
+            player.seek(Duration.ZERO);
+            player.play();
+        }
     }
 
-    public static Media getMedia(String name) {
-        Path audioPath;
-        Media media;
-        audioPath = Paths.get("src","main","resources","Audio",name+".mp3");
-        media = new Media(audioPath.toUri().toString());
-        return media;
-    }
-
+    // ===== 公开的播放方法 =====
     public void playButtonSound() {
-        MediaPlayer mediaPlayer = new MediaPlayer(buttonSound);
-        mediaPlayer.play();
+        playSound("button");
     }
 
     public void playClickSound() {
-        MediaPlayer mediaPlayer = new MediaPlayer(clickSound);
-        mediaPlayer.setVolume(1);
-        mediaPlayer.play();
+        playSound("click");
     }
 
-    public void playToggleSound(){
-        MediaPlayer mediaPlayer = new MediaPlayer(bgClickSound);
-        mediaPlayer.setVolume(0.5);
-        mediaPlayer.play();
-        mediaPlayer.setOnEndOfMedia(()->mediaPlayer.setVolume(1.0));
+    public void playToggleSound() {
+        playSound("toggle");
     }
 
     public void playEliminateSound() {
-        MediaPlayer mediaPlayer = new MediaPlayer(eliminateSound);
-        mediaPlayer.play();
+        playSound("eliminate");
     }
 
     public void playBombSound() {
-        MediaPlayer mediaPlayer = new MediaPlayer(bombSound);
-        mediaPlayer.play();
-    }
-    public void playIceBreakSound(){
-        MediaPlayer mediaPlayer = new MediaPlayer(iceBreakSound);
-        mediaPlayer.play();
+        playSound("bomb");
     }
 
+    public void playIceBreakSound() {
+        playSound("iceBreak");
+    }
+
+    // ===== 背景音乐 =====
+    public void playBgMusic() {
+        if (bgPlayer == null) {
+            Media media = new Media(getClass().getResource("/Audio/bgmusic_Cello.mp3").toString());
+            bgPlayer = new MediaPlayer(media);
+            bgPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            bgPlayer.setVolume(volume);
+        }
+        bgPlayer.play();
+    }
+
+    public void stopBgMusic() {
+        if (bgPlayer != null) bgPlayer.stop();
+    }
+
+    public void setBgVolume(double vol) {
+        if (bgPlayer != null) bgPlayer.setVolume(vol);
+    }
+
+    // ===== 统一音量控制 =====
     public void setVolume(double volume) {
-
+        for (MediaPlayer p : soundPool.values()) {
+            p.setVolume(volume);
+        }
+        if (bgPlayer != null) bgPlayer.setVolume(volume);
     }
-
 }

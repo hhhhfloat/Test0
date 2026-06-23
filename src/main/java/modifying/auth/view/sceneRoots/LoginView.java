@@ -7,6 +7,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import modifying.auth.controller.LoginCtrl;
 import modifying.auth.view.tools.AuthToolTip;
+import modifying.auth.view.tools.PasswordRevealField;
 import modifying.shared.view.UIUtils;
 
 import java.nio.file.Paths;
@@ -15,7 +16,6 @@ public class LoginView extends StackPane {
 
     private final VBox loginBox;
     private TextField usernameField;
-    private PasswordField passwordField;
     private final LoginCtrl loginCtrl;
 
 
@@ -31,12 +31,16 @@ public class LoginView extends StackPane {
 
     }
 
+    PasswordRevealField passwordRevealField;
     private void initLoginBox() {
         // 输入框
         usernameField = new TextField();
         usernameField.setPromptText("YOUR NAME");
-        passwordField = new PasswordField();
-        passwordField.setPromptText("YOUR PASSWORD");
+        usernameField.getStyleClass().add("username-field");
+
+        passwordRevealField = new PasswordRevealField(loginCtrl.getAudioCtrl());
+        passwordRevealField.setPromptText("YOUR PASSWORD");
+
 
         // 按钮
         Button quitBtn = new Button("Quit");
@@ -44,10 +48,10 @@ public class LoginView extends StackPane {
         Button registerBtn = new Button("No account yet? Click here to register");
 
         quitBtn.setOnAction(event -> loginCtrl.handleLoginQuit());
-        quitBtn.setOnMouseEntered(e-> System.out.println("aaaaa"));
-        confirmBtn.setOnAction(e -> loginCtrl.handleLoginConfirm(
-                usernameField.getText(),
-                passwordField.getText()
+        confirmBtn.setOnAction(e ->
+                loginCtrl.handleLoginConfirm(
+                    usernameField.getText(),
+                    passwordRevealField.getText()
         ));
         registerBtn.setOnAction(e -> loginCtrl.handleRegister());
 
@@ -63,7 +67,7 @@ public class LoginView extends StackPane {
         loginBox.getChildren().addAll(
                 messageLabel,
                 usernameField,
-                passwordField,
+                passwordRevealField,
                 choiceBox,
                 registerBtn
         );
@@ -72,6 +76,6 @@ public class LoginView extends StackPane {
 
     public void clearTextField() {
         usernameField.clear();
-        passwordField.clear();
+        passwordRevealField.clear();
     }
 }

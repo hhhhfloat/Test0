@@ -55,7 +55,6 @@ public class AuthToolTip {
         if (tooltipLabel.isVisible()) {
             tooltipLabel.setText(newText);
         }
-        System.out.println("AuthToolTip updateText: " + newText);
     }
 
     private void updatePosition(double sceneX, double sceneY) {

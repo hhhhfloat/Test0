@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import modifying.auth.controller.LoginCtrl;
+import modifying.auth.view.tools.PasswordRevealField;
 
 import java.nio.file.Paths;
 
@@ -19,8 +20,8 @@ public class RegisterView extends StackPane {
     private final LoginCtrl loginCtrl;
 
     private TextField usernameField;
-    private PasswordField passwordField;
-    private PasswordField confirmField;
+    private PasswordRevealField passwordField;
+    private PasswordRevealField confirmField;
 
     public RegisterView(LoginCtrl loginCtrl) {
         this.loginCtrl = loginCtrl;
@@ -41,11 +42,12 @@ public class RegisterView extends StackPane {
         // 输入框
         usernameField = new TextField();
         usernameField.setPromptText("YOUR NAME");
+        usernameField.getStyleClass().add("username-field");
 
-        passwordField = new PasswordField();
+        passwordField = new PasswordRevealField(loginCtrl.getAudioCtrl());
         passwordField.setPromptText("YOUR PASSWORD");
 
-        confirmField = new PasswordField();
+        confirmField = new PasswordRevealField(loginCtrl.getAudioCtrl());
         confirmField.setPromptText("CONFIRM PASSWORD");
 
         // 输入限制（2000 字符）

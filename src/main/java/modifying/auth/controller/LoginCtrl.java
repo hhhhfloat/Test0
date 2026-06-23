@@ -18,6 +18,10 @@ public class LoginCtrl {
     private final AudioCtrl audioCtrl;
     private final AuthSceneCtrl authSceneCtrl;
 
+    public AudioCtrl getAudioCtrl() {
+        return audioCtrl;
+    }
+
     private Account account;
     private int loadNumber = 0;
 

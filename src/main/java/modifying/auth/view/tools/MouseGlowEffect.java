@@ -3,6 +3,10 @@ package modifying.auth.view.tools;
 import before.controller.AudioCtrl;
 import javafx.animation.*;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
@@ -85,6 +89,12 @@ public class MouseGlowEffect {
 
         // 鼠标点击生成扩散圆圈
         scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            if (event.getTarget() instanceof Button ||
+                    event.getTarget() instanceof TextField ||
+                    event.getTarget() instanceof PasswordField ||
+                    event.getTarget() instanceof Hyperlink) {
+                return; // 跳过，让控件自己的音效处理
+            }
             audioCtrl.playToggleSound();
             double x = event.getX();
             double y = event.getY();

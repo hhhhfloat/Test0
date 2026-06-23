@@ -4,13 +4,48 @@ VBox, HBox {
 }
 
 /* ===== 文本输入框 ===== */
-.text-field {
+.username-field {
     -fx-max-width: 500px;
     -fx-pref-height: 60px;
     -fx-font-size: 16px;
     -fx-font-family: "Consolas";
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
+}
+
+/* ===== 这个就是passwordField的专用，无需额外添加 ===== */
+.password-field{
+    -fx-max-width: 460px;
+    -fx-pref-height: 60px;
+    -fx-font-size: 16px;
+    -fx-font-family: "Consolas";
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.password-reveal-field{
+    -fx-max-width: 460px;
+    -fx-pref-height: 60px;
+    -fx-font-size: 16px;
+    -fx-font-family: "Consolas";
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+/* ===== 密码框眼睛按钮 ===== */
+.reveal-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-pref-width: 35px;
+    -fx-pref-height: 35px;
+    -fx-min-width: 35px;
+    -fx-max-width: 35px;
+    -fx-min-height: 35px;
+    -fx-max-height: 35px;
+}
+.reveal-button .image-view {
+    -fx-fit-width: 35px;
+    -fx-fit-height: 35px;
 }
 
 /* ===== 标题标签 ===== */
