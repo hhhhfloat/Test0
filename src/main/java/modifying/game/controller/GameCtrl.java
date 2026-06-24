@@ -17,4 +17,8 @@ public class GameCtrl {
         this.username = username;
         this.mapSaveData = mapSaveData;
     }
+
+    public void launchGame(String gameId){
+        System.out.println("Launching" + gameId);
+    }
 }
