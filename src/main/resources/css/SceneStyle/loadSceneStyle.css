@@ -28,7 +28,7 @@ LoadBox {
 }
 
 .cross {
-    -fx-background-image: url('/Sprites/cross.png');
+    -fx-background-image: url('/Sprites/delete.png');
     -fx-background-size: cover;
     -fx-pref-width: 55px;
     -fx-pref-height: 55px;

@@ -1,4 +1,4 @@
-package modifying.auth.view.sceneRoots;
+package modifying.auth.view.sceneroots;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.*;

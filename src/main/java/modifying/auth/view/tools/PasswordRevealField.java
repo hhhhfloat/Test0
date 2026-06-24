@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Priority;
+import modifying.shared.resources.ResourceManager;
 
 public class PasswordRevealField extends HBox {
 
@@ -25,12 +26,10 @@ public class PasswordRevealField extends HBox {
 
     public PasswordRevealField(AudioCtrl audioCtrl) {
         // 加载图片
-        ImageView eyeOpen = new ImageView(
-                getClass().getResource("/sprites/eyeopen.png").toExternalForm()
-        );
-        ImageView eyeClose = new ImageView(
-                getClass().getResource("/sprites/eyeclose.png").toExternalForm()
-        );
+        ImageView eyeOpen = ResourceManager.getInstance()
+                .getAuthAtlas().createImageView("eyeopen.png");
+        ImageView eyeClose = ResourceManager.getInstance()
+                .getAuthAtlas().createImageView("eyeclose.png");
 
         // 初始化输入框...
         textField.getStyleClass().add("password-reveal-field");

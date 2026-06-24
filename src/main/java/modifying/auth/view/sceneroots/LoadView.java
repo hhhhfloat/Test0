@@ -1,7 +1,8 @@
-package modifying.auth.view.sceneRoots;
+package modifying.auth.view.sceneroots;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -10,6 +11,7 @@ import modifying.auth.controller.LoginCtrl;
 import modifying.auth.dao.LoadDao;
 import modifying.auth.view.tools.AuthToolTip;
 import modifying.shared.model.TOAST_TYPE;
+import modifying.shared.resources.ResourceManager;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -51,7 +53,10 @@ public class LoadView extends StackPane {
             saveButtons.addLast(save);
 
             save.getStyleClass().add("action-button");
-            delete.getStyleClass().add("cross-button");
+            ImageView deleteIcon = ResourceManager.getInstance()
+                    .getAuthAtlas().createImageView("delete.png");
+            delete.setGraphic(deleteIcon);
+            delete.getStyleClass().add("delete-button");
 
             final int k = i;
             save.setOnAction(e->loginCtrl.handleLoad(k));

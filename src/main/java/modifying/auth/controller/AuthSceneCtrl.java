@@ -15,10 +15,10 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import modifying.auth.view.sceneRoots.AccountView;
-import modifying.auth.view.sceneRoots.LoadView;
-import modifying.auth.view.sceneRoots.LoginView;
-import modifying.auth.view.sceneRoots.RegisterView;
+import modifying.auth.view.sceneroots.AccountView;
+import modifying.auth.view.sceneroots.LoadView;
+import modifying.auth.view.sceneroots.LoginView;
+import modifying.auth.view.sceneroots.RegisterView;
 import modifying.shared.controller.MainController;
 import modifying.shared.model.TOAST_TYPE;
 import modifying.shared.view.UIUtils;
@@ -51,8 +51,8 @@ public class AuthSceneCtrl {
         return SCREEN_HEIGHT;
     }
 
-    private Stage authStage;
-    private Scene authScene;
+    private final Stage authStage;
+    private final Scene authScene;
     private final Map<String, Parent> viewCache = new HashMap<>();
 
     public Scene getAuthScene() {
@@ -347,6 +347,5 @@ public class AuthSceneCtrl {
     }
 
 
-    /// end the application and tell the mainController to start gameModule
 
 }

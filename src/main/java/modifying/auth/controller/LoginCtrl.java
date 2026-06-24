@@ -167,8 +167,7 @@ public class LoginCtrl {
         /// 真正的游戏从现在开始
         // 🔥 接下来将 mapSaveData 传给 Game 层启动游戏
         mainController.setMapSaveData(mapSaveData);
-        mainController.onAuthSuccess(account.getUserName());
-
+        mainController.onGameStart(account.getUserName());
     }
     public void handleDelete(int k){
         audioCtrl.playButtonSound();

@@ -21,7 +21,6 @@ public class AuthModule{
 
         AuthSceneCtrl authSceneCtrl = new AuthSceneCtrl(authStage, mainController);
 
-        ///  These two don't need to be separated by auth and game
         AudioCtrl audioCtrl = new AudioCtrl();
         MouseGlowEffect.setAudioCtrl(audioCtrl);
 
