@@ -41,10 +41,10 @@ public class CameraController {
         this.viewportHeight = viewportHeight;
 
         // 计算正常边界
-        minX = -worldWidth/2;
-        maxX = worldWidth/2;
-        minY = -worldHeight/2;
-        maxY = worldHeight/2;
+        minX = -worldWidth/2+viewportWidth/2;
+        maxX = worldWidth/2-viewportWidth/2;
+        minY = -worldHeight/2+viewportHeight/2;
+        maxY = worldHeight/2-viewportHeight/2;
 
         // 初始化当前值
         resetToCenter();
@@ -189,10 +189,10 @@ public class CameraController {
         viewportHeight = newVpHeight;
 
         // 重新计算边界
-        minX = -worldWidth/2;
-        maxX = worldWidth/2;
-        minY = -worldHeight/2;
-        maxY = worldHeight/2;
+        minX = -worldWidth/2+viewportWidth/2;
+        maxX = worldWidth/2-viewportWidth/2;
+        minY = -worldHeight/2+viewportHeight/2;
+        maxY = worldHeight/2-viewportHeight/2;
 
         // 调整当前平移位置，确保不超出新边界
         double curX = targetNode.getTranslateX();
