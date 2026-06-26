@@ -1,83 +1,117 @@
 package modifying.game.view.implement;
 
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.transform.Scale;
 import modifying.game.controller.CameraController;
 import modifying.game.controller.GameCtrl;
 import modifying.game.controller.GameSceneCtrl;
 import modifying.game.view.IGameScene;
 import modifying.shared.view.UIUtils;
 
-import java.nio.file.Paths;
 import java.util.Objects;
 
-public class GameSelectView extends StackPane implements IGameScene {
+import static java.lang.Math.clamp;
 
-    // 从 GameSceneCtrl 获取世界尺寸（消除魔法数字）
+public class GameSelectView extends StackPane implements IGameScene, CameraController.BoundsProvider {
+
     private static final double WORLD_W = GameSceneCtrl.getWorldWidth();
     private static final double WORLD_H = GameSceneCtrl.getWorldHeight();
 
     private final GameCtrl gameCtrl;
     private final CameraController camera;
 
-    // 地图组（用于未来滚轮缩放）
     private final Group mapGroup;
-    // 背景图片视图
     private final ImageView mapBackground;
-    // 按钮容器
     private final Group buttonGroup;
+
+    private final Scale mapScale = new Scale(1, 1);
+    private double currentScale = 1.0;
+    private static final double MAX_SCALE = 2.0;
+    private static final double MIN_SCALE = 0.2;
 
     public GameSelectView(GameCtrl gameCtrl, CameraController camera) {
         this.gameCtrl = gameCtrl;
         this.camera = camera;
 
-        // 1. 加载背景图片（请将图片放在 src/main/resources/images/map_background.png）
         Image mapImage = new Image(
                 Objects.requireNonNull(
                         getClass().getResourceAsStream("/Sprites/sprites/grid_background.png")
                 )
         );
         mapBackground = new ImageView(mapImage);
-
-
-        // 确保图片尺寸与常量一致（如果图片本身是 3600x2500，自动适配）
         mapBackground.setFitWidth(WORLD_W);
         mapBackground.setFitHeight(WORLD_H);
-        // 保持原比例（但如果图片比例与常量不一致，需调整，这里假定一致）
         mapBackground.setPreserveRatio(false);
 
-
-        // 2. 按钮组
         buttonGroup = new Group();
-
-        // 3. 地图组
         mapGroup = new Group(mapBackground, buttonGroup);
+        mapGroup.getTransforms().add(mapScale);
+        getChildren().add(mapGroup);
 
-        this.getChildren().add(mapGroup);
-
-        // 4. 添加游戏入口（坐标用绝对数字，因为相对地图位置是固定的）
         addGameEntry("snake", 500, 600);
         addGameEntry("link link", 1200, 800);
 
-        // 5. 绑定摄像机（事件源是 mapGroup，移动目标是 contentContainer）
+        // 设置摄像机边界提供者为本对象
+        camera.setBoundsProvider(this);
         camera.attachTo(mapGroup);
-
-        // 6. 初始居中
         camera.resetToCenter();
+
+        setupScrollZoom();
     }
 
-    // ----- 辅助方法：添加游戏入口按钮 -----
+    @Override
+    public Bounds getVisualBounds() {
+        // 返回 mapGroup 在父容器（GameSelectView）中的真实视觉边界
+        // 因为 GameSelectView 与 contentContainer 对齐，所以这个边界就是世界坐标系中的真实范围
+        return mapGroup.getBoundsInParent();
+    }
+
+
+
+    private void setupScrollZoom() {
+        this.setOnScroll(e -> {
+            if (e.isControlDown() || e.isShiftDown() || e.isAltDown()) return;
+            double delta = e.getDeltaY();
+            double newScale = calcNewScale(delta);
+            if (Math.abs(newScale - currentScale) < 0.001) return;
+
+            // 获取世界坐标（基于 contentContainer）
+            Node worldNode = camera.getTargetNode();
+            Point2D worldPoint = worldNode.sceneToLocal(e.getSceneX(), e.getSceneY());
+            double worldX = worldPoint.getX();
+            double worldY = worldPoint.getY();
+
+            // 应用缩放
+            mapScale.setPivotX(worldX);
+            mapScale.setPivotY(worldY);
+            mapScale.setX(newScale);
+            mapScale.setY(newScale);
+            currentScale = newScale;
+
+            // 更新摄像机边界并触发平滑修正（内部会调用 getVisualBounds）
+            camera.setScale(newScale);
+        });
+    }
+
+    private double calcNewScale(double delta) {
+        double factor = (delta > 0) ? 1.1 : 1 / 1.1;
+        double temp = currentScale * factor;
+        return clamp(temp, MIN_SCALE, MAX_SCALE);
+    }
+
     private void addGameEntry(String text, double x, double y) {
         Button btn = new Button(text);
-        btn.setLayoutX(x - 60);  // 假设按钮宽 120，居中
-        btn.setLayoutY(y - 25);  // 假设按钮高 50，居中
+        btn.setLayoutX(x - 60);
+        btn.setLayoutY(y - 25);
         btn.setPrefSize(120, 50);
         btn.setStyle(
                 "-fx-font-family: 'Comic Sans MS';" +
@@ -88,9 +122,7 @@ public class GameSelectView extends StackPane implements IGameScene {
                         "-fx-border-radius: 25;" +
                         "-fx-background-radius: 25;"
         );
-        // 点击事件：通过 GameCtrl 启动对应游戏
         btn.setOnAction(e -> gameCtrl.launchGame(mapTextToGameId(text)));
-        // 应用通用悬浮缩放效果
         UIUtils.addHoverScale(btn);
         buttonGroup.getChildren().add(btn);
     }
@@ -100,8 +132,6 @@ public class GameSelectView extends StackPane implements IGameScene {
         if (text.contains("link link")) return "LINK_LINK";
         return "UNKNOWN";
     }
-
-
 
     @Override
     public Parent getView() {
@@ -120,22 +150,16 @@ public class GameSelectView extends StackPane implements IGameScene {
 
     @Override
     public void onPause() {
-        // 大厅被覆盖（比如进入游戏）时，不需要特别操作
-        // 但如果有背景动画，可以在这里暂停
     }
 
     @Override
     public void onResume() {
-        // 大厅重新显示时，刷新排行榜或用户信息
     }
 
     @Override
     public void update(long now) {
-        // 大厅界面的 update 通常什么都不做，或者做很轻量的 UI 闪烁
-        // 留空即可
     }
 
-    private void refreshUserData(){
-
+    private void refreshUserData() {
     }
 }

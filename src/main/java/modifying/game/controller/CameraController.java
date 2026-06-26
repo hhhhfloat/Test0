@@ -1,8 +1,7 @@
 package modifying.game.controller;
 
-import javafx.animation.AnimationTimer;
-import javafx.animation.Interpolator;
 import javafx.animation.Transition;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
@@ -10,44 +9,106 @@ import javafx.util.Duration;
 import static java.lang.Math.clamp;
 
 public class CameraController {
-    // 正常边界（硬边界）
+    // 边界约束（基于视觉边界实时计算）
     private double minX, maxX, minY, maxY;
-    // 弹性 overscroll 限制（超出边界的最大像素）
-    private static final double OVERSHOOT_LIMIT = 80;
-    // 回弹动画时长（毫秒）
     private static final double BOUNCE_DURATION_MS = 300;
+    private static final double OVERSHOOT_LIMIT = 80;
+    private static final double WORLD_W = GameSceneCtrl.getWorldWidth();
+    private static final double WORLD_H = GameSceneCtrl.getWorldHeight();
 
-    private final Node targetNode;
-    private final double worldWidth;
-    private final double worldHeight;
-    private double viewportWidth;
-    private double viewportHeight;
+    private final Node targetNode;          // contentContainer
+    private double viewportWidth, viewportHeight;
+    private double overshootLimit = OVERSHOOT_LIMIT;
+    private boolean wasDragged = false;
 
-    // 拖拽状态
     private double mouseAnchorX, mouseAnchorY;
     private double translateAnchorX, translateAnchorY;
-    // 当前平移值（用于动画）
     private double currentTx, currentTy;
-
-    // 回弹动画
     private Transition bounceTransition;
 
-    public CameraController(Node targetNode, double worldWidth, double worldHeight,
-                            double viewportWidth, double viewportHeight) {
+    // 缩放状态（仅用于倍数限制，不再用于边界计算）
+    private double currentScale = 1.0;
+    private Transition snapTransition;
+    private static final double MIN_SCALE = 0.2;
+    private static final double MAX_SCALE = 2.0;
+
+    private boolean isDragged;
+
+    // 视觉边界提供者
+    public interface BoundsProvider {
+        Bounds getVisualBounds();
+    }
+    private BoundsProvider boundsProvider;
+
+    public CameraController(Node targetNode, double viewportWidth, double viewportHeight) {
         this.targetNode = targetNode;
-        this.worldWidth = worldWidth;
-        this.worldHeight = worldHeight;
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
-
-        // 计算正常边界
-        minX = -worldWidth/2+viewportWidth/2;
-        maxX = worldWidth/2-viewportWidth/2;
-        minY = -worldHeight/2+viewportHeight/2;
-        maxY = worldHeight/2-viewportHeight/2;
-
-        // 初始化当前值
         resetToCenter();
+    }
+
+    public void setBoundsProvider(BoundsProvider provider) {
+        this.boundsProvider = provider;
+        // 立即计算一次边界
+        calculateEdge();
+    }
+
+    public void setScale(double newScale) {
+        if (Math.abs(newScale - currentScale) < 0.0001) return;
+        currentScale = clamp(newScale, MIN_SCALE, MAX_SCALE);
+        // 缩放后，视觉边界已变化，重新计算并修正
+        calculateEdge();
+        snapToBounds();
+    }
+
+    public Node getTargetNode() { return targetNode; }
+
+    private void snapToBounds() {
+        double curX = targetNode.getTranslateX();
+        double curY = targetNode.getTranslateY();
+        currentTx = curX;
+        currentTy = curY;
+
+        calculateEdge();
+        double endX = clamp(curX, minX, maxX);
+        double endY = clamp(curY, minY, maxY);
+        if (Math.abs(curX - endX) < 0.01 && Math.abs(curY - endY) < 0.01) return;
+
+        if (snapTransition != null) snapTransition.stop();
+
+        final double startX = curX;
+        final double startY = curY;
+
+        snapTransition = new Transition() {
+            {
+                setCycleDuration(Duration.millis(250));
+                setInterpolator(javafx.animation.Interpolator.EASE_OUT);
+            }
+            @Override
+            protected void interpolate(double frac) {
+                double currentX = startX + (endX - startX) * frac;
+                double currentY = startY + (endY - startY) * frac;
+                targetNode.setTranslateX(currentX);
+                targetNode.setTranslateY(currentY);
+                currentTx = currentX;
+                currentTy = currentY;
+            }
+        };
+        snapTransition.setOnFinished(e -> {
+            targetNode.setTranslateX(endX);
+            targetNode.setTranslateY(endY);
+            currentTx = endX;
+            currentTy = endY;
+            snapTransition = null;
+        });
+        snapTransition.play();
+    }
+
+    public void setTranslate(double x, double y) {
+        targetNode.setTranslateX(x);
+        targetNode.setTranslateY(y);
+        currentTx = x;
+        currentTy = y;
     }
 
     public void attachTo(Node eventSource) {
@@ -57,56 +118,50 @@ public class CameraController {
     }
 
     private void onMousePressed(MouseEvent e) {
-        // 如果正在回弹动画，强制结束并跳到最终位置
+        wasDragged = false;
         if (bounceTransition != null) {
             bounceTransition.stop();
             bounceTransition = null;
-            // 将节点固定到当前实际位置（避免跳变）
         }
-
+        if (snapTransition != null) {
+            snapTransition.stop();
+            snapTransition = null;
+        }
         mouseAnchorX = e.getSceneX();
         mouseAnchorY = e.getSceneY();
-        // 记录起始平移（用节点当前的 translate）
         translateAnchorX = targetNode.getTranslateX();
         translateAnchorY = targetNode.getTranslateY();
     }
 
     private void onMouseDragged(MouseEvent e) {
+        wasDragged = true;
         double deltaX = e.getSceneX() - mouseAnchorX;
         double deltaY = e.getSceneY() - mouseAnchorY;
-
         double targetTx = translateAnchorX + deltaX;
         double targetTy = translateAnchorY + deltaY;
-
-        // 应用弹性限制（允许超出边界但施加阻力）
         double clampedTx = applyElasticLimit(targetTx, minX, maxX);
         double clampedTy = applyElasticLimit(targetTy, minY, maxY);
-
         targetNode.setTranslateX(clampedTx);
         targetNode.setTranslateY(clampedTy);
-
-        // 记录当前值（用于回弹）
         currentTx = clampedTx;
         currentTy = clampedTy;
     }
 
     private void onMouseReleased(MouseEvent e) {
-        // 检查是否超出正常边界，如果是则启动回弹动画
-        if (isOutOfBounds(currentTx, currentTy)) {
+        if (wasDragged && isOutOfBounds(currentTx, currentTy)) {
             startBounceAnimation();
         }
+        wasDragged = false;
     }
 
-    // ====== 弹性限制算法 ======
     private double applyElasticLimit(double value, double min, double max) {
         if (value < min) {
             double overshoot = min - value;
-            // 施加弹性阻力：超出越多，允许增加越少（对数衰减）
-            double limitedOvershoot = Math.min(OVERSHOOT_LIMIT, overshoot * 0.5);
+            double limitedOvershoot = Math.min(overshootLimit, overshoot * 0.5);
             return min - limitedOvershoot;
         } else if (value > max) {
             double overshoot = value - max;
-            double limitedOvershoot = Math.min(OVERSHOOT_LIMIT, overshoot * 0.5);
+            double limitedOvershoot = Math.min(overshootLimit, overshoot * 0.5);
             return max + limitedOvershoot;
         } else {
             return value;
@@ -117,33 +172,37 @@ public class CameraController {
         return x < minX || x > maxX || y < minY || y > maxY;
     }
 
-    // ====== 回弹动画 ======
     private void startBounceAnimation() {
         if (bounceTransition != null) {
             bounceTransition.stop();
+            bounceTransition = null;
         }
-
+        if (snapTransition != null) {
+            snapTransition.stop();
+            snapTransition = null;
+        }
         double startX = targetNode.getTranslateX();
         double startY = targetNode.getTranslateY();
+        // 动画过程中持续更新缓存值
+        currentTx = startX;
+        currentTy = startY;
         double endX = clamp(startX, minX, maxX);
         double endY = clamp(startY, minY, maxY);
-
-        // 如果已经在边界内，不需要动画
         if (startX == endX && startY == endY) return;
 
         bounceTransition = new Transition() {
             {
                 setCycleDuration(Duration.millis(BOUNCE_DURATION_MS));
-                setInterpolator(Interpolator.EASE_OUT);
+                setInterpolator(javafx.animation.Interpolator.EASE_OUT);
             }
-
             @Override
             protected void interpolate(double frac) {
                 double curX = startX + (endX - startX) * frac;
                 double curY = startY + (endY - startY) * frac;
                 targetNode.setTranslateX(curX);
                 targetNode.setTranslateY(curY);
-                // 更新当前值（以备后续）
+                currentTx = curX;
+                currentTy = curY;
                 if (frac >= 1.0) {
                     currentTx = endX;
                     currentTy = endY;
@@ -151,7 +210,6 @@ public class CameraController {
                 }
             }
         };
-
         bounceTransition.setOnFinished(e -> {
             targetNode.setTranslateX(endX);
             targetNode.setTranslateY(endY);
@@ -159,64 +217,58 @@ public class CameraController {
             currentTy = endY;
             bounceTransition = null;
         });
-
         bounceTransition.play();
     }
 
-    // ====== 公共方法 ======
+    // 注意：resetToCenter 只重置平移，不改变缩放。
     public void resetToCenter() {
-        double cx = (viewportWidth - worldWidth) / 2;
-        double cy = (viewportHeight - worldHeight) / 2;
-        double endX = clamp(cx, minX, maxX);
-        double endY = clamp(cy, minY, maxY);
-        targetNode.setTranslateX(endX);
-        targetNode.setTranslateY(endY);
-        currentTx = endX;
-        currentTy = endY;
         if (bounceTransition != null) {
             bounceTransition.stop();
             bounceTransition = null;
         }
+        if (snapTransition != null) {
+            snapTransition.stop();
+            snapTransition = null;
+        }
+        targetNode.setTranslateX(0);
+        targetNode.setTranslateY(0);
+        currentTx = 0;
+        currentTy = 0;
     }
 
-    public void updateViewport(double newVpWidth, double newVpHeight){
-        // 如果尺寸没变，直接返回（避免重复计算）
-        if (Math.abs(newVpWidth - viewportWidth) < 0.01 && Math.abs(newVpHeight - viewportHeight) < 0.01) {
+    public void updateViewport(double newVpWidth, double newVpHeight) {
+        if (Math.abs(newVpWidth - viewportWidth) < 0.01 &&
+                Math.abs(newVpHeight - viewportHeight) < 0.01) {
             return;
         }
-        // 更新视口尺寸
         viewportWidth = newVpWidth;
         viewportHeight = newVpHeight;
+        calculateEdge();
+        snapToBounds();
+    }
 
-        // 重新计算边界
-        minX = -worldWidth/2+viewportWidth/2;
-        maxX = worldWidth/2-viewportWidth/2;
-        minY = -worldHeight/2+viewportHeight/2;
-        maxY = worldHeight/2-viewportHeight/2;
+    private void calculateEdge() {
+        if (boundsProvider == null) return;
+        Bounds visual = boundsProvider.getVisualBounds();
+        if (visual == null) return;
+        double visualMinX = visual.getMinX();
+        double visualMaxX = visual.getMaxX();
+        double visualMinY = visual.getMinY();
+        double visualMaxY = visual.getMaxY();
 
-        // 调整当前平移位置，确保不超出新边界
-        double curX = targetNode.getTranslateX();
-        double curY = targetNode.getTranslateY();
-        double clampedX = clamp(curX, minX, maxX);
-        double clampedY = clamp(curY, minY, maxY);
-        if (clampedX != curX || clampedY != curY) {
-            targetNode.setTranslateX(clampedX);
-            targetNode.setTranslateY(clampedY);
-            currentTx = clampedX;
-            currentTy = clampedY;
-        }
+        // 摄像机平移 translateX/Y 表示contentContainer相对于initial pos的偏移。
 
-        // 如果当前存在回弹动画，也需要根据新边界重新定位？但更简单：如果正在回弹则停止并立即固定到边界内
-        if (bounceTransition != null) {
-            bounceTransition.stop();
-            bounceTransition = null;
-            targetNode.setTranslateX(clampedX);
-            targetNode.setTranslateY(clampedY);
-            currentTx = clampedX;
-            currentTy = clampedY;
-        }
+        minX = (WORLD_W + viewportWidth) / 2 - visualMaxX;
+        maxX = (WORLD_W - viewportWidth) / 2 - visualMinX;
+        minY = (WORLD_H + viewportHeight) / 2 - visualMaxY;
+        maxY = (WORLD_H - viewportHeight) / 2 - visualMinY;
+
+        // 如果图像小于视口，可能出现 minX > maxX，此时应允许摄像机居中，我们不做特殊处理，但 clamp 会处理。
     }
 
     public double getTranslateX() { return targetNode.getTranslateX(); }
     public double getTranslateY() { return targetNode.getTranslateY(); }
+    public double getViewportWidth() { return viewportWidth; }
+    public double getViewportHeight() { return viewportHeight; }
+    public double getCurrentScale() { return currentScale; }
 }
