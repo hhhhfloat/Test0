@@ -1,9 +1,13 @@
 package modifying.game.controller;
 
 import javafx.animation.Transition;
+import javafx.event.Event;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.robot.Robot;
 import javafx.util.Duration;
 
 import static java.lang.Math.clamp;
@@ -12,7 +16,7 @@ public class CameraController {
     // 边界约束（基于视觉边界实时计算）
     private double minX, maxX, minY, maxY;
     private static final double BOUNCE_DURATION_MS = 300;
-    private static final double OVERSHOOT_LIMIT = 80;
+    private static final double OVERSHOOT_LIMIT = 60;
     private static final double WORLD_W = GameSceneCtrl.getWorldWidth();
     private static final double WORLD_H = GameSceneCtrl.getWorldHeight();
 
@@ -55,7 +59,7 @@ public class CameraController {
 
     public void setScale(double newScale) {
         if (Math.abs(newScale - currentScale) < 0.0001) return;
-        currentScale = clamp(newScale, MIN_SCALE, MAX_SCALE);
+        currentScale = newScale;
         // 缩放后，视觉边界已变化，重新计算并修正
         calculateEdge();
         snapToBounds();
@@ -230,10 +234,10 @@ public class CameraController {
             snapTransition.stop();
             snapTransition = null;
         }
-        targetNode.setTranslateX(0);
-        targetNode.setTranslateY(0);
-        currentTx = 0;
-        currentTy = 0;
+        targetNode.setTranslateX(-(WORLD_W-viewportWidth)/2);
+        targetNode.setTranslateY(-(WORLD_H-viewportHeight)/2);
+        currentTx = -(WORLD_W-viewportWidth)/2;
+        currentTy = -(WORLD_H-viewportHeight)/2;
     }
 
     public void updateViewport(double newVpWidth, double newVpHeight) {
@@ -243,8 +247,43 @@ public class CameraController {
         }
         viewportWidth = newVpWidth;
         viewportHeight = newVpHeight;
+
+
+
         calculateEdge();
-        snapToBounds();
+        if(isOutOfBounds(getTranslateX(),getTranslateY())){
+            try {
+                snapToBounds();
+            } catch (IllegalArgumentException e) {
+                fireScrollEvent((Node) boundsProvider);
+            }
+        }
+    }
+
+    private void fireScrollEvent(Node target){
+        Robot robot = new Robot();
+        Point2D screenPos = robot.getMousePosition();
+
+        Point2D localPos = target.sceneToLocal(screenPos);
+
+        ScrollEvent virtualEvent = new ScrollEvent(
+                target,
+                target,
+                ScrollEvent.SCROLL,
+                localPos.getX(),  // x - 节点本地坐标
+                localPos.getY(),  // y - 节点本地坐标
+                screenPos.getX(), // screenX - 屏幕绝对坐标
+                screenPos.getY(), // screenY - 屏幕绝对坐标
+                false, false, false, false, // shift, control, alt, meta (按键状态)
+                false, false,           // direct, inertia (是否为直接手势，是否有惯性)
+                0, -0.1,                 // deltaX, deltaY (重点：这里设置一个微小的滚动量，触发缩放逻辑)
+                0, -0.1,                 // totalDeltaX, totalDeltaY
+                ScrollEvent.HorizontalTextScrollUnits.NONE, 0, // 文本滚动单位 (通常设为NONE)
+                ScrollEvent.VerticalTextScrollUnits.NONE, 0,   // 文本滚动单位 (通常设为NONE)
+                0,                      // touchCount
+                null                    // pickResult
+        );
+        Event.fireEvent(target, virtualEvent);
     }
 
     private void calculateEdge() {
@@ -258,10 +297,10 @@ public class CameraController {
 
         // 摄像机平移 translateX/Y 表示contentContainer相对于initial pos的偏移。
 
-        minX = (WORLD_W + viewportWidth) / 2 - visualMaxX;
-        maxX = (WORLD_W - viewportWidth) / 2 - visualMinX;
-        minY = (WORLD_H + viewportHeight) / 2 - visualMaxY;
-        maxY = (WORLD_H - viewportHeight) / 2 - visualMinY;
+        minX =  viewportWidth - visualMaxX;
+        maxX =  - visualMinX;
+        minY = viewportHeight - visualMaxY;
+        maxY = - visualMinY;
 
         // 如果图像小于视口，可能出现 minX > maxX，此时应允许摄像机居中，我们不做特殊处理，但 clamp 会处理。
     }

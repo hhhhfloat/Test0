@@ -19,7 +19,7 @@ import modifying.shared.view.UIUtils;
 
 import java.util.Objects;
 
-import static java.lang.Math.clamp;
+import static java.lang.Math.*;
 
 public class GameSelectView extends StackPane implements IGameScene, CameraController.BoundsProvider {
 
@@ -105,8 +105,11 @@ public class GameSelectView extends StackPane implements IGameScene, CameraContr
     private double calcNewScale(double delta) {
         double factor = (delta > 0) ? 1.1 : 1 / 1.1;
         double temp = currentScale * factor;
-        return clamp(temp, MIN_SCALE, MAX_SCALE);
+        double minScale = max(camera.getViewportWidth() / WORLD_W, camera.getViewportHeight() / WORLD_H) + 0.01;
+        return clamp(temp, minScale, MAX_SCALE);
     }
+
+
 
     private void addGameEntry(String text, double x, double y) {
         Button btn = new Button(text);

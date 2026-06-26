@@ -2,6 +2,7 @@ package modifying.game.controller;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.Bindings;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -70,6 +71,7 @@ public class GameSceneCtrl {
         contentContainer.setMinSize(WORLD_WIDTH, WORLD_HEIGHT);
         contentContainer.setMaxSize(WORLD_WIDTH, WORLD_HEIGHT);
         contentPane.getChildren().add(contentContainer);
+        contentPane.setAlignment(Pos.TOP_LEFT);
 
         // 4. 摄像机
         cameraController = new CameraController(
@@ -79,7 +81,7 @@ public class GameSceneCtrl {
         // 窗口尺寸变化时更新摄像机视口
         gameScene.widthProperty().addListener((obs, old, newVal) -> {
             if (newVal.doubleValue() > 0) {
-                cameraController.updateViewport(newVal.doubleValue(), gameScene.getHeight());
+                cameraController.updateViewport(gameScene.getWidth(), newVal.doubleValue());
             }
         });
         gameScene.heightProperty().addListener((obs, old, newVal) -> {
@@ -109,6 +111,7 @@ public class GameSceneCtrl {
         // 6. 主循环
         initGameLoop();
     }
+
 
     private void initGameLoop() {
         gameLoop = new AnimationTimer() {
