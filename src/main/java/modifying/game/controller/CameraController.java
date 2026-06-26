@@ -260,28 +260,28 @@ public class CameraController {
         }
     }
 
-    private void fireScrollEvent(Node target){
+    private void fireScrollEvent(Node target) {
+        // target 应为 GameSelectView
         Robot robot = new Robot();
         Point2D screenPos = robot.getMousePosition();
-
-        Point2D localPos = target.sceneToLocal(screenPos);
+        Point2D localPos = target.sceneToLocal(screenPos); // 相对于 target (GameSelectView)
 
         ScrollEvent virtualEvent = new ScrollEvent(
                 target,
                 target,
                 ScrollEvent.SCROLL,
-                localPos.getX(),  // x - 节点本地坐标
-                localPos.getY(),  // y - 节点本地坐标
-                screenPos.getX(), // screenX - 屏幕绝对坐标
-                screenPos.getY(), // screenY - 屏幕绝对坐标
-                false, false, false, false, // shift, control, alt, meta (按键状态)
-                false, false,           // direct, inertia (是否为直接手势，是否有惯性)
-                0, -0.1,                 // deltaX, deltaY (重点：这里设置一个微小的滚动量，触发缩放逻辑)
-                0, -0.1,                 // totalDeltaX, totalDeltaY
-                ScrollEvent.HorizontalTextScrollUnits.NONE, 0, // 文本滚动单位 (通常设为NONE)
-                ScrollEvent.VerticalTextScrollUnits.NONE, 0,   // 文本滚动单位 (通常设为NONE)
-                0,                      // touchCount
-                null                    // pickResult
+                localPos.getX(),
+                localPos.getY(),
+                screenPos.getX(),
+                screenPos.getY(),
+                false, false, false, false,
+                false, false,
+                0, -0.1,
+                0, -0.1,
+                ScrollEvent.HorizontalTextScrollUnits.NONE, 0,
+                ScrollEvent.VerticalTextScrollUnits.NONE, 0,
+                0,
+                null
         );
         Event.fireEvent(target, virtualEvent);
     }

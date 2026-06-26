@@ -85,8 +85,7 @@ public class GameSelectView extends StackPane implements IGameScene, CameraContr
             if (Math.abs(newScale - currentScale) < 0.001) return;
 
             // 获取世界坐标（基于 contentContainer）
-            Node worldNode = camera.getTargetNode();
-            Point2D worldPoint = worldNode.sceneToLocal(e.getSceneX(), e.getSceneY());
+            Point2D worldPoint = mapGroup.sceneToLocal(e.getSceneX(), e.getSceneY());
             double worldX = worldPoint.getX();
             double worldY = worldPoint.getY();
 
