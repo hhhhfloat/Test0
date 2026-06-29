@@ -1,18 +1,23 @@
 package modifying.game.controller;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import modifying.game.view.IGameScene;
 import modifying.game.view.implement.GameSelectView;
 import modifying.shared.controller.MainController;
+import modifying.shared.model.TOAST_TYPE;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -63,6 +68,7 @@ public class GameSceneCtrl {
         contentPane.minHeightProperty().bind(gameScene.heightProperty());
         contentPane.maxWidthProperty().bind(gameScene.widthProperty());
         contentPane.maxHeightProperty().bind(gameScene.heightProperty());
+
         gameRoot.getChildren().add(contentPane);
 
         // 3. 世界容器（固定大小 3600x2500）
@@ -95,6 +101,10 @@ public class GameSceneCtrl {
         // 5. 消息层（Toast/弹窗，独立缩放）
         messagePane = new StackPane();
         messagePane.setPrefSize(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        messagePane.setMinSize(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        messagePane.setMaxSize(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        messagePane.getStylesheets().add(Paths.get("src","main","resources","css","AuthSceneStyle","confirmStyle.css").toUri().toString());
+        messagePane.getStylesheets().add(Paths.get("src","main","resources","css","AuthSceneStyle","toastStyle.css").toUri().toString());
         messagePane.setMouseTransparent(true);
         messageGroup = new Group(messagePane);
         messageGroup.scaleXProperty().bind(
@@ -171,6 +181,7 @@ public class GameSceneCtrl {
         if (!sceneStack.isEmpty()) {
             sceneStack.peek().getView().setDisable(true);
         }
+
         sceneStack.push(newScene);
         newScene.onEnter();
         contentContainer.getChildren().add(newScene.getView());
@@ -211,5 +222,85 @@ public class GameSceneCtrl {
         while (sceneStack.size() > 1) {
             popScene();
         }
+    }
+
+
+    private Node currentToast;
+    private static final double TOAST_SLIDE_RATIO = 0.6;
+    private static final double TOAST_TOP_OFFSET_RATIO = 0.04;
+    private static final double TOAST_DISPLAY_SECONDS = 2.5;
+    private static final double TOAST_ANIMATION_MILLIS = 400;
+    private static final double TOAST_OVERSHOOT_MILLIS_RATIO = 0.5;
+    private static final double TOAST_UNDERSHOOT_MILLIS_RATIO = 1.2;
+    private static final double TOAST_SETTLE_MILLIS_RATIO = 1.5;
+    public void showToast(String message, TOAST_TYPE TYPE) {
+        if (messagePane == null) return;
+        if (currentToast != null) {
+            messagePane.getChildren().remove(currentToast);
+            currentToast = null;
+        }
+
+        HBox toastBox = new HBox();
+        toastBox.setMouseTransparent(true);
+        toastBox.getStyleClass().addAll("toast-box", TYPE.getCssClass());
+        toastBox.setMaxHeight(Region.USE_PREF_SIZE);
+
+        Label label = new Label(message);
+        label.setId("toast-label");
+        label.setWrapText(true);
+
+        toastBox.getChildren().add(label);
+
+        // 定位（逻辑坐标固定值）
+        double slideDistance = VIEWPORT_WIDTH * TOAST_SLIDE_RATIO;
+        double topOffset = VIEWPORT_HEIGHT * TOAST_TOP_OFFSET_RATIO;
+
+        // 添加到 messagePane
+        messagePane.getChildren().add(toastBox);
+        StackPane.setAlignment(toastBox, Pos.TOP_RIGHT);
+        toastBox.setTranslateY(topOffset);
+        toastBox.setTranslateX(slideDistance);
+        currentToast = toastBox;
+
+        // 动画（完全不变）
+        toastBox.setOpacity(0);
+        toastBox.setScaleX(0.5);
+        toastBox.setScaleY(0.5);
+
+        Timeline popInTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(toastBox.translateXProperty(), slideDistance),
+                        new KeyValue(toastBox.opacityProperty(), 0),
+                        new KeyValue(toastBox.scaleXProperty(), 0.5),
+                        new KeyValue(toastBox.scaleYProperty(), 0.5)
+                ),
+                new KeyFrame(Duration.millis(TOAST_ANIMATION_MILLIS * TOAST_OVERSHOOT_MILLIS_RATIO),
+                        new KeyValue(toastBox.translateXProperty(), 0),
+                        new KeyValue(toastBox.opacityProperty(), 1),
+                        new KeyValue(toastBox.scaleXProperty(), 1.05),
+                        new KeyValue(toastBox.scaleYProperty(), 1.05)
+                ),
+                new KeyFrame(Duration.millis(TOAST_ANIMATION_MILLIS * TOAST_UNDERSHOOT_MILLIS_RATIO),
+                        new KeyValue(toastBox.scaleXProperty(), 0.95),
+                        new KeyValue(toastBox.scaleYProperty(), 0.95)
+                ),
+                new KeyFrame(Duration.millis(TOAST_ANIMATION_MILLIS * TOAST_SETTLE_MILLIS_RATIO),
+                        new KeyValue(toastBox.scaleXProperty(), 1.0),
+                        new KeyValue(toastBox.scaleYProperty(), 1.0)
+                )
+        );
+        popInTimeline.play();
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(TOAST_DISPLAY_SECONDS));
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(TOAST_ANIMATION_MILLIS), toastBox);
+        slideOut.setFromX(0);
+        slideOut.setToX(slideDistance);
+        slideOut.setOnFinished(e -> {
+            messagePane.getChildren().remove(toastBox);
+            if (currentToast == toastBox) currentToast = null;
+        });
+
+        pause.setOnFinished(e -> slideOut.play());
+        pause.play();
     }
 }

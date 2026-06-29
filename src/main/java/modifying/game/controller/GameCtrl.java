@@ -3,6 +3,7 @@ package modifying.game.controller;
 import modifying.game.view.IGameScene;
 import modifying.shared.controller.AudioCtrl;
 import modifying.shared.model.MapSaveData;
+import modifying.shared.model.TOAST_TYPE;
 
 public class GameCtrl {
 
@@ -20,6 +21,7 @@ public class GameCtrl {
 
     public void launchGame(String gameId) {
         System.out.println("Launching " + gameId);
+        gameSceneCtrl.showToast("Launching" + gameId, TOAST_TYPE.ERROR);
         // 创建游戏场景（后续由具体游戏类实现）
         // IGameScene gameScene = new SomeGameScene(this);
         // gameSceneCtrl.enterGameScene(gameScene);
