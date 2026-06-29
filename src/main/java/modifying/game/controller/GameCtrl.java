@@ -21,7 +21,14 @@ public class GameCtrl {
 
     public void launchGame(String gameId) {
         System.out.println("Launching " + gameId);
-        gameSceneCtrl.showToast("Launching" + gameId, TOAST_TYPE.ERROR);
+        // gameSceneCtrl.showToast("Launching" + gameId, TOAST_TYPE.ERROR);
+        gameSceneCtrl.showConfirmDialog(
+                "Launching" + gameId,
+                "",
+                ()->{
+
+                },()->{}
+        );
         // 创建游戏场景（后续由具体游戏类实现）
         // IGameScene gameScene = new SomeGameScene(this);
         // gameSceneCtrl.enterGameScene(gameScene);

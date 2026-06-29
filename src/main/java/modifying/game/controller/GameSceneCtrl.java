@@ -6,10 +6,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import modifying.game.view.IGameScene;
@@ -302,5 +305,66 @@ public class GameSceneCtrl {
 
         pause.setOnFinished(e -> slideOut.play());
         pause.play();
+    }
+
+    public void showConfirmDialog(String title, String message, Runnable onConfirm, Runnable onCancel) {
+        contentPane.setEffect(new GaussianBlur());
+
+        messagePane.setMouseTransparent(false);
+
+        if(currentToast != null){
+            messagePane.getChildren().remove(currentToast);
+            currentToast = null;
+        }
+
+        // 内容面板（样式全部在 CSS 中）
+        VBox contentBox = new VBox(20);
+        contentBox.getStyleClass().add("confirm-box");
+        contentBox.setAlignment(Pos.CENTER);
+
+        Label titleLabel = new Label(title);
+        titleLabel.setId("confirm-title");
+
+        Label msgLabel = new Label(message);
+        msgLabel.setId("confirm-message");
+        msgLabel.setWrapText(true);
+        msgLabel.setAlignment(Pos.CENTER);
+
+        Button confirmBtn = new Button("Confirm");
+        Button cancelBtn = new Button("Cancel");
+        confirmBtn.getStyleClass().add("confirm-btn-confirm");
+        cancelBtn.getStyleClass().add("confirm-btn-cancel");
+
+        // 悬停效果由 CSS 的 :hover 处理，不需要 Java 代码
+
+        HBox buttonBox = new HBox(30, confirmBtn);
+        if(onCancel != null) buttonBox.getChildren().add(cancelBtn);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        contentBox.getChildren().addAll(titleLabel, msgLabel, buttonBox);
+
+        // 覆盖层
+        StackPane overlay = new StackPane();
+        overlay.getChildren().addAll(contentBox);
+        StackPane.setAlignment(contentBox, Pos.CENTER);
+
+        messagePane.getChildren().add(overlay);
+        overlay.toFront();
+
+        // 按钮事件
+        confirmBtn.setOnAction(e -> {
+            messagePane.getChildren().remove(overlay);
+            messagePane.setMouseTransparent(true);
+            contentPane.setEffect(null);
+            if (onConfirm != null) onConfirm.run();
+        });
+        if(onCancel != null){
+            cancelBtn.setOnAction(e -> {
+                messagePane.getChildren().remove(overlay);
+                messagePane.setMouseTransparent(true);
+                contentPane.setEffect(null);
+                onCancel.run();
+            });
+        }
     }
 }
