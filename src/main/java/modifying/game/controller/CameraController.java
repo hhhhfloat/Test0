@@ -36,7 +36,6 @@ public class CameraController {
     private static final double MIN_SCALE = 0.2;
     private static final double MAX_SCALE = 2.0;
 
-    private boolean isDragged;
 
     // 视觉边界提供者
     public interface BoundsProvider {
@@ -48,7 +47,10 @@ public class CameraController {
         this.targetNode = targetNode;
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
-        resetToCenter();
+    }
+
+    public double getCurrentScale() {
+        return currentScale;
     }
 
     public void setBoundsProvider(BoundsProvider provider) {
@@ -58,11 +60,10 @@ public class CameraController {
     }
 
     public void setScale(double newScale) {
-        if (Math.abs(newScale - currentScale) < 0.0001) return;
         currentScale = newScale;
         // 缩放后，视觉边界已变化，重新计算并修正
         calculateEdge();
-        snapToBounds();
+        startBounceAnimation();
     }
 
     public Node getTargetNode() { return targetNode; }
@@ -122,23 +123,15 @@ public class CameraController {
     }
 
     private void onMousePressed(MouseEvent e) {
-        wasDragged = false;
-        if (bounceTransition != null) {
-            bounceTransition.stop();
-            bounceTransition = null;
-        }
-        if (snapTransition != null) {
-            snapTransition.stop();
-            snapTransition = null;
-        }
-        mouseAnchorX = e.getSceneX();
+        wasDragged = false;                 // 重置拖拽标记
+        mouseAnchorX = e.getSceneX();       // 记录按下时的鼠标坐标
         mouseAnchorY = e.getSceneY();
-        translateAnchorX = targetNode.getTranslateX();
-        translateAnchorY = targetNode.getTranslateY();
+        translateAnchorX = currentTx;       // 记录按下时的节点位移（用currentTx保证准确性）
+        translateAnchorY = currentTy;
     }
-
     private void onMouseDragged(MouseEvent e) {
         wasDragged = true;
+
         double deltaX = e.getSceneX() - mouseAnchorX;
         double deltaY = e.getSceneY() - mouseAnchorY;
         double targetTx = translateAnchorX + deltaX;
@@ -149,15 +142,14 @@ public class CameraController {
         targetNode.setTranslateY(clampedTy);
         currentTx = clampedTx;
         currentTy = clampedTy;
-    }
 
+    }
     private void onMouseReleased(MouseEvent e) {
         if (wasDragged && isOutOfBounds(currentTx, currentTy)) {
             startBounceAnimation();
         }
         wasDragged = false;
     }
-
     private double applyElasticLimit(double value, double min, double max) {
         if (value < min) {
             double overshoot = min - value;
@@ -171,11 +163,9 @@ public class CameraController {
             return value;
         }
     }
-
     private boolean isOutOfBounds(double x, double y) {
         return x < minX || x > maxX || y < minY || y > maxY;
     }
-
     private void startBounceAnimation() {
         if (bounceTransition != null) {
             bounceTransition.stop();
@@ -187,7 +177,6 @@ public class CameraController {
         }
         double startX = targetNode.getTranslateX();
         double startY = targetNode.getTranslateY();
-        // 动画过程中持续更新缓存值
         currentTx = startX;
         currentTy = startY;
         double endX = clamp(startX, minX, maxX);
@@ -203,10 +192,7 @@ public class CameraController {
             protected void interpolate(double frac) {
                 double curX = startX + (endX - startX) * frac;
                 double curY = startY + (endY - startY) * frac;
-                targetNode.setTranslateX(curX);
-                targetNode.setTranslateY(curY);
-                currentTx = curX;
-                currentTy = curY;
+                setTranslate(curX, curY);
                 if (frac >= 1.0) {
                     currentTx = endX;
                     currentTy = endY;
@@ -247,8 +233,6 @@ public class CameraController {
         }
         viewportWidth = newVpWidth;
         viewportHeight = newVpHeight;
-
-
 
         calculateEdge();
         if(isOutOfBounds(getTranslateX(),getTranslateY())){
@@ -295,19 +279,14 @@ public class CameraController {
         double visualMinY = visual.getMinY();
         double visualMaxY = visual.getMaxY();
 
-        // 摄像机平移 translateX/Y 表示contentContainer相对于initial pos的偏移。
-
         minX =  viewportWidth - visualMaxX;
         maxX =  - visualMinX;
         minY = viewportHeight - visualMaxY;
         maxY = - visualMinY;
-
-        // 如果图像小于视口，可能出现 minX > maxX，此时应允许摄像机居中，我们不做特殊处理，但 clamp 会处理。
     }
 
     public double getTranslateX() { return targetNode.getTranslateX(); }
     public double getTranslateY() { return targetNode.getTranslateY(); }
     public double getViewportWidth() { return viewportWidth; }
     public double getViewportHeight() { return viewportHeight; }
-    public double getCurrentScale() { return currentScale; }
 }

@@ -4,7 +4,6 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -21,7 +20,7 @@ import java.util.Objects;
 
 import static java.lang.Math.*;
 
-public class GameSelectView extends StackPane implements IGameScene, CameraController.BoundsProvider {
+public class LobbyView extends StackPane implements IGameScene, CameraController.BoundsProvider {
 
     private static final double WORLD_W = GameSceneCtrl.getWorldWidth();
     private static final double WORLD_H = GameSceneCtrl.getWorldHeight();
@@ -29,25 +28,34 @@ public class GameSelectView extends StackPane implements IGameScene, CameraContr
     private final GameCtrl gameCtrl;
     private final CameraController camera;
 
-    private final Group mapGroup;
-    private final ImageView mapBackground;
-    private final Group buttonGroup;
+    private Group mapGroup;
+    private Group buttonGroup;
 
     private final Scale mapScale = new Scale(1, 1);
-    private double currentScale = 1.0;
     private static final double MAX_SCALE = 2.0;
     private static final double MIN_SCALE = 0.2;
-
-    public GameSelectView(GameCtrl gameCtrl, CameraController camera) {
+    private final StackPane contentPane;
+    public LobbyView(GameCtrl gameCtrl, StackPane contentPane) {
         this.gameCtrl = gameCtrl;
-        this.camera = camera;
+        this.contentPane = contentPane;
+        contentPane.setAlignment(Pos.TOP_LEFT);
 
+        initMapGroup();
+
+        // 设置摄像机边界提供者为本对象
+        camera = new CameraController(this, contentPane.getWidth(), contentPane.getHeight());
+        initCamera();
+
+        setupScrollZoom();
+    }
+
+    private void initMapGroup(){
         Image mapImage = new Image(
                 Objects.requireNonNull(
                         getClass().getResourceAsStream("/Sprites/sprites/grid_background.png")
                 )
         );
-        mapBackground = new ImageView(mapImage);
+        ImageView mapBackground = new ImageView(mapImage);
         mapBackground.setFitWidth(WORLD_W);
         mapBackground.setFitHeight(WORLD_H);
         mapBackground.setPreserveRatio(false);
@@ -59,19 +67,30 @@ public class GameSelectView extends StackPane implements IGameScene, CameraContr
 
         addGameEntry("snake", 500, 600);
         addGameEntry("link link", 1200, 800);
+    }
 
-        // 设置摄像机边界提供者为本对象
+    private void initCamera(){
+        contentPane.widthProperty().addListener(
+                (obs, old, newVal) ->{
+                    if(newVal.doubleValue() > 0){
+                        camera.updateViewport(contentPane.getWidth(), contentPane.getHeight());
+                    }
+                }
+        );
+        contentPane.heightProperty().addListener(
+                (obs, old, newVal)->{
+                    if(newVal.doubleValue() > 0){
+                        camera.updateViewport(contentPane.getWidth(), contentPane.getHeight());
+                    }
+                }
+        );
         camera.setBoundsProvider(this);
         camera.attachTo(mapGroup);
         camera.resetToCenter();
-
-        setupScrollZoom();
     }
 
     @Override
     public Bounds getVisualBounds() {
-        // 返回 mapGroup 在父容器（GameSelectView）中的真实视觉边界
-        // 因为 GameSelectView 与 contentContainer 对齐，所以这个边界就是世界坐标系中的真实范围
         return mapGroup.getBoundsInParent();
     }
 
@@ -81,20 +100,37 @@ public class GameSelectView extends StackPane implements IGameScene, CameraContr
         this.setOnScroll(e -> {
             if (e.isControlDown() || e.isShiftDown() || e.isAltDown()) return;
             double delta = e.getDeltaY();
+            double oldScale = camera.getCurrentScale();
             double newScale = calcNewScale(delta);
-            if (Math.abs(newScale - currentScale) < 0.001) return;
+            if (Math.abs(newScale - oldScale) < 0.001) return;
+
+            double sceneX = e.getSceneX();
+            double sceneY = e.getSceneY();
 
             // 获取世界坐标（基于 contentContainer）
-            Point2D worldPoint = mapGroup.sceneToLocal(e.getSceneX(), e.getSceneY());
+            Point2D worldPoint = mapGroup.sceneToLocal(sceneX, sceneY);
             double worldX = worldPoint.getX();
             double worldY = worldPoint.getY();
 
+            double oldPivotX = mapScale.getPivotX();
+            double oldPivotY = mapScale.getPivotY();
+
+            double newPivotX, newPivotY;
+
+            if (Math.abs(1.0 - newScale) < 1e-12) {
+                newPivotX = worldX;
+                newPivotY = worldY;
+            } else {
+                // 推导出的精确锁定公式：
+                // (W * newS) + P_new * (1 - newS) = (W * oldS) + P_old * (1 - oldS)
+                newPivotX = (worldX * (oldScale - newScale) + oldPivotX * (1 - oldScale)) / (1 - newScale);
+                newPivotY = (worldY * (oldScale - newScale) + oldPivotY * (1 - oldScale)) / (1 - newScale);
+            }
             // 应用缩放
-            mapScale.setPivotX(worldX);
-            mapScale.setPivotY(worldY);
+            mapScale.setPivotX(newPivotX);
+            mapScale.setPivotY(newPivotY);
             mapScale.setX(newScale);
             mapScale.setY(newScale);
-            currentScale = newScale;
 
             // 更新摄像机边界并触发平滑修正（内部会调用 getVisualBounds）
             camera.setScale(newScale);
@@ -103,7 +139,7 @@ public class GameSelectView extends StackPane implements IGameScene, CameraContr
 
     private double calcNewScale(double delta) {
         double factor = (delta > 0) ? 1.1 : 1 / 1.1;
-        double temp = currentScale * factor;
+        double temp = camera.getCurrentScale() * factor;
         double minScale = max(camera.getViewportWidth() / WORLD_W, camera.getViewportHeight() / WORLD_H) + 0.01;
         return clamp(temp, minScale, MAX_SCALE);
     }

@@ -16,7 +16,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import modifying.game.view.IGameScene;
-import modifying.game.view.implement.GameSelectView;
+import modifying.game.view.implement.LobbyView;
+import modifying.shared.controller.AudioCtrl;
 import modifying.shared.controller.MainController;
 import modifying.shared.model.TOAST_TYPE;
 
@@ -44,20 +45,20 @@ public class GameSceneCtrl {
     private final StackPane contentPane;
     private final Group messageGroup;
     private final StackPane messagePane;
-    private final StackPane contentContainer;
     private final Scene gameScene;
     private final Stack<IGameScene> sceneStack = new Stack<>();
     private AnimationTimer gameLoop;
-    private final CameraController cameraController;
 
     // ----- 页面节点管理 -----
-    private GameSelectView gameSelectView;  // 大厅节点，由本控制器创建并持有
+    private LobbyView lobbyView;  // 大厅节点，由本控制器创建并持有
     private Map<String, IGameScene> sceneCache = new HashMap<>(); // 可选：用于缓存其他场景
+    private AudioCtrl audioCtrl;
+    private GameCtrl gameCtrl;
 
-    public GameSceneCtrl(Stage gameStage, MainController mainController) {
+    public GameSceneCtrl(Stage gameStage, MainController mainController, AudioCtrl audioCtrl) {
         this.gameStage = gameStage;
         this.mainController = mainController;
-
+        this.audioCtrl = audioCtrl;
         // 1. 根容器
         gameRoot = new StackPane();
         gameScene = new Scene(gameRoot, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
@@ -73,33 +74,6 @@ public class GameSceneCtrl {
         contentPane.maxHeightProperty().bind(gameScene.heightProperty());
 
         gameRoot.getChildren().add(contentPane);
-
-        // 3. 世界容器（固定大小 3600x2500）
-        contentContainer = new StackPane();
-        contentContainer.setPrefSize(WORLD_WIDTH, WORLD_HEIGHT);
-        contentContainer.setMinSize(WORLD_WIDTH, WORLD_HEIGHT);
-        contentContainer.setMaxSize(WORLD_WIDTH, WORLD_HEIGHT);
-        contentPane.getChildren().add(contentContainer);
-        contentPane.setAlignment(Pos.TOP_LEFT);
-
-        // 4. 摄像机
-        cameraController = new CameraController(
-                contentContainer,
-                gameScene.getWidth(), gameScene.getHeight()
-        );
-        // 窗口尺寸变化时更新摄像机视口
-        gameScene.widthProperty().addListener((obs, old, newVal) -> {
-            if (newVal.doubleValue() > 0) {
-                cameraController.updateViewport(gameScene.getWidth(), newVal.doubleValue());
-            }
-        });
-        gameScene.heightProperty().addListener((obs, old, newVal) -> {
-            if (newVal.doubleValue() > 0) {
-                cameraController.updateViewport(gameScene.getWidth(), newVal.doubleValue());
-            }
-        });
-        // 初始更新
-        cameraController.updateViewport(gameScene.getWidth(), gameScene.getHeight());
 
         // 5. 消息层（Toast/弹窗，独立缩放）
         messagePane = new StackPane();
@@ -125,6 +99,10 @@ public class GameSceneCtrl {
         initGameLoop();
     }
 
+    public void setGameCtrl(GameCtrl gameCtrl){
+        this.gameCtrl = gameCtrl;
+    }
+
 
     private void initGameLoop() {
         gameLoop = new AnimationTimer() {
@@ -140,26 +118,18 @@ public class GameSceneCtrl {
 
     // ----- 场景导航方法（对外提供）-----
 
-    /**
-     * 显示大厅页面（如果已存在则直接显示，否则创建）
-     */
-    public void showGameSelectView(GameCtrl gameCtrl) {
-        if (gameSelectView == null) {
-            // 首次创建
-            gameSelectView = new GameSelectView(gameCtrl, cameraController);
-            // 设置摄像机边界提供者（如果 GameSelectView 实现了 BoundsProvider）
-            // cameraController.setBoundsProvider(gameSelectView); // 已在 GameSelectView 构造中设置
+
+    public void showLobbyView(GameCtrl gameCtrl) {
+        if (lobbyView == null) {
+            lobbyView = new LobbyView(gameCtrl, contentPane);
         }
-        // 如果栈为空，则直接压入；否则替换顶部或追加
-        pushScene(gameSelectView);
+        pushScene(lobbyView);
     }
 
-    /**
-     * 进入某个游戏场景（由 GameCtrl 调用）
-     */
+
     public void enterGameScene(IGameScene gameScene) {
         // 如果已有游戏场景在栈顶，可先出栈
-        if (!sceneStack.isEmpty() && !(sceneStack.peek() instanceof GameSelectView)) {
+        if (!sceneStack.isEmpty() && !(sceneStack.peek() instanceof LobbyView)) {
             popScene();
         }
         pushScene(gameScene);
@@ -169,12 +139,12 @@ public class GameSceneCtrl {
      * 回到大厅
      */
     public void goBackToLobby() {
-        while (!sceneStack.isEmpty() && !(sceneStack.peek() instanceof GameSelectView)) {
+        while (!sceneStack.isEmpty() && !(sceneStack.peek() instanceof LobbyView)) {
             popScene();
         }
         // 确保大厅可见（可能已经被销毁）
-        if (gameSelectView != null && !sceneStack.contains(gameSelectView)) {
-            pushScene(gameSelectView);
+        if (lobbyView != null && !sceneStack.contains(lobbyView)) {
+            pushScene(lobbyView);
         }
     }
 
@@ -187,7 +157,7 @@ public class GameSceneCtrl {
 
         sceneStack.push(newScene);
         newScene.onEnter();
-        contentContainer.getChildren().add(newScene.getView());
+        contentPane.getChildren().add(newScene.getView());
         newScene.getView().setDisable(false);
     }
 
@@ -197,7 +167,7 @@ public class GameSceneCtrl {
         }
         IGameScene top = sceneStack.pop();
         top.onExit();
-        contentContainer.getChildren().remove(top.getView());
+        contentPane.getChildren().remove(top.getView());
         IGameScene newTop = sceneStack.peek();
         newTop.onResume();
         newTop.getView().setDisable(false);
@@ -205,20 +175,9 @@ public class GameSceneCtrl {
 
     // ----- 对外 Getter -----
 
-    public CameraController getCameraController() {
-        return cameraController;
-    }
 
-    public GameSelectView getGameSelectView() {
-        return gameSelectView;
-    }
-
-    public StackPane getContentContainer() {
-        return contentContainer;
-    }
-
-    public void resetCameraToCenter() {
-        cameraController.resetToCenter();
+    public LobbyView getLobbyView() {
+        return lobbyView;
     }
 
     public void popAllScenes() {

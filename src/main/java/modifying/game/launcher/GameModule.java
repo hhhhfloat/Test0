@@ -1,7 +1,6 @@
 package modifying.game.launcher;
 
 import javafx.stage.Stage;
-import modifying.game.controller.CameraController;
 import modifying.game.controller.GameCtrl;
 import modifying.game.controller.GameSceneCtrl;
 import modifying.shared.controller.AudioCtrl;
@@ -17,15 +16,15 @@ public class GameModule {
     }
 
     public void start(Stage primaryStage, String username, MapSaveData mapSaveData) {
-        // 1. 创建场景控制器
-        GameSceneCtrl gameSceneCtrl = new GameSceneCtrl(primaryStage, mainController);
-
-        // 2. 创建音频和游戏控制器
         AudioCtrl audioCtrl = new AudioCtrl();
+
+        GameSceneCtrl gameSceneCtrl = new GameSceneCtrl(primaryStage, mainController, audioCtrl);
+
         GameCtrl gameCtrl = new GameCtrl(gameSceneCtrl, audioCtrl, mapSaveData, username);
 
-        // 3. 让 GameSceneCtrl 显示大厅（它内部会创建 GameSelectView）
-        gameSceneCtrl.showGameSelectView(gameCtrl);
+        gameSceneCtrl.setGameCtrl(gameCtrl);
+
+        gameSceneCtrl.showLobbyView(gameCtrl);
 
         primaryStage.show();
     }
