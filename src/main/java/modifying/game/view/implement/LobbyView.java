@@ -13,6 +13,7 @@ import javafx.scene.transform.Scale;
 import modifying.game.controller.CameraController;
 import modifying.game.controller.GameCtrl;
 import modifying.game.controller.GameSceneCtrl;
+import modifying.game.view.GameWindow;
 import modifying.game.view.IGameScene;
 import modifying.shared.view.UIUtils;
 
@@ -64,6 +65,7 @@ public class LobbyView extends StackPane implements IGameScene, CameraController
         mapGroup = new Group(mapBackground, buttonGroup);
         mapGroup.getTransforms().add(mapScale);
         getChildren().add(mapGroup);
+        gameCtrl.getGameSceneCtrl().setMapGroup(mapGroup);
 
         addGameEntry("snake", 500, 600);
         addGameEntry("link link", 1200, 800);
@@ -160,7 +162,11 @@ public class LobbyView extends StackPane implements IGameScene, CameraController
                         "-fx-border-radius: 25;" +
                         "-fx-background-radius: 25;"
         );
-        btn.setOnAction(e -> gameCtrl.launchGame(mapTextToGameId(text)));
+        btn.setOnAction(e -> {
+            String gameId = mapTextToGameId(text);
+            // 让窗口出现在按钮右下侧（避免完全遮挡按钮）
+            gameCtrl.openGameWindow(gameId, x + 80, y - 20);
+        });
         UIUtils.addHoverScale(btn);
         buttonGroup.getChildren().add(btn);
     }
@@ -188,10 +194,12 @@ public class LobbyView extends StackPane implements IGameScene, CameraController
 
     @Override
     public void onPause() {
+        this.setMouseTransparent(true);
     }
 
     @Override
     public void onResume() {
+        this.setMouseTransparent(false);
     }
 
     @Override

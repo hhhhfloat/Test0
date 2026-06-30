@@ -39,5 +39,9 @@ public class GameCtrl {
         return gameSceneCtrl;
     }
 
+    // 在 GameCtrl.java 中添加
+    public void openGameWindow(String gameId, double worldX, double worldY) {
+        gameSceneCtrl.createGameWindow(gameId, worldX, worldY);
+    }
     // ... 其他 getter
 }

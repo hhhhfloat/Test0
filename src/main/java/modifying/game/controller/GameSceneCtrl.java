@@ -15,16 +15,16 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import modifying.game.view.GameWindow;
 import modifying.game.view.IGameScene;
 import modifying.game.view.implement.LobbyView;
+import modifying.game.view.implement.SnakeGameWindow;
 import modifying.shared.controller.AudioCtrl;
 import modifying.shared.controller.MainController;
 import modifying.shared.model.TOAST_TYPE;
 
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 public class GameSceneCtrl {
     // 视口尺寸（逻辑像素，与 Scene 一致）
@@ -54,6 +54,7 @@ public class GameSceneCtrl {
     private Map<String, IGameScene> sceneCache = new HashMap<>(); // 可选：用于缓存其他场景
     private AudioCtrl audioCtrl;
     private GameCtrl gameCtrl;
+
 
     public GameSceneCtrl(Stage gameStage, MainController mainController, AudioCtrl audioCtrl) {
         this.gameStage = gameStage;
@@ -97,6 +98,44 @@ public class GameSceneCtrl {
 
         // 6. 主循环
         initGameLoop();
+    }
+
+
+    private final Map<String, GameWindow> viewMap = new HashMap<>();
+
+    // 在 GameSceneCtrl.java 中
+    public void createGameWindow(String gameId, double worldX, double worldY) {
+        if (mapGroup == null) {
+            System.err.println("Error: mapGroup not set in GameSceneCtrl!");
+            return;
+        }
+
+        GameWindow window;
+        switch (gameId) {
+            case "SNAKE":
+                window = (SnakeGameWindow)viewMap.computeIfAbsent("SNAKE",k->new SnakeGameWindow(gameCtrl, mapGroup));
+                if(!mapGroup.getChildren().contains(window)) {
+                    mapGroup.getChildren().add(window);
+                    window.setLayoutX(worldX);
+                    window.setLayoutY(worldY);
+                }
+                window.toFront();
+                focusOn(window);
+                break;
+            // 后续添加其他游戏：
+            // case "LINK_LINK":
+            //     window = new LinkGameWindow(gameCtrl, mapGroup);
+            //     break;
+            default:
+                System.out.println("Unknown game id: " + gameId);
+                return;
+        }
+
+
+    }
+
+    public void focusOn(GameWindow window){
+        ///  not implemented yet
     }
 
     public void setGameCtrl(GameCtrl gameCtrl){
@@ -148,17 +187,28 @@ public class GameSceneCtrl {
         }
     }
 
+    public void removeWindow(String key) {
+        Node tempNode = viewMap.get(key);
+        mapGroup.getChildren().remove(tempNode);
+        viewMap.remove(key);
+    }
     // ----- 栈操作（内部使用）-----
 
     private void pushScene(IGameScene newScene) {
         if (!sceneStack.isEmpty()) {
-            sceneStack.peek().getView().setDisable(true);
+            IGameScene old = sceneStack.peek();
+            old.onPause();
+            old.getView().setDisable(true);
         }
 
         sceneStack.push(newScene);
         newScene.onEnter();
         contentPane.getChildren().add(newScene.getView());
         newScene.getView().setDisable(false);
+    }
+    private Group mapGroup;
+    public void setMapGroup(Group mapGroup){
+        this.mapGroup = mapGroup;
     }
 
     private void popScene() {
