@@ -6,15 +6,18 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import modifying.game.controller.CameraController;
 import modifying.game.controller.GameCtrl;
 import modifying.game.controller.GameSceneCtrl;
 import modifying.game.view.GameWindow;
 import modifying.game.view.IGameScene;
+import modifying.shared.resources.ResourceManager;
 import modifying.shared.view.UIUtils;
 
 import java.util.Objects;
@@ -41,6 +44,7 @@ public class LobbyView extends StackPane implements IGameScene, CameraController
         this.contentPane = contentPane;
         contentPane.setAlignment(Pos.TOP_LEFT);
 
+        getStylesheets().add(getClass().getResource("/css/GameSceneStyle/gameSceneStyle.css").toExternalForm());
         initMapGroup();
 
         // 设置摄像机边界提供者为本对象
@@ -149,19 +153,20 @@ public class LobbyView extends StackPane implements IGameScene, CameraController
 
 
     private void addGameEntry(String text, double x, double y) {
+        ImageView buttonFrame = ResourceManager.getInstance()
+                .getGameAtlas().createImageView("try.png");
+        buttonFrame.setFitWidth(120);
+        buttonFrame.setFitHeight(50);
+        buttonFrame.setPreserveRatio(false);
+
         Button btn = new Button(text);
+        btn.setGraphic(buttonFrame);
+        btn.setContentDisplay(ContentDisplay.CENTER);
+        btn.setAlignment(Pos.CENTER);
+        btn.setTextAlignment(TextAlignment.CENTER);
         btn.setLayoutX(x - 60);
         btn.setLayoutY(y - 25);
-        btn.setPrefSize(120, 50);
-        btn.setStyle(
-                "-fx-font-family: 'Comic Sans MS';" +
-                        "-fx-font-size: 16px;" +
-                        "-fx-background-color: #f0e6d3;" +
-                        "-fx-border-color: #8b7a66;" +
-                        "-fx-border-width: 3px;" +
-                        "-fx-border-radius: 25;" +
-                        "-fx-background-radius: 25;"
-        );
+        btn.getStyleClass().add("lobby-btn");   // ✅ 添加样式类
         btn.setOnAction(e -> {
             String gameId = mapTextToGameId(text);
             // 让窗口出现在按钮右下侧（避免完全遮挡按钮）

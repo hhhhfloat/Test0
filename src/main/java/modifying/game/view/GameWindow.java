@@ -5,18 +5,22 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import modifying.game.controller.GameSceneCtrl;
+
+import java.util.Objects;
 
 public abstract class GameWindow extends StackPane {
 
     protected final Group mapGroup;
     protected final StackPane contentArea;
 
-    private static final double WIDTH = 320;
-    private static final double HEIGHT = 240;
+    private static final double WIDTH = 500;
+    private static final double HEIGHT = 720;
 
     // 拖动状态
     private double dragStartSceneX, dragStartSceneY;
@@ -34,63 +38,43 @@ public abstract class GameWindow extends StackPane {
         this.gameSceneCtrl = gameSceneCtrl;
 
         // ---------- 窗口大小和样式 ----------
+        Image mapImage = new Image(
+                Objects.requireNonNull(
+                        getClass().getResourceAsStream("/Sprites/sprites/Paper.png")
+                )
+        );
+        ImageView paperBackground = new ImageView(mapImage);
+        getChildren().add(paperBackground);
+        // 在 GameWindow 构造函数的开头或末尾
+        getStylesheets().add(getClass().getResource("/css/GameSceneStyle/gameSceneStyle.css").toExternalForm());
         setPrefSize(WIDTH, HEIGHT);
         setMaxSize(WIDTH, HEIGHT);
-        setStyle(
-                "-fx-background-color: #fdf6e3;" +
-                        "-fx-border-color: #d5c4a1;" +
-                        "-fx-border-width: 3px;" +
-                        "-fx-border-radius: 10;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0.2, 5, 5);"
-        );
+        getStyleClass().add("game-window");
 
         // 确保鼠标事件能被正确捕获（不会被下层地图抢走）
         setPickOnBounds(true);
 
         // ---------- 标题栏（拖动区域） ----------
         HBox titleBar = new HBox();
-        titleBar.setPrefHeight(32);
-        titleBar.setStyle(
-                "-fx-background-color: #e6d5b8;" +
-                        "-fx-border-color: #d5c4a1;" +
-                        "-fx-border-width: 0 0 2px 0;" +
-                        "-fx-border-radius: 10 10 0 0;" +
-                        "-fx-background-radius: 10 10 0 0;"
-        );
-        titleBar.setAlignment(Pos.CENTER_LEFT);
-        titleBar.setPadding(new javafx.geometry.Insets(0, 12, 0, 12));
+        titleBar.setMaxHeight(32);
+        titleBar.getStyleClass().add("window-title-bar");
 
         Label titleLabel = new Label(title);
-        titleLabel.setStyle(
-                "-fx-font-family: 'Comic Sans MS';" +
-                        "-fx-font-size: 15px;" +
-                        "-fx-text-fill: #5a4a3a;"
-        );
+        titleLabel.getStyleClass().add("window-title");
 
         // 占位弹簧（把关闭按钮推到最右边）
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Button closeBtn = new Button("✕");
-        closeBtn.setStyle(
-                "-fx-background-color: transparent;" +
-                        "-fx-text-fill: #8b7a66;" +
-                        "-fx-font-size: 15px;" +
-                        "-fx-cursor: hand;" +
-                        "-fx-font-weight: bold;"
-        );
+        closeBtn.getStyleClass().add("window-close-btn");
         closeBtn.setOnAction(e -> close());
 
         titleBar.getChildren().addAll(titleLabel, spacer, closeBtn);
 
         // ---------- 内容区域（留给子类放游戏画布/按钮） ----------
         contentArea = new StackPane();
-        contentArea.setStyle(
-                "-fx-background-color: transparent;" +
-                        "-fx-border-radius: 0 0 10 10;" +
-                        "-fx-background-radius: 0 0 10 10;"
-        );
+        contentArea.getStyleClass().add("window-content");
 
         // ---------- 组装窗口 ----------
         getChildren().addAll(contentArea, titleBar);
