@@ -24,34 +24,36 @@
 
 /* ---------- 游戏窗口 ---------- */
 .game-window {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0.2, 5, 5);
+
 }
 
 /* 标题栏 */
 .window-title-bar {
-    -fx-max-height: 32px;
-    -fx-background-color: #e6d5b8;
-    -fx-padding: 0 12 0 12;
+    -fx-background-color: transparent;
+    -fx-max-height: 50px;
+    -fx-min-height: 50px;
+    -fx-pref-height: 50px;
+    -fx-padding: 0 15 0 15;
     -fx-alignment: center-left;
 }
 
 /* 标题文字 */
 .window-title {
     -fx-font-family: 'Comic Sans MS';
-    -fx-font-size: 15px;
+    -fx-font-size: 25px;
     -fx-text-fill: #5a4a3a;
 }
 
 /* 关闭按钮 */
 .window-close-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: #8b7a66;
-    -fx-font-size: 15px;
+    -fx-max-height: 30px;
+    -fx-min-height: 30px;
+    -fx-pref-height: 30px;
+    -fx-max-width: 30px;
+    -fx-min-width: 30px;
+    -fx-pref-width: 30px;
     -fx-cursor: hand;
-    -fx-font-weight: bold;
-}
-.window-close-btn:hover {
-    -fx-text-fill: #cc0000;
 }
 
 /* 内容区域 */

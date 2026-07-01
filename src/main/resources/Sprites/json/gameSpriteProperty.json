@@ -1,0 +1,36 @@
+{"frames": [
+
+{
+	"filename": "close_btn.png",
+	"frame": {"x":441,"y":48,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":30},
+	"sourceSize": {"w":30,"h":30}
+},
+{
+	"filename": "title_bar.png",
+	"frame": {"x":1,"y":1,"w":489,"h":45},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":1,"w":489,"h":45},
+	"sourceSize": {"w":500,"h":50}
+},
+{
+	"filename": "try.png",
+	"frame": {"x":1,"y":48,"w":438,"h":191},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":438,"h":191},
+	"sourceSize": {"w":440,"h":192}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "gameSpriteProperty.png",
+	"format": "RGBA8888",
+	"size": {"w":491,"h":240},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:1d2e850dac9554bea120fdc49951d70c:ff2bdddd685c5d2eb9929ab69b31bc79:f95495d6264123dd830ce0ac7b21025f$"
+}
+}
