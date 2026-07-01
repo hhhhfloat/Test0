@@ -150,7 +150,9 @@ public class LobbyView extends StackPane implements IGameScene, CameraController
         return clamp(temp, minScale, MAX_SCALE);
     }
 
-
+    public CameraController getCameraController() {
+        return camera; // 需要把 camera 从 LobbyView 移到 GameSceneCtrl？
+    }
 
     private void addGameEntry(String text, double x, double y) {
         ImageView buttonFrame = ResourceManager.getInstance()

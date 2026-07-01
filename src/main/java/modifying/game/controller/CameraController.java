@@ -109,6 +109,15 @@ public class CameraController {
         snapTransition.play();
     }
 
+    public void translateBy(double dx, double dy) {
+        double newX = currentTx + dx;
+        double newY = currentTy + dy;
+        // 钳制到合法边界（利用已有的 minX/maxX/minY/maxY）
+        newX = clamp(newX, minX, maxX);
+        newY = clamp(newY, minY, maxY);
+        setTranslate(newX, newY);
+    }
+
     public void setTranslate(double x, double y) {
         targetNode.setTranslateX(x);
         targetNode.setTranslateY(y);

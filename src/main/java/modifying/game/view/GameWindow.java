@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
+import modifying.game.controller.CameraController;
 import modifying.game.controller.GameSceneCtrl;
 
 import java.util.Objects;
@@ -27,6 +28,7 @@ public abstract class GameWindow extends StackPane {
     private double layoutStartX, layoutStartY;
     protected final GameSceneCtrl gameSceneCtrl;
     private String windowId;
+    private double offsetX, offsetY; // 鼠标相对于窗口左上角的本地坐标偏移
 
     public String getWindowId() {
         return windowId;
@@ -94,25 +96,20 @@ public abstract class GameWindow extends StackPane {
     private void onDragStart(MouseEvent e) {
         dragStartSceneX = e.getSceneX();
         dragStartSceneY = e.getSceneY();
-        layoutStartX = getLayoutX();
-        layoutStartY = getLayoutY();
-        toFront(); // 拖动时自动置顶
-        e.consume(); // 防止事件穿透
+        // 不再需要 layoutStartX/Y
+        Point2D startLocal = mapGroup.sceneToLocal(dragStartSceneX, dragStartSceneY);
+        offsetX = getLayoutX() - startLocal.getX();
+        offsetY = getLayoutY() - startLocal.getY();
+        toFront();
+        e.consume();
     }
 
     private void onDragDragging(MouseEvent e) {
-        // 将当前鼠标位置和起始鼠标位置都转换到 mapGroup 的本地坐标系
-        // 这样即使地图缩放/平移，拖动的偏移量也是精准的世界坐标偏移
         Point2D currentLocal = mapGroup.sceneToLocal(e.getSceneX(), e.getSceneY());
-        Point2D startLocal = mapGroup.sceneToLocal(dragStartSceneX, dragStartSceneY);
+        double newX = currentLocal.getX() + offsetX;
+        double newY = currentLocal.getY() + offsetY;
 
-        double deltaX = currentLocal.getX() - startLocal.getX();
-        double deltaY = currentLocal.getY() - startLocal.getY();
-
-        double newX = layoutStartX + deltaX;
-        double newY = layoutStartY + deltaY;
-
-        // 限制窗口不能拖出地图边界（防止窗口掉到地图外面去）
+        // 限制窗口不能拖出地图边界
         double maxX = GameSceneCtrl.getWorldWidth() - WIDTH;
         double maxY = GameSceneCtrl.getWorldHeight() - HEIGHT;
         newX = Math.max(0, Math.min(newX, maxX));
@@ -120,6 +117,28 @@ public abstract class GameWindow extends StackPane {
 
         setLayoutX(newX);
         setLayoutY(newY);
+
+        // ---------- 边缘滚动检测（保持不变） ----------
+        double mouseSceneX = e.getSceneX();
+        double mouseSceneY = e.getSceneY();
+        double edgeThreshold = 30;
+        double scrollSpeedFactor = 0.5;
+        CameraController cam = gameSceneCtrl.getLobbyView().getCameraController();
+        if (cam != null) {
+            double dx = 0, dy = 0;
+            if (mouseSceneX < edgeThreshold) {
+                dx = scrollSpeedFactor * (edgeThreshold - mouseSceneX);
+            } else if (mouseSceneX > cam.getViewportWidth() - edgeThreshold) {
+                dx = -scrollSpeedFactor * (mouseSceneX - (cam.getViewportWidth() - edgeThreshold));
+            }
+            if (mouseSceneY < edgeThreshold) {
+                dy = scrollSpeedFactor * (edgeThreshold - mouseSceneY);
+            } else if (mouseSceneY > cam.getViewportHeight() - edgeThreshold) {
+                dy = -scrollSpeedFactor * (mouseSceneY - (cam.getViewportHeight() - edgeThreshold));
+            }
+            cam.translateBy(dx, dy);
+        }
+
         e.consume();
     }
 
